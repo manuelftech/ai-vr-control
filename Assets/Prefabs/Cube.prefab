@@ -13,9 +13,11 @@ GameObject:
   - component: {fileID: 6677089023445990434}
   - component: {fileID: 7317652884076256572}
   - component: {fileID: 1876255317735729738}
+  - component: {fileID: 8891196324866845939}
+  - component: {fileID: 5829801512013784087}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: cube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 9033952237472549670}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.0262, y: 0.7085, z: 1.8799}
+  m_LocalPosition: {x: 1.853, y: 0.751, z: 1.891}
   m_LocalScale: {x: 0.040143438, y: 0.43548262, z: 0.03871146}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -139,3 +141,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!75 &8891196324866845939
+ConstantForce:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033952237472549670}
+  m_Enabled: 1
+  m_Force: {x: 0, y: 0, z: 0}
+  m_RelativeForce: {x: 0, y: 0, z: 0}
+  m_Torque: {x: 0, y: 0, z: 0}
+  m_RelativeTorque: {x: 0, y: 0, z: 0}
+--- !u!114 &5829801512013784087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033952237472549670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f47e4107c98d4056948836209314345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PostDataManager
+  apiURL: http://localhost:5000/game-objects/status
+  targetTag: cube
