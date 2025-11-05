@@ -4,6 +4,7 @@ using System.Collections;
 using System.Text;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class PropertyManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PropertyManager : MonoBehaviour
 
     void Start()
     {
+        // Register this object in the Global manager, to modify gameObject properties
         if (GlobalManager.Instance != null)
         {
             GlobalManager.Instance.RegisterObject(this.gameObject);
@@ -24,28 +26,30 @@ public class PropertyManager : MonoBehaviour
         {
             Debug.LogError("GlobalManager instance not found! Cannot register " + this.name);
         }
-        
-        // if (objectMap.TryGetValue(targetID, out GameObject objToColor))
-        // {
-        //     Renderer renderer = objToColor.GetComponent<Renderer>();
-        //     if (renderer != null)
-        //     {
-        //         renderer.material.color = newColor;
-        //         Debug.Log("Changed color of object with ID " + targetID);
-        //     }
-        //     else
-        //     {
-        //         Debug.LogError("Object with ID " + targetID + " has no Renderer component.");
-        //     }
-        // }
-        // else
-        // {
-        //     Debug.LogError("Object with ID " + targetID + " not found in map.");
-        // }
-        // When this object loads and starts in the scene,
-        // it automatically finds the ObjectManager instance
-        // and registers itself.
 
+        // Dictionary<int, string> newGameObjects = apiResponseList.ToDictionary(gameObject => gameObject.id, gameObject => gameObject.color);
+        foreach (var localGameObject in GlobalManager.objectMap)
+        {
+            Debug.Log("InstanceId: " + localGameObject.Key);
+            Debug.Log("GameObject: " + localGameObject.Value);
+            if (newGameObjects.TryGetValue(localGameObject.Key, out string newGameObject))
+            {
+                Renderer renderer = localGameObject.Value.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material.color = newGameObject.color;
+                    Debug.Log("Changed color of object with ID " + localGameObject.Key);
+                }
+                else
+                {
+                    Debug.LogError("Object with ID " + localGameObject.Key + " has no Renderer component.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Could not find an object with ID: " + localGameObject.Key);
+            }
+        }
     }
 
     // - 1) Register this Object when it starts
@@ -102,33 +106,24 @@ public class PropertyManager : MonoBehaviour
 
         // For this example, we'll use a raw JSON string:
         string jsonData = "{\"prompt\":\"increase the gravity of all the green objects that are near the chair\"}";
-
-        // 2. Convert the JSON string to a byte array
         byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
-
-        // 3. Create the UnityWebRequest object
         using (UnityWebRequest request = new UnityWebRequest(apiURL, "POST"))
         {
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
-
-            // 4. Set the necessary Content-Type header to tell the server it's JSON
             request.SetRequestHeader("Content-Type", "application/json");
-
-            // 5. Send the request and wait for a response
             yield return request.SendWebRequest();
-
-            // 6. Check for errors
             if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error: " + request.error);
             }
             else
             {
-                // 7. Success: Log the response received from the server
                 Debug.Log("Received: " + request.downloadHandler.text);
             }
         }
+        // Return the following Dictionary:
+        // Dictionary<int, string> newGameObjects = apiResponseList.ToDictionary(gameObject => gameObject.id, gameObject => gameObject.color);
     }
 }
 
