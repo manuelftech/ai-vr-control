@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using AIControlMagicVR.Data.Models;
 using System;
-
+ 
 namespace AIControlMagicVR.Managers.Networking
 {
     public class ApiServiceGameStatus : MonoBehaviour
