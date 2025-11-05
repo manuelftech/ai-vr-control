@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class GlobalManager : MonoBehaviour
 {
     public static GlobalManager Instance { get; private set; }
-    private Dictionary<int, GameObject> objectMap = new Dictionary<int, GameObject>();
+    public Dictionary<int, GameObject> objectMap = new Dictionary<int, GameObject>();
 
     void Awake()
     {

@@ -27,17 +27,18 @@ public class PropertyManager : MonoBehaviour
             Debug.LogError("GlobalManager instance not found! Cannot register " + this.name);
         }
 
-        // Dictionary<int, string> newGameObjects = apiResponseList.ToDictionary(gameObject => gameObject.id, gameObject => gameObject.color);
-        foreach (var localGameObject in GlobalManager.objectMap)
+        Dictionary<int, GameObject> newGameObjects = new Dictionary<int, GameObject>();
+        foreach (var localGameObject in GlobalManager.Instance.objectMap)
         {
             Debug.Log("InstanceId: " + localGameObject.Key);
             Debug.Log("GameObject: " + localGameObject.Value);
-            if (newGameObjects.TryGetValue(localGameObject.Key, out string newGameObject))
+            if (newGameObjects.TryGetValue(localGameObject.Key, out GameObject newGameObject))
             {
                 Renderer renderer = localGameObject.Value.GetComponent<Renderer>();
                 if (renderer != null)
                 {
-                    renderer.material.color = newGameObject.color;
+                    //renderer.material.color = newGameObject.color;
+                    renderer.material.color = Color.red;
                     Debug.Log("Changed color of object with ID " + localGameObject.Key);
                 }
                 else
