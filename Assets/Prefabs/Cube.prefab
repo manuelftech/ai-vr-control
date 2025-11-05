@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7317652884076256572}
   - component: {fileID: 1876255317735729738}
   - component: {fileID: 8891196324866845939}
-  - component: {fileID: 5829801512013784087}
+  - component: {fileID: 5501530623576153084}
   m_Layer: 0
   m_Name: Cube
   m_TagString: cube
@@ -153,7 +153,7 @@ ConstantForce:
   m_RelativeForce: {x: 0, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
---- !u!114 &5829801512013784087
+--- !u!114 &5501530623576153084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,8 +162,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9033952237472549670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f47e4107c98d4056948836209314345, type: 3}
+  m_Script: {fileID: 11500000, guid: cbf763684456e4da4a661110aa415c05, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PostDataManager
-  apiURL: http://localhost:5000/game-objects/status
-  targetTag: cube
+  m_EditorClassIdentifier: Assembly-CSharp::AIControlMagicVR.Managers.AddToManager
