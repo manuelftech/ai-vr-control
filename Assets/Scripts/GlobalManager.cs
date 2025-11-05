@@ -4,8 +4,7 @@ using System.Collections.Generic;
 public class GlobalManager : MonoBehaviour
 {
     public static GlobalManager Instance { get; private set; }
-    public Dictionary<int, GameObject> objectMap = new Dictionary<int, GameObject>();
-
+    public Dictionary<int, GameObject> sceneGameObjects = new Dictionary<int, GameObject>();
     void Awake()
     {
         // Set up the singleton instance when the scene loads
@@ -23,9 +22,9 @@ public class GlobalManager : MonoBehaviour
     public void RegisterObject(GameObject obj)
     {
         int id = obj.GetInstanceID();
-        if (!objectMap.ContainsKey(id))
+        if (!sceneGameObjects.ContainsKey(id))
         {
-            objectMap.Add(id, obj);
+            sceneGameObjects.Add(id, obj);
         }
     }
 }
