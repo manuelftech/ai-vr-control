@@ -10,11 +10,11 @@ namespace AIControlMagicVR.Managers
             if (GlobalManager.Instance != null)
             {
                 GlobalManager.Instance.RegisterObject(this.gameObject);
-                Debug.Log("GameObject registered: " + this.name + ", Id: " + this.GetInstanceID());
+                Debug.Log("[AddToManager] GameObject registered. Name: " + this.name);
             }
             else
             {
-                Debug.LogError("GlobalManager instance not found! Cannot register " + this.name);
+                Debug.LogError("[AddToManager] GlobalManager instance not found! Cannot register Name: " + this.name);
             }
         }
     }
