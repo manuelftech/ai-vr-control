@@ -11,7 +11,7 @@ namespace AIControlMagicVR.Managers.Networking
     public class ApiServiceGameStatus : MonoBehaviour
     {
         public string apiURL = "http://localhost:5000/game-objects/status";
-        public async Task<ElementsStatus> CallEndpointGameStatus()
+        public async Task<ObjectsProperties> CallEndpointGameStatus()
         {
             string jsonData = "{\"prompt\":\"increase the gravity of all the green objects that are near the chair\"}";
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
@@ -28,7 +28,7 @@ namespace AIControlMagicVR.Managers.Networking
             else
             {
                 Debug.Log("API CallEndpointGameStatus Response: " + request.downloadHandler.text);
-                return JsonUtility.FromJson<ElementsStatus>(request.downloadHandler.text);
+                return JsonUtility.FromJson<ObjectsProperties>(request.downloadHandler.text);
             }
         }
     }

@@ -44,13 +44,6 @@ namespace AIControlMagicVR.Managers
             }
         }
 
-        // - 1) Register this Object when it starts
-        // if (GlobalManager.Instance != null) {
-        //     GlobalManager.Instance.RegisterObject(this.gameObject);
-        // } else {
-        //     Debug.LogError("GlobalManager instance not found! Cannot register " + this.name);
-        // }
-
         // - 2) Find gameObjects based on their ID:
         // GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(targetTag);
         // if (taggedObjects.Length == 0)

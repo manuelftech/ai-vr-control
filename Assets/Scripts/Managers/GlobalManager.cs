@@ -29,5 +29,10 @@ namespace AIControlMagicVR.Managers
                 sceneGameObjects.Add(id, obj);
             }
         }
+
+        public void UpdateObjectsProperties(GameObject[] gameObjects)
+        {
+            //
+        }
     }
 }

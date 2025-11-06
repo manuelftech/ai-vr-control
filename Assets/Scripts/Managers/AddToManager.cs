@@ -10,7 +10,7 @@ namespace AIControlMagicVR.Managers
             if (GlobalManager.Instance != null)
             {
                 GlobalManager.Instance.RegisterObject(this.gameObject);
-                Debug.Log("GameObject registered: " + this.name);
+                Debug.Log("GameObject registered: " + this.name + ", Id: " + this.GetInstanceID());
             }
             else
             {

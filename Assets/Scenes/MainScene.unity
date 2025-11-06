@@ -5665,18 +5665,18 @@ PrefabInstance:
     - target: {fileID: 7339749990365776479, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}
       propertyPath: m_OnTextSubmitted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1638288218}
+      objectReference: {fileID: 1635002796}
     - target: {fileID: 7339749990365776479, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}
       propertyPath: m_OnTextSubmitted.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7339749990365776479, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}
       propertyPath: m_OnTextSubmitted.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SendTextToChatbot
+      value: RequestActionToChatbot
       objectReference: {fileID: 0}
     - target: {fileID: 7339749990365776479, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}
       propertyPath: m_OnTextSubmitted.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: VirtualKeyboardActions, Assembly-CSharp
+      value: AIControlMagicVR.Data.ScriptableObjects.VirtualKeyboardActions, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7339749990365776479, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}
       propertyPath: m_OnTextSubmitted.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -6730,6 +6730,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7339749990365776448, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1635002796}
     - targetCorrespondingSourceObject: {fileID: 3453409048499465193, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1638288218}
@@ -13636,6 +13639,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1624025054}
   m_CullTransparentMesh: 1
+--- !u!1 &1635002785 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7339749990365776448, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}
+  m_PrefabInstance: {fileID: 690361432}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1635002796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635002785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78f3e7f6f5c704712bbf390659b8d9aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AIControlMagicVR.Data.ScriptableObjects.VirtualKeyboardActions
 --- !u!1 &1638288216 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3453409048499465193, guid: 1aaf2dceef22d1147bfc70d706ddd188, type: 3}

@@ -5,13 +5,13 @@ namespace AIControlMagicVR.Data.Models
 {
 
     [Serializable]
-    public class ElementsStatus
+    public class ObjectsProperties
     {
-        public List<ElementStatus> gameObjects;
+        public List<ObjectsProperties> gameObjects;
     }
 
     [Serializable]
-    public class ElementStatus
+    public class ObjectProperties
     {
         public string instanceId { get; set; }
         public string tag { get; set; } // cube
