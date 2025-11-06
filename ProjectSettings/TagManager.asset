@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Anchor
   - cube
+  - keyboardText
   layers:
   - Default
   - TransparentFX
