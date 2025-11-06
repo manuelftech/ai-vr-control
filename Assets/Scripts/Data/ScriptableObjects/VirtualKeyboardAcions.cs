@@ -47,10 +47,10 @@ namespace AIControlMagicVR.Data.ScriptableObjects
         }
 
 
-        public void RequestActionToChatbot()
+        public async void RequestActionToChatbot()
         {
             // Send both the prompt, and the GameObjects' current properties to the chatbot, to command it to calculate the new rquested properties to be assigned to these GameObjects
-            Task<ObjectsProperties> updatedObjectsProperties = apiGameProperties.CallChatbotExecuteAction(APIChatbotRequest.Builder()
+            ObjectsProperties updatedObjectsProperties = await apiGameProperties.CallChatbotExecuteAction(APIChatbotRequest.Builder()
                     .Prompt(this.CaptureKeyboardInputText())
                     .GameObjectsProperties(GlobalManager.Instance.GetGameObjectsProperties()).Build()
                 );

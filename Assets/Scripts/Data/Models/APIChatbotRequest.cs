@@ -21,11 +21,13 @@ namespace AIControlMagicVR.Data.Models
             public APIChatbotRequestBuilder Prompt(string prompt)
             {
                 _instance.Prompt = prompt;
+                return this;
             }
 
             public APIChatbotRequestBuilder GameObjectsProperties(ObjectsProperties gameObjectsProperties)
             {
                 _instance.GameObjectsProperties = gameObjectsProperties;
+                return this;
             }
 
             public APIChatbotRequest Build()
