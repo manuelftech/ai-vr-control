@@ -2,13 +2,15 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using AIControlMagicVR.Data.Models;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace AIControlMagicVR.Managers
 {
     public class GlobalManager : MonoBehaviour
     {
         public static GlobalManager Instance { get; private set; }
-        public Dictionary<string, GameObject> sceneGameObjects = [];
+        public Dictionary<string, GameObject> sceneGameObjects = new Dictionary<string, GameObject>();
 
         void Awake()
         {
@@ -39,7 +41,7 @@ namespace AIControlMagicVR.Managers
 
         public void UpdateObjectsProperties(List<ObjectsProperties> updatedGameObjects)
         {
-            foreach (ObjectProperties updatedGameObject in updatedGameObjects)
+            foreach (ObjectProperties updatedGameObject in updatedGameObjects.GetGameObjects())
             {
                 if (sceneGameObjects.TryGetValue(updatedGameObject.Id, out GameObject localGameObject))
                 {
@@ -76,27 +78,27 @@ namespace AIControlMagicVR.Managers
             }
         }
 
-        public List<ObjectProperties> GetGameObjectsProperties()
+        public ObjectsProperties GetGameObjectsProperties()
         {
-            List<ObjectProperties> objectsProperties = [];
+            ObjectsProperties objectsProperties = new ObjectsProperties();
             foreach (var sceneGameObject in sceneGameObjects)
             {
                 ConstantForce constantForce = localGameObject.GetComponent<ConstantForce>();
                 Renderer renderer = localGameObject.GetComponent<Renderer>();
 
-                objectsProperties.add(ObjectProperties.Builder()
-                    .Id(sceneGameObject.id)
-                    .Tag(sceneGameObject.tag)
-                    .Component(ComponentsProperties.Builder()
-                        .ConstantForce(CoordinatesProperties.Builder()
-                            .x(constantForce.force.x)
-                            .y(constantForce.force.y)
-                            .z(constantForce.force.z).Build())
+                objectsProperties.getGameObjects().add(ObjectProperties.Builder()
+                    .Id(sceneGameObject.Key)
+                    .Tag(sceneGameObject.Value.tag)
+                    .Component(ObjectsProperties.ComponentsProperties.Builder()
+                        .ConstantForce(ObjectsProperties.CoordinatesProperties.Builder()
+                            .X(constantForce.force.x)
+                            .Y(constantForce.force.y)
+                            .Z(constantForce.force.z).Build())
                         .Color(renderer.material.color).Build())
-                    .Transform(CoordinatesProperties.Builder()
-                        .x(sceneGameObject.transform.position.x)
-                        .y(sceneGameObject.transform.position.y)
-                        .z(sceneGameObject.transform.position.z).Build()).Build());
+                    .Transform(ObjectsProperties.CoordinatesProperties.Builder()
+                        .X(sceneGameObject.Value.transform.position.x)
+                        .Y(sceneGameObject.Value.transform.position.y)
+                        .Z(sceneGameObject.Value.transform.position.z).Build()).Build());
             }
             return objectsProperties;
         }
