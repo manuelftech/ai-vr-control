@@ -19,7 +19,58 @@ async def ask_question(request: Request):
         logging.error("Error processing response from chatbot: %s", e)
         raise e
     
-    return {'answer': "object successfully executed"}
+    return {"GameObjects": [
+        {
+            "Id": "abc123",
+            "Tag": "cube",
+            "Components": {
+                "ConstantForce": 9.82,
+                "Color": "red"
+            },
+            "Transform": {
+                "Position": {
+                    "x": 1.98,
+                    "y": 1.287,
+                    "z": 1.331
+                },
+                "Rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 5.17
+                },
+                "Scale": {
+                    "x": 0.04014344,
+                    "y": 0.4354826,
+                    "z": 0.03871146
+                },
+            }
+        },
+        {
+            "Id": "def456",
+            "Tag": "Chair",
+            "Components": {
+                "ConstantForce": 9.82,
+                "Color": "red"
+            },
+            "Transform": {
+                "Position": {
+                    "x": 1.98,
+                    "y": 1.287,
+                    "z": 1.331
+                },
+                "Rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 5.17
+                },
+                "Scale": {
+                    "x": 0.04014344,
+                    "y": 0.4354826,
+                    "z": 0.03871146
+                },
+            }
+        }
+    ]}
 
 
 """ 
