@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using AIControlMagicVR.Data.Models;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace AIControlMagicVR.Managers
 {
@@ -9,11 +12,6 @@ namespace AIControlMagicVR.Managers
         public static GlobalManager Instance { get; private set; }
         public Dictionary<string, GameObject> sceneGameObjects = new Dictionary<string, GameObject>();
 
-        // curl -iX POST http://localhost:5000/game-objects/status -H 'Accept: application/json' -H 'Content-Type: application/json' -d '{"prompt": "test"}'
-        public string apiURL = "http://localhost:5000/game-objects/status";
-        private ConstantForce constantForceComponent;
-        private List<int> instanceIdsList = new List<int>();
-        public string targetTag = "cube";
         void Awake()
         {
             // Set up the singleton instance when the scene loads
@@ -41,73 +39,79 @@ namespace AIControlMagicVR.Managers
             }
         }
 
-        public void UpdateObjectsProperties(GameObject[] gameObjects)
+        public List<ObjectProperties> GetFormattedGameObjects()
         {
-            //
+            List<ObjectProperties> objectsProperties = new List<ObjectProperties>();
+            foreach (var sceneGameObject in sceneGameObjects)
+            {
+                ConstantForce constantForce = sceneGameObject.Value.GetComponent<ConstantForce>();
+                Renderer renderer = sceneGameObject.Value.GetComponent<Renderer>();
+
+                objectsProperties.Add(ObjectProperties.Builder()
+                    .Id(sceneGameObject.Key)
+                    .Tag(sceneGameObject.Value.tag)
+                    .Name(sceneGameObject.Value.name)
+                    .Components(ComponentsProperties.Builder()
+                        .ConstantForce(CoordinatesProperties.Builder()
+                            .X(constantForce.force.x)
+                            .Y(constantForce.force.y)
+                            .Z(constantForce.force.z).Build())
+                        .Color(renderer.material.color.ToString()).Build())
+                    .Transform(TransformProperties.Builder()
+                        .Position(CoordinatesProperties.Builder()
+                            .X(sceneGameObject.Value.transform.position.x)
+                            .Y(sceneGameObject.Value.transform.position.y)
+                            .Z(sceneGameObject.Value.transform.position.z).Build())
+                        .Rotation(CoordinatesProperties.Builder()
+                            .X(sceneGameObject.Value.transform.rotation.x)
+                            .Y(sceneGameObject.Value.transform.rotation.y)
+                            .Z(sceneGameObject.Value.transform.rotation.z).Build())
+                        .Scale(CoordinatesProperties.Builder()
+                            .X(sceneGameObject.Value.transform.localScale.x)
+                            .Y(sceneGameObject.Value.transform.localScale.y)
+                            .Z(sceneGameObject.Value.transform.localScale.z).Build()).Build()).Build());
+            }
+            Debug.Log("[GlobalManager] Completed GetFormattedGameObjects()");
+            return objectsProperties;
         }
 
+        public void UpdateObjectsProperties(List<ObjectProperties> updatedGameObjects)
+        {
+            foreach (ObjectProperties updatedGameObject in updatedGameObjects)
+            {
+                if (sceneGameObjects.TryGetValue(updatedGameObject.Id, out GameObject localGameObject))
+                {
+                    // Change color
+                    Renderer renderer = localGameObject.GetComponent<Renderer>();
+                    if (renderer != null)
+                    {
+                        // renderer.material.color = newGameObject.components.color;
+                        renderer.material.color = Color.red;
+                        Debug.Log("Changed color of object with ID " + updatedGameObject.Id);
+                    }
+                    else
+                    {
+                        Debug.LogError("Object with ID " + updatedGameObject.Id + " has no Renderer component.");
+                    }
 
-        // - 1) Update GameObjects' properties
-        // Dictionary<int, GameObject> newGameObjects = new Dictionary<int, GameObject>();
-        // foreach (var newGameObject in newGameObjects)
-        // {
-        //     Debug.Log("InstanceId: " + newGameObject.Key);
-        //     Debug.Log("GameObject: " + newGameObject.Value);
-        //     if (GlobalManager.Instance.sceneGameObjects.TryGetValue(newGameObject.Key, out GameObject localGameObject))
-        //     {
-        //         Renderer renderer = localGameObject.GetComponent<Renderer>();
-        //         if (renderer != null)
-        //         {
-        //             //renderer.material.color = newGameObject.color;
-        //             renderer.material.color = Color.red;
-        //             Debug.Log("Changed color of object with ID " + newGameObject.Key);
-        //         }
-        //         else
-        //         {
-        //             Debug.LogError("Object with ID " + newGameObject.Key + " has no Renderer component.");
-        //         }
-        //     }
-        //     else
-        //     {
-        //         Debug.LogWarning("Could not find an object with ID: " + newGameObject.Key);
-        //     }
-        // }
-
-
-        // - 2) Find gameObjects based on their ID:
-        // GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(targetTag);
-        // if (taggedObjects.Length == 0)
-        // {
-        //     Debug.LogWarning("No GameObjects found with the tag: " + targetTag);
-        //     return;
-        // }
-        // foreach (GameObject obj in taggedObjects)
-        // {
-        //     int id = obj.GetInstanceID();
-        //     instanceIdsList.Add(id);
-        //     Debug.Log("Found object: " + obj.name + " with Instance ID: " + id);
-        // }
-        // Debug.Log("Total objects found with tag '" + targetTag + "': " + instanceIdsList.Count);
-
-        // - 3) Change value to make objects float:
-        // constantForceComponent = GetComponent<ConstantForce>();
-        // if (constantForceComponent != null)
-        // {
-        //     constantForceComponent.force = new Vector3(0, 9.82f, 0);
-        // }
-        // else
-        // {
-        //     Debug.LogError("ConstantForce component not found on this GameObject!");
-        // }
-
-        // - 4) Change the gameObject's color:
-        // Renderer renderer = GetComponent<Renderer>();
-        // if (renderer != null)
-        // {
-        //     renderer.material.color = Color.yellow; // Changes to a specific color
-        // }
-
-        // - 5) Call endpoint:
-        // StartCoroutine(SendPostRequest());
+                    // Change force
+                    ConstantForce constantForce = localGameObject.GetComponent<ConstantForce>();
+                    if (constantForce != null)
+                    {
+                        // constantForce.force = newGameObject.components.constantForce;
+                        constantForce.force = new Vector3(0, 9.82f, 0);
+                        Debug.Log("Changed ConstantForce of object with ID " + updatedGameObject.Id);
+                    }
+                    else
+                    {
+                        Debug.LogError("Object with ID " + updatedGameObject.Id + " has no Renderer component.");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Could not find an object with ID: " + updatedGameObject.Id);
+                }
+            }
+        }
     }
 }
