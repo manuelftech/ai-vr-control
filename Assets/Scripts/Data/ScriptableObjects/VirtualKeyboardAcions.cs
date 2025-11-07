@@ -10,15 +10,7 @@ namespace AIControlMagicVR.Data.ScriptableObjects
     public class VirtualKeyboardActions : MonoBehaviour
     {
         private static readonly string Tag = "keyboardText";
-        private APIGameProperties apiGameProperties;
-        public void Start()
-        {
-            apiGameProperties = FindObjectOfType<APIGameProperties>();
-            if (apiGameProperties == null)
-            {
-                Debug.LogError("APIGameProperties script not found in the scene!");
-            }
-        }
+        private APIGameProperties apiGameProperties = new APIGameProperties();
         public string CaptureKeyboardInputText()
         {
             GameObject keyboardText = GameObject.FindWithTag(Tag);
@@ -50,13 +42,16 @@ namespace AIControlMagicVR.Data.ScriptableObjects
         public async void RequestActionToChatbot()
         {
             // Send both the prompt, and the GameObjects' current properties to the chatbot, to command it to calculate the new rquested properties to be assigned to these GameObjects
-            ObjectsProperties updatedObjectsProperties = await apiGameProperties.CallChatbotExecuteAction(APIChatbotRequest.Builder()
+            APIChatbotRequest request = APIChatbotRequest.Builder()
                     .Prompt(this.CaptureKeyboardInputText())
-                    .GameObjectsProperties(GlobalManager.Instance.GetGameObjectsProperties()).Build()
-                );
+                    .GameObjects(GlobalManager.Instance.GetFormattedGameObjects()).Build();
+            ObjectsProperties response = await apiGameProperties.CallChatbotExecuteAction(request);
 
-            Debug.Log("Data sent to the Endpoint");
-            GlobalManager.Instance.UpdateObjectsProperties(updatedObjectsProperties);
+
+            Debug.Log("Validation 1 [start]");
+            Debug.Log(response.GameObjects);
+            Debug.Log("Validation 1 [end]");
+            GlobalManager.Instance.UpdateObjectsProperties(response.GameObjects);
         }
     }
 }

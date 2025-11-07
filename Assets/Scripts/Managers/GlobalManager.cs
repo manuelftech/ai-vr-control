@@ -39,9 +39,44 @@ namespace AIControlMagicVR.Managers
             }
         }
 
-        public void UpdateObjectsProperties(ObjectsProperties objectsProperties)
+        public List<ObjectProperties> GetFormattedGameObjects()
         {
-            foreach (ObjectProperties updatedGameObject in objectsProperties.GameObjects)
+            List<ObjectProperties> objectsProperties = new List<ObjectProperties>();
+            foreach (var sceneGameObject in sceneGameObjects)
+            {
+                ConstantForce constantForce = sceneGameObject.Value.GetComponent<ConstantForce>();
+                Renderer renderer = sceneGameObject.Value.GetComponent<Renderer>();
+
+                objectsProperties.Add(ObjectProperties.Builder()
+                    .Id(sceneGameObject.Key)
+                    .Tag(sceneGameObject.Value.tag)
+                    .Component(ComponentProperties.Builder()
+                        .ConstantForce(CoordinatesProperties.Builder()
+                            .X(constantForce.force.x)
+                            .Y(constantForce.force.y)
+                            .Z(constantForce.force.z).Build())
+                        .Color(renderer.material.color.ToString()).Build())
+                    .Transform(TransformProperties.Builder()
+                        .Position(CoordinatesProperties.Builder()
+                            .X(sceneGameObject.Value.transform.position.x)
+                            .Y(sceneGameObject.Value.transform.position.y)
+                            .Z(sceneGameObject.Value.transform.position.z).Build())
+                        .Rotation(CoordinatesProperties.Builder()
+                            .X(sceneGameObject.Value.transform.rotation.x)
+                            .Y(sceneGameObject.Value.transform.rotation.y)
+                            .Z(sceneGameObject.Value.transform.rotation.z).Build())
+                        .Scale(CoordinatesProperties.Builder()
+                            .X(sceneGameObject.Value.transform.localScale.x)
+                            .Y(sceneGameObject.Value.transform.localScale.y)
+                            .Z(sceneGameObject.Value.transform.localScale.z).Build()).Build()).Build());
+            }
+            Debug.Log("[GlobalManager] Completed GetGameObjectsProperties()");
+            return objectsProperties;
+        }
+
+        public void UpdateObjectsProperties(List<ObjectProperties> updatedGameObjects)
+        {
+            foreach (ObjectProperties updatedGameObject in updatedGameObjects)
             {
                 if (sceneGameObjects.TryGetValue(updatedGameObject.Id, out GameObject localGameObject))
                 {
@@ -76,40 +111,6 @@ namespace AIControlMagicVR.Managers
                     Debug.LogWarning("Could not find an object with ID: " + updatedGameObject.Id);
                 }
             }
-        }
-
-        public ObjectsProperties GetGameObjectsProperties()
-        {
-            ObjectsProperties objectsProperties = new ObjectsProperties();
-            foreach (var sceneGameObject in sceneGameObjects)
-            {
-                ConstantForce constantForce = sceneGameObject.Value.GetComponent<ConstantForce>();
-                Renderer renderer = sceneGameObject.Value.GetComponent<Renderer>();
-
-                objectsProperties.GameObjects.Add(ObjectProperties.Builder()
-                    .Id(sceneGameObject.Key)
-                    .Tag(sceneGameObject.Value.tag)
-                    .Component(ComponentProperties.Builder()
-                        .ConstantForce(CoordinatesProperties.Builder()
-                            .X(constantForce.force.x)
-                            .Y(constantForce.force.y)
-                            .Z(constantForce.force.z).Build())
-                        .Color(renderer.material.color.ToString()).Build())
-                    .Transform(TransformProperties.Builder()
-                        .Position(CoordinatesProperties.Builder()
-                            .X(sceneGameObject.Value.transform.position.x)
-                            .Y(sceneGameObject.Value.transform.position.y)
-                            .Z(sceneGameObject.Value.transform.position.z).Build())
-                        .Rotation(CoordinatesProperties.Builder()
-                            .X(sceneGameObject.Value.transform.rotation.x)
-                            .Y(sceneGameObject.Value.transform.rotation.y)
-                            .Z(sceneGameObject.Value.transform.rotation.z).Build())
-                        .Scale(CoordinatesProperties.Builder()
-                            .X(sceneGameObject.Value.transform.localScale.x)
-                            .Y(sceneGameObject.Value.transform.localScale.y)
-                            .Z(sceneGameObject.Value.transform.localScale.z).Build()).Build()).Build());
-            }
-            return objectsProperties;
         }
     }
 }

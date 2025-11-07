@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace AIControlMagicVR.Managers.Networking
 {
-    public class APIGameProperties : MonoBehaviour
+    public class APIGameProperties
     {
         public string apiURL = "http://localhost:5000/game-objects/status";
         // curl -iX POST http://localhost:5000/game-objects/status -H 'Accept: application/json' -H 'Content-Type: application/json' -d '{"prompt": "test"}'
