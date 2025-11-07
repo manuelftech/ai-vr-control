@@ -47,7 +47,6 @@ namespace AIControlMagicVR.Data.ScriptableObjects
                     .GameObjects(GlobalManager.Instance.GetFormattedGameObjects()).Build();
             ObjectsProperties response = await apiGameProperties.CallChatbotExecuteAction(request);
 
-
             Debug.Log("Validation 1 [start]");
             Debug.Log(response.GameObjects);
             Debug.Log("Validation 1 [end]");
