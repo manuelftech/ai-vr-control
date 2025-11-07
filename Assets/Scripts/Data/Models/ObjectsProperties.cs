@@ -6,7 +6,7 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class ObjectsProperties
     {
-        public List<ObjectProperties>? GameObjects { get; private set; }
+        public List<ObjectProperties>? GameObjects ;
         public ObjectsProperties() { }
         public static ObjectsPropertiesBuilder Builder()
         {
@@ -31,11 +31,12 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class ObjectProperties
     {
-        public string Id { get; set; }
-        public string Tag { get; set; } // cube
-        public ComponentProperties? Component { get; private set; }
-        public TransformProperties? Transform { get; private set; }
-        private ObjectProperties() { }
+        public string Id ;
+        public string Tag ; // cube
+        public string Name ; // cube_4
+        public ComponentsProperties? Components ;
+        public TransformProperties? Transform ;
+        public ObjectProperties() { }
         public static ObjectPropertiesBuilder Builder()
         {
             return new ObjectPropertiesBuilder();
@@ -54,9 +55,14 @@ namespace AIControlMagicVR.Data.Models
                 _instance.Tag = tag;
                 return this;
             }
-            public ObjectPropertiesBuilder Component(ComponentProperties component)
+            public ObjectPropertiesBuilder Name(string name)
             {
-                _instance.Component = component;
+                _instance.Name = name;
+                return this;
+            }
+            public ObjectPropertiesBuilder Components(ComponentsProperties components)
+            {
+                _instance.Components = components;
                 return this;
             }
             public ObjectPropertiesBuilder Transform(TransformProperties transform)
@@ -73,30 +79,30 @@ namespace AIControlMagicVR.Data.Models
 
 
     [Serializable]
-    public class ComponentProperties
+    public class ComponentsProperties
     {
-        public CoordinatesProperties? ConstantForce { get; private set; } // 9.84
-        public string? Color { get; private set; } // blue
-        private ComponentProperties() { }
-        public static ComponentPropertiesBuilder Builder()
+        public CoordinatesProperties? ConstantForce ; // 9.84
+        public string? Color ; // blue
+        public ComponentsProperties() { }
+        public static ComponentsPropertiesBuilder Builder()
         {
-            return new ComponentPropertiesBuilder();
+            return new ComponentsPropertiesBuilder();
         }
 
-        public class ComponentPropertiesBuilder
+        public class ComponentsPropertiesBuilder
         {
-            private ComponentProperties _instance = new ComponentProperties();
-            public ComponentPropertiesBuilder ConstantForce(CoordinatesProperties constantForce)
+            private ComponentsProperties _instance = new ComponentsProperties();
+            public ComponentsPropertiesBuilder ConstantForce(CoordinatesProperties constantForce)
             {
                 _instance.ConstantForce = constantForce;
                 return this;
             }
-            public ComponentPropertiesBuilder Color(string color)
+            public ComponentsPropertiesBuilder Color(string color)
             {
                 _instance.Color = color;
                 return this;
             }
-            public ComponentProperties Build()
+            public ComponentsProperties Build()
             {
                 return _instance;
             }
@@ -106,11 +112,11 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class TransformProperties
     {
-        public CoordinatesProperties? Position { get; private set; }
-        public CoordinatesProperties? Rotation { get; private set; }
-        public CoordinatesProperties? Scale { get; private set; }
+        public CoordinatesProperties? Position ;
+        public CoordinatesProperties? Rotation ;
+        public CoordinatesProperties? Scale ;
 
-        private TransformProperties() { }
+        public TransformProperties() { }
         public static TransformPropertiesBuilder Builder()
         {
             return new TransformPropertiesBuilder();
@@ -145,11 +151,11 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class CoordinatesProperties
     {
-        public float? X { get; private set; } // 1.98
-        public float? Y { get; private set; } // 1.287
-        public float? Z { get; private set; } // 0.03871146
+        public float? X ; // 1.98
+        public float? Y ; // 1.287
+        public float? Z ; // 0.03871146
 
-        private CoordinatesProperties() { }
+        public CoordinatesProperties() { }
         public static CoordinatesPropertiesBuilder Builder()
         {
             return new CoordinatesPropertiesBuilder();

@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System;
+using System.Reflection;
 using AIControlMagicVR.Managers;
 using AIControlMagicVR.Data.Models;
 using AIControlMagicVR.Managers.Networking;
@@ -46,10 +47,6 @@ namespace AIControlMagicVR.Data.ScriptableObjects
                     .Prompt(this.CaptureKeyboardInputText())
                     .GameObjects(GlobalManager.Instance.GetFormattedGameObjects()).Build();
             ObjectsProperties response = await apiGameProperties.CallChatbotExecuteAction(request);
-
-            Debug.Log("Validation 1 [start]");
-            Debug.Log(response.GameObjects);
-            Debug.Log("Validation 1 [end]");
             GlobalManager.Instance.UpdateObjectsProperties(response.GameObjects);
         }
     }

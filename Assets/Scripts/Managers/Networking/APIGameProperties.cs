@@ -7,18 +7,22 @@ using AIControlMagicVR.Data.Models;
 using System;
 using Newtonsoft.Json;
 
+using System.Reflection;
+
 namespace AIControlMagicVR.Managers.Networking
 {
     public class APIGameProperties
     {
         public string apiURL = "http://localhost:5000/game-objects/status";
-        // curl -iX POST http://localhost:5000/game-objects/status -H 'Accept: application/json' -H 'Content-Type: application/json' -d '{"prompt": "test"}'
+        // curl -iX POST http://localhost:5000/game-objects/status -H 'Accept: application/json' -H 'Content-Type: application/json' -d '{"Prompt": "test"}'
         public async Task<ObjectsProperties> CallChatbotExecuteAction(APIChatbotRequest chatbotRequest)
         {
             // byte[] bodyRaw = Encoding.UTF8.GetBytes("{'Prompt':'increase the gravity of all the green objects that are near the chair', 'GameObjectsProperties': " + gameObjectsProperties + "}");
             // request.uploadHandler = new UploadHandlerRaw(bodyRaw);
- 
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(chatbotRequest));
+            var jsonRequest = JsonConvert.SerializeObject(chatbotRequest);
+            Debug.Log("[APIGameProperties] API Request: " + jsonRequest);
+
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonRequest);
             using UnityWebRequest request = new UnityWebRequest(apiURL, "POST");
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -26,13 +30,13 @@ namespace AIControlMagicVR.Managers.Networking
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Error: " + request.error);
-                throw new Exception("Error: " + request.error);
+                throw new Exception("[APIGameProperties] Error: " + request.error);
             }
             else
             {
-                Debug.Log("API CallEndpointGameStatus Response: " + request.downloadHandler.text);
-                return JsonUtility.FromJson<ObjectsProperties>(request.downloadHandler.text);
+                Debug.Log("[APIGameProperties] API Response: " + request.downloadHandler.text);
+                var response = JsonUtility.FromJson<ObjectsProperties>(request.downloadHandler.text);
+                return response;
             }
         }
     }

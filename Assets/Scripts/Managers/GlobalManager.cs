@@ -50,7 +50,8 @@ namespace AIControlMagicVR.Managers
                 objectsProperties.Add(ObjectProperties.Builder()
                     .Id(sceneGameObject.Key)
                     .Tag(sceneGameObject.Value.tag)
-                    .Component(ComponentProperties.Builder()
+                    .Name(sceneGameObject.Value.name)
+                    .Components(ComponentsProperties.Builder()
                         .ConstantForce(CoordinatesProperties.Builder()
                             .X(constantForce.force.x)
                             .Y(constantForce.force.y)
@@ -70,7 +71,7 @@ namespace AIControlMagicVR.Managers
                             .Y(sceneGameObject.Value.transform.localScale.y)
                             .Z(sceneGameObject.Value.transform.localScale.z).Build()).Build()).Build());
             }
-            Debug.Log("[GlobalManager] Completed GetGameObjectsProperties()");
+            Debug.Log("[GlobalManager] Completed GetFormattedGameObjects()");
             return objectsProperties;
         }
 
