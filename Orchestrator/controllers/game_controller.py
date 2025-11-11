@@ -68,6 +68,34 @@ async def ask_question(request: Request):
     Query: "@Tag:{cubes} @ComponentsColor:{green} @ComponentsConstantForce:[-inf 9.82]"
     """
     request = body["GameObjects"]
+    request = [{"GameObjects": [
+        {
+            "Id": newId,
+            "Tag": "cube",
+            "Name": "Cube_2",
+            "Components": {
+                "ConstantForce": 9.82,
+                "Color": "red"
+            },
+            "Transform": {
+                "Position": {
+                    "X": 1.98,
+                    "Y": 1.287,
+                    "Z": 1.331
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 5.17
+                },
+                "Scale": {
+                    "X": 0.04014344,
+                    "Y": 0.4354826,
+                    "Z": 0.03871146
+                },
+            }
+        }
+    ]}]
 
     client.json().set(f"GameObjects:array" , '$', request)
 
@@ -76,27 +104,27 @@ async def ask_question(request: Request):
     search_results = client.ft(INDEX_NAME).search(query)
     search_results
 
-    try:
-        NEW_CONSTANT_FORCE_VALUE = 9.83
-        updated_objects = []
-        print(f"Found {search_results.total} objects to update.")
-        for doc in search_results.docs:
-            key = doc.id
-            client.json().set(key, '$.Components.ConstantForce', NEW_CONSTANT_FORCE_VALUE)
-            updated_json = client.json().get(key)
-            updated_objects.append(updated_json)
-            print(f"Updated key {key}, new force: {updated_json.get('constantforce')}")
+    # try:
+    #     NEW_CONSTANT_FORCE_VALUE = 9.83
+    #     updated_objects = []
+    #     print(f"Found {search_results.total} objects to update.")
+    #     for doc in search_results.docs:
+    #         key = doc.id
+    #         client.json().set(key, '$.Components.ConstantForce', NEW_CONSTANT_FORCE_VALUE)
+    #         updated_json = client.json().get(key)
+    #         updated_objects.append(updated_json)
+    #         print(f"Updated key {key}, new force: {updated_json.get('constantforce')}")
 
-        print("\n--- Summary of all updated objects (full JSON) ---")
-        for obj in updated_objects:
-            print(json.dumps(obj, indent=2))
+    #     print("\n--- Summary of all updated objects (full JSON) ---")
+    #     for obj in updated_objects:
+    #         print(json.dumps(obj, indent=2))
 
-    except redis.exceptions.ResponseError as e:
-        print(f"\nAn error occurred, likely related to the index configuration or search query syntax:")
-        print(e)
-    except redis.exceptions.ConnectionError as e:
-        print(f"\nCould not connect to Redis server. Ensure Redis Stack is running.")
-        print(e)
+    # except redis.exceptions.ResponseError as e:
+    #     print(f"\nAn error occurred, likely related to the index configuration or search query syntax:")
+    #     print(e)
+    # except redis.exceptions.ConnectionError as e:
+    #     print(f"\nCould not connect to Redis server. Ensure Redis Stack is running.")
+    #     print(e)
 
     #result = react_agent.invoke(prompt_template)
     try:
@@ -107,4 +135,4 @@ async def ask_question(request: Request):
     
     #await asyncio.sleep(10)
     
-    return updated_objects
+    return search_results
