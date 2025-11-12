@@ -82,12 +82,32 @@ async def ask_question(request: Request):
     print("[END] loop")
 
     #query = "@Tag:{cube} @ComponentsColor:{red} @ComponentsConstantForce:[-inf 9.82]"
-    query = "@Tag:{cube}"
-    search_results = client.ft(INDEX_NAME).search(query)
-    search_results
-    print(f"Search results: {search_results}")
+    total_results = []
+    queries = ["@Tag:{cube}"]
+    for query in queries:
+        search_results = client.ft(INDEX_NAME).search(query)
+        python_generated_code = "client.json().set(key, '$.Components.ConstantForce', NEW_CONSTANT_FORCE_VALUE)"
+        print(f"Search results: {search_results}")
+        total_results.append((query, python_generated_code, search_results))
+
     updated_objects = []
 
+    for query, python_generated_code, search_results in total_results:
+        updated_objects.append(update(client, query, search_results, python_generated_code))
+
+    #result = react_agent.invoke(prompt_template)
+    try:
+        result = "test"
+    except Exception as e:
+        logging.error("Error processing response from chatbot: %s", e)
+        raise e
+    
+    # #await asyncio.sleep(10)
+    
+    return {"GameObjects": updated_objects}
+
+def update(client, query, search_results, python_generated_code):
+    #query = "@Tag:{cube} @ComponentsColor:{red} @ComponentsConstantForce:[-inf 9.82]"
     try:
         NEW_CONSTANT_FORCE_VALUE = 9.83
         NEW_CONSTANT_COLOR_VALUE = "red"
@@ -95,6 +115,8 @@ async def ask_question(request: Request):
         print(f"Found {search_results.total} objects to update.")
         for doc in search_results.docs:
             key = doc.id
+            for key_update in key_updates:
+                key_update # inside would be: client.json().set(key, '$.Components.ConstantForce', NEW_CONSTANT_FORCE_VALUE)
             client.json().set(key, '$.Components.ConstantForce', NEW_CONSTANT_FORCE_VALUE)
             client.json().set(key, '$.Components.Color', NEW_CONSTANT_COLOR_VALUE)
             updated_json = client.json().get(key)
@@ -111,14 +133,3 @@ async def ask_question(request: Request):
     except redis.exceptions.ConnectionError as e:
         print(f"\nCould not connect to Redis server. Ensure Redis Stack is running.")
         print(e)
-
-    #result = react_agent.invoke(prompt_template)
-    try:
-        result = "test"
-    except Exception as e:
-        logging.error("Error processing response from chatbot: %s", e)
-        raise e
-    
-    # #await asyncio.sleep(10)
-    
-    return {"GameObjects": updated_objects}
