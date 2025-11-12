@@ -14,7 +14,6 @@ namespace AIControlMagicVR.Managers.Networking
     public class APIGameProperties
     {
         public string apiURL = "http://localhost:5000/game-objects/status";
-        // curl -iX POST http://localhost:5000/game-objects/status -H 'Accept: application/json' -H 'Content-Type: application/json' -d '{"Prompt": "test"}'
         public async Task<ObjectsProperties> CallChatbotExecuteAction(APIChatbotRequest chatbotRequest)
         {
             // byte[] bodyRaw = Encoding.UTF8.GetBytes("{'Prompt':'increase the gravity of all the green objects that are near the chair', 'GameObjectsProperties': " + gameObjectsProperties + "}");
@@ -36,6 +35,7 @@ namespace AIControlMagicVR.Managers.Networking
             {
                 Debug.Log("[APIGameProperties] API Response: " + request.downloadHandler.text);
                 var response = JsonUtility.FromJson<ObjectsProperties>(request.downloadHandler.text);
+                Debug.Log("[APIGameProperties] Conversion completed");
                 return response;
             }
         }

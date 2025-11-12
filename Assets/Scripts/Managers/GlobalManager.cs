@@ -77,6 +77,7 @@ namespace AIControlMagicVR.Managers
 
         public void UpdateObjectsProperties(List<ObjectProperties> updatedGameObjects)
         {
+            Debug.Log("[UpdateObjectsProperties] Loop");
             foreach (ObjectProperties updatedGameObject in updatedGameObjects)
             {
                 if (sceneGameObjects.TryGetValue(updatedGameObject.Id, out GameObject localGameObject))
