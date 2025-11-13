@@ -6,7 +6,7 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class ObjectsProperties
     {
-        public List<ObjectProperties> GameObjects;
+        public List<ObjectProperties> VirtualRealityState;
         
         public ObjectsProperties() { }
     }

@@ -42,12 +42,12 @@ namespace AIControlMagicVR.Data.ScriptableObjects
 
         public async void RequestActionToChatbot()
         {
-            // Send both the prompt, and the GameObjects' current properties to the chatbot, to command it to calculate the new rquested properties to be assigned to these GameObjects
+            // Send both the prompt, and the VR states' current properties to the chatbot, to command it to calculate the new rquested properties to be assigned to these VR States
             APIChatbotRequest request = APIChatbotRequest.Builder()
                     .Prompt(this.CaptureKeyboardInputText())
-                    .GameObjects(GlobalManager.Instance.GetFormattedGameObjects()).Build();
+                    .VirtualRealityState(GlobalManager.Instance.GetFormattedVirtualRealityState()).Build();
             ObjectsProperties response = await apiGameProperties.CallChatbotExecuteAction(request);
-            GlobalManager.Instance.UpdateObjectsProperties(response.GameObjects);
+            GlobalManager.Instance.UpdateVRStateProperties(response.VirtualRealityState);
         }
     }
 }

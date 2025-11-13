@@ -6,20 +6,17 @@ using System.Collections.Generic;
 using AIControlMagicVR.Data.Models;
 using System;
 using Newtonsoft.Json;
-
 using System.Reflection;
 
 namespace AIControlMagicVR.Managers.Networking
 {
-    public class APIGameProperties
+    public class APIVRProperties
     {
-        public string apiURL = "http://localhost:5000/game-objects/status";
+        public string apiURL = "http://localhost:5000/virtual-reality-environment/state";
         public async Task<ObjectsProperties> CallChatbotExecuteAction(APIChatbotRequest chatbotRequest)
         {
-            // byte[] bodyRaw = Encoding.UTF8.GetBytes("{'Prompt':'increase the gravity of all the green objects that are near the chair', 'GameObjectsProperties': " + gameObjectsProperties + "}");
-            // request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             var jsonRequest = JsonConvert.SerializeObject(chatbotRequest);
-            Debug.Log("[APIGameProperties] API Request: " + jsonRequest);
+            Debug.Log("[APIVRProperties] API Request: " + jsonRequest);
 
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonRequest);
             using UnityWebRequest request = new UnityWebRequest(apiURL, "POST");
@@ -29,13 +26,13 @@ namespace AIControlMagicVR.Managers.Networking
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                throw new Exception("[APIGameProperties] Error: " + request.error);
+                throw new Exception("[APIVRProperties] Error: " + request.error);
             }
             else
             {
-                Debug.Log("[APIGameProperties] API Response: " + request.downloadHandler.text);
+                Debug.Log("[APIVRProperties] API Response: " + request.downloadHandler.text);
                 var response = JsonUtility.FromJson<ObjectsProperties>(request.downloadHandler.text);
-                Debug.Log("[APIGameProperties] Conversion completed");
+                Debug.Log("[APIVRProperties] Conversion completed");
                 return response;
             }
         }

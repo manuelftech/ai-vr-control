@@ -7,7 +7,7 @@ namespace AIControlMagicVR.Data.Models
     public class APIChatbotRequest
     {
         public string Prompt { get; private set; }
-        public List<ObjectProperties>? GameObjects { get; private set; }
+        public List<ObjectProperties>? VirtualRealityState { get; private set; }
         private APIChatbotRequest() { }
         
         public static APIChatbotRequestBuilder Builder()
@@ -24,9 +24,9 @@ namespace AIControlMagicVR.Data.Models
                 return this;
             }
 
-            public APIChatbotRequestBuilder GameObjects(List<ObjectProperties> gameObjects)
+            public APIChatbotRequestBuilder VirtualRealityState(List<ObjectProperties> virtualRealityState)
             {
-                _instance.GameObjects = gameObjects;
+                _instance.VirtualRealityState = virtualRealityState;
                 return this;
             }
 
