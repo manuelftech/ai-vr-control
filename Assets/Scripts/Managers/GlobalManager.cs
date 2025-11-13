@@ -86,8 +86,7 @@ namespace AIControlMagicVR.Managers
                     Renderer renderer = localGameObject.GetComponent<Renderer>();
                     if (renderer != null)
                     {
-                        // renderer.material.color = newGameObject.components.color;
-                        renderer.material.color = Color.red;
+                        renderer.material.color = updatedGameObject.Components.Color;
                         Debug.Log("Changed color of object with ID " + updatedGameObject.Id);
                     }
                     else
@@ -99,8 +98,7 @@ namespace AIControlMagicVR.Managers
                     ConstantForce constantForce = localGameObject.GetComponent<ConstantForce>();
                     if (constantForce != null)
                     {
-                        // constantForce.force = newGameObject.components.constantForce;
-                        constantForce.force = new Vector3(0, 9.82f, 0);
+                        constantForce.force = new Vector3(updatedGameObject.Components.ConstantForce.X, updatedGameObject.Components.ConstantForce.Y, updatedGameObject.Components.ConstantForce.Z);
                         Debug.Log("Changed ConstantForce of object with ID " + updatedGameObject.Id);
                     }
                     else

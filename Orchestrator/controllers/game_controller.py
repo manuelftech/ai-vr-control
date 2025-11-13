@@ -127,8 +127,14 @@ def ask_chatbot():
         conf.search_query = "@Tag:{cube}"
         conf.properties_to_update = []
         properties_to_update_1 = GameUpdateConfig()
-        properties_to_update_1.property = "$.Components.ConstantForce"
+        properties_to_update_1.property = "$.Components.ConstantForce.X"
+        properties_to_update_1.value = 0
+        properties_to_update_1 = GameUpdateConfig()
+        properties_to_update_1.property = "$.Components.ConstantForce.Y"
         properties_to_update_1.value = 9.83
+        properties_to_update_1 = GameUpdateConfig()
+        properties_to_update_1.property = "$.Components.ConstantForce.Z"
+        properties_to_update_1.value = 0
         properties_to_update_2 = GameUpdateConfig()
         properties_to_update_2.property = "$.Components.Color"
         properties_to_update_2.value = "red"
