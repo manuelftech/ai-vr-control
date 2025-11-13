@@ -59,7 +59,7 @@ namespace AIControlMagicVR.Managers
 
                 ComponentsProperties components = new ComponentsProperties();
                 components.ConstantForce = constantForceProps;
-                components.Color = renderer.material.color.ToString();
+                components.Color = ColorUtility.ToHtmlStringRGB(renderer.material.color);
 
                 props.Components = components;
 
@@ -104,8 +104,11 @@ namespace AIControlMagicVR.Managers
                     {
                         Color updatedColor;
                         ColorUtility.TryParseHtmlString(updatedGameObject.Components.Color, out updatedColor);
+                        
                         renderer.material.color = updatedColor;
                         Debug.Log("Changed color of object with ID " + updatedGameObject.Id);
+                        Debug.Log(updatedColor);
+                        Debug.Log("Color displayed");
                     }
                     else
                     {
