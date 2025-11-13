@@ -15,7 +15,7 @@ def ask_chatbot(prompt):
 
         'Properties:'
         $.Components.ConstantForce.Y = 0
-        $.Components.Color = '' 
+        $.Components.Color = #FF0000 
 
         Answer only with that template
         The template is divided in two sections, Query and Properties
@@ -25,13 +25,14 @@ def ask_chatbot(prompt):
         You will identify the objects that need to be found, and replace those values for those in the Query template, and then find the new values to be assidned and replace them in the properties section of the template
         The first phrases of the user's question may start with 'make', 'I want', 'I desire', or somilar phrases, you have to take from those phrases the Query to find the @ elements,
         After that first phrase, if you read 'become', 'turn them', 'make', you will not assign those values to the Query, but to the properties, because it means these will be the new values that will be used in the properties
+        Every time you add a property for color, it has to be the hexadecimal color code representation of the color, if you refer to a color on the Query part of the template, always add a \ before.
 
         Example:
         1) If you are asked the following:
         'Make all green cubes float'
         You have to convert it to the following resulting template:
         @Tag:{cube} 
-        @ComponentColor:{green}
+        @ComponentColor:{\#00FF00}
         $.Components.ConstantForce.Y = 9.83
 
         2) If you are asked the following:
@@ -44,16 +45,16 @@ def ask_chatbot(prompt):
         'I need all floating cubes become blue'
         You have to convert it to the following resulting template:
         @Tag:{cube} 
-        @ComponentConstantForceY:[+inf 9.83]
-        $.Components.Color = 'blue'
+        @ComponentConstantForceY:[9.83 +inf ]
+        $.Components.Color = #0000FF
 
         4) If you are asked the following:
         'I need all floating cubes that are yellow to become orange and to stop levitating'
         You have to convert it to the following resulting template:
         @Tag:{cube} 
-        @ComponentConstantForceY:[+inf 9.83] 
-        @ComponentColor:{yellow}
-        $.Components.Color = 'orange'
+        @ComponentConstantForceY:[9.83 +inf ] 
+        @ComponentColor:{\#FFFF00}
+        $.Components.Color = #FFA500
         $.Components.ConstantForce.Y = 0
 
         Have in mind that if a property is not mentioned for searching, you should not include it in the response template

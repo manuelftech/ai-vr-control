@@ -37,17 +37,19 @@ async def ask_question(request: Request):
     for game_object in game_objects:
         client.json().set(f"{KEY_PREFIX}{game_object['Id']}" , '$', game_object)
 
-    #template = ask_chatbot(str(body["Prompt"]))
-    template = """```
+    """```
     Query:
     @Tag:{cube} 
-    @ComponentColor:{} 
+    @ComponentColor:{#00FF00}
     @ComponentConstantForceY:[]
 
     Properties:
+    $.Components.Color = #00FF00
     $.Components.ConstantForce.Y = 9.83
-    $.Components.Color = 'green'
     ```"""
+
+    template = ask_chatbot(str(body["Prompt"]))
+    
     config = get_formatted_config(template)
 
     updated_gameobjects = []
@@ -64,7 +66,6 @@ async def ask_question(request: Request):
 
 def get_formatted_config(template):
     print(f"[Validation] Received template: {template}")
-    # 'Query:\n@Tag:{chair} \n@ComponentColor:{purple} \n@ComponentConstantForceY:[] \n\nProperties:\n$.Components.ConstantForce.Y = 9.83'
     query = ""
     properties = []
     

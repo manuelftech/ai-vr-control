@@ -59,7 +59,7 @@ namespace AIControlMagicVR.Managers
 
                 ComponentsProperties components = new ComponentsProperties();
                 components.ConstantForce = constantForceProps;
-                components.Color = renderer.material.color.ToString();
+                components.Color = ColorUtility.ToHtmlStringRGB(renderer.material.color);
 
                 props.Components = components;
 
