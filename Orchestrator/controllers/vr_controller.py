@@ -14,7 +14,7 @@ router = APIRouter(prefix="/virtual-reality-environment")
 async def ask_question(request: Request):
     request_body = await request.json()
     prompt = request_body["Prompt"]
-    logging.info("Prompt: %s", prompt)
+    logging.debug("Prompt: %s", prompt)
 
     vr_repository = VRRepository()
 
@@ -24,6 +24,7 @@ async def ask_question(request: Request):
     # Obtain the modification template for Redis from the Chatbot
     template_query = ask_chatbot(prompt)
 
+    # extract from the template the query and properties to be updated
     template_query = get_formatted_config(template_query)
 
     # Search and update the required VR elements in Redis

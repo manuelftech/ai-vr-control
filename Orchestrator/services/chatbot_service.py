@@ -1,10 +1,10 @@
 from openai import OpenAI
+from config.environment import config
 import json
 
 def ask_chatbot(prompt):
-    api_key = "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"
     model = "gpt-4o-mini"
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=config.LLM_API_KEY)
 
     prompt_config = """
         take the following Redis Query template: 
@@ -136,6 +136,4 @@ def ask_chatbot(prompt):
     print(response.model_dump_json(indent=2))
     print("\n" + response.output_text)
 
-    #output_args_json = response.choices[0].message.tool_calls[0].function.arguments
-    #print(f"[VALIDATION OUTPUT] output_args_json: {output_args_json}")
     return response.output_text
