@@ -1,11 +1,7 @@
-from fastapi import APIRouter, HTTPException, Request
-from fastapi.params import Depends
-from pydantic import BaseModel
+from fastapi import APIRouter, Request
 from services.chatbot_service import ask_chatbot
 from repository.vr_repository import VRRepository
 import logging
-import json
-import asyncio
 
 logging.basicConfig(level=logging.DEBUG)
 logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -33,38 +29,3 @@ async def ask_question(request: Request):
     updated_vr_state = vr_repository.updateAllWithTemplate(return_saved=True, template=template_query)
     
     return {"VirtualRealityState": updated_vr_state}
-
-def get_formatted_config(template):
-    print(f"[Validation] Received template: {template}")
-    query = ""
-    properties = []
-    
-    from typing import Union
-    
-    class VRUpdateConfig:
-        property: str
-        value: Union[str | float]
-    
-    for line in template.split("\n"):
-        if len(line.strip()) == 0:
-            continue
-        if "@" == line.strip()[0] and "[]" not in line and "{}" not in line:
-            query = f"{query} {line}".strip()
-        if "$" == line.strip()[0]:
-            update = line.split("=")
-            vrupdate_config = VRUpdateConfig()
-            vrupdate_config.property = update[0].strip()
-            try:
-                vrupdate_config.value = float(update[1].strip())
-            except:
-                vrupdate_config.value = update[1].strip()
-            properties.append(vrupdate_config)
-    
-    class VRModificationConfig():
-        search_query: str
-        properties_to_update: list[VRUpdateConfig]
-    
-    conf = VRModificationConfig()
-    conf.search_query = query
-    conf.properties_to_update = properties
-    return conf
