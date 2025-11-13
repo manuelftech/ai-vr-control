@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: M_YFFaM_Burlap02
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_Parent: {fileID: 2100000, guid: c83ecb1be9e3fdf4ea10c1b8ff8992f3, type: 2}
+  m_Parent: {fileID: 2100000, guid: 74ae9dd1237766e4598efc4222793524, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _METALLICSPECGLOSSMAP
