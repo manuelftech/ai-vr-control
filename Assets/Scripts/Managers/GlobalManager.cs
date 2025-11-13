@@ -10,11 +10,11 @@ namespace AIControlMagicVR.Managers
     public class GlobalManager : MonoBehaviour
     {
         public static GlobalManager Instance { get; private set; }
-        public Dictionary<string, GameObject> sceneGameObjects = new Dictionary<string, GameObject>();
+        public Dictionary<string, GameObject> vrStateObjects = new Dictionary<string, GameObject>();
 
         void Awake()
         {
-            // Set up the singleton instance when the scene loads
+            // This general VR State manager is created only once
             if (Instance != null && Instance != this)
             {
                 Destroy(this.gameObject);
@@ -28,29 +28,30 @@ namespace AIControlMagicVR.Managers
 
         public void RegisterObject(GameObject obj)
         {
+            // Every time a Vr State is instantiated, it is registered in the global state manager
             string universalId = Guid.NewGuid().ToString();
-            if (sceneGameObjects.TryAdd(universalId, obj))
+            if (vrStateObjects.TryAdd(universalId, obj))
             {
-                Debug.Log("[GlobalManager] GameObject registered. Universal Id: " + universalId);
+                Debug.Log("[GlobalManager] VR state registered. Universal Id: " + universalId);
             }
             else
             {
-                Debug.Log("[GlobalManager] GameObject with Universal Id: " + universalId + " already registered");
+                Debug.Log("[GlobalManager] VR state with Universal Id: " + universalId + " already registered");
             }
         }
 
-        public List<ObjectProperties> GetFormattedGameObjects()
+        public List<ObjectProperties> GetFormattedVirtualRealityState()
         {
             List<ObjectProperties> objectsProperties = new List<ObjectProperties>();
-            foreach (var sceneGameObject in sceneGameObjects)
+            foreach (var sceneVRState in vrStateObjects)
             {
-                ConstantForce constantForce = sceneGameObject.Value.GetComponent<ConstantForce>();
-                Renderer renderer = sceneGameObject.Value.GetComponent<Renderer>();
+                ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
+                Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
 
                 ObjectProperties props = new ObjectProperties();
-                props.Id = sceneGameObject.Key;
-                props.Tag = sceneGameObject.Value.tag;
-                props.Name = sceneGameObject.Value.name;
+                props.Id = sceneVRState.Key;
+                props.Tag = sceneVRState.Value.tag;
+                props.Name = sceneVRState.Value.name;
 
                 CoordinatesProperties constantForceProps = new CoordinatesProperties();
                 constantForceProps.X = constantForce.force.x;
@@ -59,24 +60,24 @@ namespace AIControlMagicVR.Managers
 
                 ComponentsProperties components = new ComponentsProperties();
                 components.ConstantForce = constantForceProps;
-                components.Color = ColorUtility.ToHtmlStringRGB(renderer.material.color);
+                components.Color = "#" + ColorUtility.ToHtmlStringRGB(renderer.material.color);
 
                 props.Components = components;
 
                 CoordinatesProperties position = new CoordinatesProperties();
-                position.X = sceneGameObject.Value.transform.position.x;
-                position.Y = sceneGameObject.Value.transform.position.y;
-                position.Z = sceneGameObject.Value.transform.position.z;
+                position.X = sceneVRState.Value.transform.position.x;
+                position.Y = sceneVRState.Value.transform.position.y;
+                position.Z = sceneVRState.Value.transform.position.z;
 
                 CoordinatesProperties rotation = new CoordinatesProperties();
-                rotation.X = sceneGameObject.Value.transform.rotation.x;
-                rotation.Y = sceneGameObject.Value.transform.rotation.y;
-                rotation.Z = sceneGameObject.Value.transform.rotation.z;
+                rotation.X = sceneVRState.Value.transform.rotation.x;
+                rotation.Y = sceneVRState.Value.transform.rotation.y;
+                rotation.Z = sceneVRState.Value.transform.rotation.z;
 
                 CoordinatesProperties scale = new CoordinatesProperties();
-                scale.X = sceneGameObject.Value.transform.localScale.x;
-                scale.Y = sceneGameObject.Value.transform.localScale.y;
-                scale.Z = sceneGameObject.Value.transform.localScale.z;
+                scale.X = sceneVRState.Value.transform.localScale.x;
+                scale.Y = sceneVRState.Value.transform.localScale.y;
+                scale.Z = sceneVRState.Value.transform.localScale.z;
 
                 TransformProperties transform = new TransformProperties();
                 transform.Position = position;
@@ -87,49 +88,49 @@ namespace AIControlMagicVR.Managers
 
                 objectsProperties.Add(props);
             }
-            Debug.Log("[GlobalManager] Completed GetFormattedGameObjects()");
+            Debug.Log("[GlobalManager] Completed GetFormattedVirtualRealityState()");
             return objectsProperties;
         }
 
-        public void UpdateObjectsProperties(List<ObjectProperties> updatedGameObjects)
+        public void UpdateVRStateProperties(List<ObjectProperties> updatedVRStates)
         {
-            Debug.Log("[UpdateObjectsProperties] Loop");
-            foreach (ObjectProperties updatedGameObject in updatedGameObjects)
+            Debug.Log("[UpdateVRStateProperties] Loop");
+            foreach (ObjectProperties updatedVRState in updatedVRStates)
             {
-                if (sceneGameObjects.TryGetValue(updatedGameObject.Id, out GameObject localGameObject))
+                if (vrStateObjects.TryGetValue(updatedVRState.Id, out GameObject localGameObject))
                 {
                     // Change color
                     Renderer renderer = localGameObject.GetComponent<Renderer>();
                     if (renderer != null)
                     {
                         Color updatedColor;
-                        ColorUtility.TryParseHtmlString(updatedGameObject.Components.Color, out updatedColor);
+                        ColorUtility.TryParseHtmlString(updatedVRState.Components.Color, out updatedColor);
                         
                         renderer.material.color = updatedColor;
-                        Debug.Log("Changed color of object with ID " + updatedGameObject.Id);
+                        Debug.Log("Changed color of VR State with ID " + updatedVRState.Id);
                         Debug.Log(updatedColor);
                         Debug.Log("Color displayed");
                     }
                     else
                     {
-                        Debug.LogError("Object with ID " + updatedGameObject.Id + " has no Renderer component.");
+                        Debug.LogError("VR State with ID " + updatedVRState.Id + " has no Renderer component.");
                     }
 
-                    // Change force
+                    // Change constant force
                     ConstantForce constantForce = localGameObject.GetComponent<ConstantForce>();
                     if (constantForce != null)
                     {
-                        constantForce.force = new Vector3(updatedGameObject.Components.ConstantForce.X, updatedGameObject.Components.ConstantForce.Y, updatedGameObject.Components.ConstantForce.Z);
-                        Debug.Log("Changed ConstantForce of object with ID " + updatedGameObject.Id);
+                        constantForce.force = new Vector3(updatedVRState.Components.ConstantForce.X, updatedVRState.Components.ConstantForce.Y, updatedVRState.Components.ConstantForce.Z);
+                        Debug.Log("Changed ConstantForce of VR State with ID " + updatedVRState.Id);
                     }
                     else
                     {
-                        Debug.LogError("Object with ID " + updatedGameObject.Id + " has no Renderer component.");
+                        Debug.LogError("VR State with ID " + updatedVRState.Id + " has no Renderer component.");
                     }
                 }
                 else
                 {
-                    Debug.LogWarning("Could not find an object with ID: " + updatedGameObject.Id);
+                    Debug.LogWarning("Could not find an VR State with ID: " + updatedVRState.Id);
                 }
             }
         }

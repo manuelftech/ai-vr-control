@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
-from controllers.game_controller import router
+from controllers.vr_controller import router
 
 app = FastAPI()
 app.include_router(router)

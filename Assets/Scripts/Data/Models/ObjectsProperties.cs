@@ -6,7 +6,7 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class ObjectsProperties
     {
-        public List<ObjectProperties> GameObjects;
+        public List<ObjectProperties> VirtualRealityState;
         
         public ObjectsProperties() { }
     }
@@ -15,8 +15,8 @@ namespace AIControlMagicVR.Data.Models
     public class ObjectProperties
     {
         public string Id ;
-        public string Tag ; // cube
-        public string Name ; // cube_4
+        public string Tag ;
+        public string Name ;
         public ComponentsProperties Components;
         public TransformProperties Transform;
         public ObjectProperties() { }
@@ -25,16 +25,16 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class ComponentsProperties
     {
-        public CoordinatesProperties ConstantForce ; // 9.84
-        public string Color; // blue
+        public CoordinatesProperties ConstantForce ;
+        public string Color;
         public ComponentsProperties() { }
     }
 
     [Serializable]
     public class TransformProperties
     {
-        public CoordinatesProperties Position ;
-        public CoordinatesProperties Rotation ;
+        public CoordinatesProperties Position;
+        public CoordinatesProperties Rotation;
         public CoordinatesProperties Scale;
         public TransformProperties() { }
         

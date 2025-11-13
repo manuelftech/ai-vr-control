@@ -6,11 +6,10 @@ namespace AIControlMagicVR.Managers
     {
         void Start()
         {
-            // Register this object in the GlobalManager, to modify gameObject properties
             if (GlobalManager.Instance != null)
             {
                 GlobalManager.Instance.RegisterObject(this.gameObject);
-                Debug.Log("[AddToManager] GameObject registered. Name: " + this.name);
+                Debug.Log("[AddToManager] VR state registered. Name: " + this.name);
             }
             else
             {
