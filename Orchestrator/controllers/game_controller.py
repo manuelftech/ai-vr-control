@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.params import Depends
 from pydantic import BaseModel
+from controllers.chatbot import ask_chatbot
 import logging
 import json
 import asyncio
@@ -18,7 +19,6 @@ router = APIRouter(prefix="/game-objects")
 async def ask_question(request: Request):
     body = await request.json()
     logging.info("Prompt: %s", body["Prompt"])
-    prompt =  body["Prompt"]
     game_objects = body["GameObjects"]
 
     REDIS_HOST = 'localhost'
@@ -37,7 +37,8 @@ async def ask_question(request: Request):
     for game_object in game_objects:
         client.json().set(f"{KEY_PREFIX}{game_object['Id']}" , '$', game_object)
 
-    config = ask_chatbot()
+    template = ask_chatbot(str(body["Prompt"]))
+    config = get_formatted_config(template)
 
     updated_gameobjects = []
 
@@ -51,37 +52,38 @@ async def ask_question(request: Request):
     
     return {"GameObjects": updated_gameobjects}
 
-def ask_chatbot():
-    redis_template = 'Query:\n@Tag:{cube} \n\nProperties:\n$.Components.ConstantForce.Y = 9.83 \n$.Components.Color = red'
+def get_formatted_config(template):
+    print(f"[Validation] Received template: {template}")
+    # 'Query:\n@Tag:{chair} \n@ComponentColor:{purple} \n@ComponentConstantForceY:[] \n\nProperties:\n$.Components.ConstantForce.Y = 9.83'
     query = ""
     properties = []
-
+    
     from typing import Union
-
+    
     class GameUpdateConfig:
         property: str
         value: Union[str | float]
-
-    for line in redis_template.split("\n"):
+    
+    for line in template.split("\n"):
         if len(line) == 0:
             continue
-        if "@" == line[0] and "[]" not in line:
+        if "@" == line[0] and "[]" not in line and "{}" not in line:
             query = f"{query} {line}".strip()
         if "$" == line[0]:
             update = line.split("=")
             gameupdate_config = GameUpdateConfig()
             gameupdate_config.property = update[0].strip()
-            try:
-                gameupdate_config.value = float(update[1].strip())
-            except ValueError:
-                gameupdate_config.value = update[1].strip()
+            gameupdate_config.value = update[1].strip()
             properties.append(gameupdate_config)
-
+    
     class GameModificationConfig():
         search_query: str
         properties_to_update: list[GameUpdateConfig]
-
+    
     conf = GameModificationConfig()
     conf.search_query = query
     conf.properties_to_update = properties
+    print(f"[FORMATTING] Query: {conf.search_query}")
+    for prop in conf.properties_to_update:
+        print(f"[FORMATTING] Property: {prop}")
     return conf
