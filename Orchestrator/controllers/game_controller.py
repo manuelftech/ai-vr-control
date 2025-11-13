@@ -75,25 +75,29 @@ async def ask_question(request: Request):
     Query: "@Tag:{cubes} @ComponentsColor:{green} @ComponentsConstantForce:[-inf 9.82]"
     """
 
-    print("[START] Loop")
+    print("[START] Saving gameobjects to Redis")
     for index, game_object in enumerate(game_objects):
         print(f"{index}: {game_object}")
         client.json().set(f"{KEY_PREFIX}{game_object['Id']}" , '$', game_object)
-    print("[END] loop")
+    print("[END] Completed saving gameobjects to Redis")
+
+    # Chatbot response: ["@Tag:{cube}", "@Tag:{cube} @ComponentsColor:{red} @ComponentsConstantForce:[-inf 9.82]"]
 
     #query = "@Tag:{cube} @ComponentsColor:{red} @ComponentsConstantForce:[-inf 9.82]"
-    total_results = []
-    queries = ["@Tag:{cube}"]
-    for query in queries:
-        search_results = client.ft(INDEX_NAME).search(query)
-        python_generated_code = "client.json().set(key, '$.Components.ConstantForce', NEW_CONSTANT_FORCE_VALUE)"
-        print(f"Search results: {search_results}")
-        total_results.append((query, python_generated_code, search_results))
 
-    updated_objects = []
+    modification_config = ask_chatbot()
 
-    for query, python_generated_code, search_results in total_results:
-        updated_objects.append(update(client, query, search_results, python_generated_code))
+    updated_gameobjects = []
+
+    for config in modification_config:
+        print(f"Query to search: {config.search_query}")
+        search_results = client.ft(INDEX_NAME).search(config.search_query)
+        print(f"Found {search_results.total} objects to update.")
+        for doc in search_results.docs:
+            for update in config.properties_to_update:
+                client.json().set(doc.id, update.property, update.value)
+                print(f"Updated Id: {doc.id}, Property: {update.property}, Value: {update.value}")
+            updated_gameobjects.append(client.json().get(doc.id))
 
     #result = react_agent.invoke(prompt_template)
     try:
@@ -104,32 +108,31 @@ async def ask_question(request: Request):
     
     # #await asyncio.sleep(10)
     
-    return {"GameObjects": updated_objects}
+    return {"GameObjects": updated_gameobjects}
 
-def update(client, query, search_results, python_generated_code):
-    #query = "@Tag:{cube} @ComponentsColor:{red} @ComponentsConstantForce:[-inf 9.82]"
-    try:
-        NEW_CONSTANT_FORCE_VALUE = 9.83
-        NEW_CONSTANT_COLOR_VALUE = "red"
-        updated_objects = []
-        print(f"Found {search_results.total} objects to update.")
-        for doc in search_results.docs:
-            key = doc.id
-            for key_update in key_updates:
-                key_update # inside would be: client.json().set(key, '$.Components.ConstantForce', NEW_CONSTANT_FORCE_VALUE)
-            client.json().set(key, '$.Components.ConstantForce', NEW_CONSTANT_FORCE_VALUE)
-            client.json().set(key, '$.Components.Color', NEW_CONSTANT_COLOR_VALUE)
-            updated_json = client.json().get(key)
-            updated_objects.append(updated_json)
-            print(f"Updated key {key}, new force: {updated_json.get('constantforce')}")
+def ask_chatbot():
+    from typing import Union
 
-        print("\n--- Summary of all updated objects (full JSON) ---")
-        for obj in updated_objects:
-            print(json.dumps(obj, indent=2))
+    class GameUpdateConfig:
+        property: str
+        value: Union[str | float]
 
-    except redis.exceptions.ResponseError as e:
-        print(f"\nAn error occurred, likely related to the index configuration or search query syntax:")
-        print(e)
-    except redis.exceptions.ConnectionError as e:
-        print(f"\nCould not connect to Redis server. Ensure Redis Stack is running.")
-        print(e)
+    class GameModificationConfig():
+        search_query: str
+        properties_to_update: list[GameUpdateConfig]
+    
+    modification_config = []
+    for _ in range(0, 1):
+        conf = GameModificationConfig()
+        conf.search_query = "@Tag:{cube}"
+        conf.properties_to_update = []
+        properties_to_update_1 = GameUpdateConfig()
+        properties_to_update_1.property = "$.Components.ConstantForce"
+        properties_to_update_1.value = 9.83
+        properties_to_update_2 = GameUpdateConfig()
+        properties_to_update_2.property = "$.Components.Color"
+        properties_to_update_2.value = "red"
+        conf.properties_to_update.append(properties_to_update_1)
+        conf.properties_to_update.append(properties_to_update_2)
+        modification_config.append(conf)
+    return modification_config
