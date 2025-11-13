@@ -9,5 +9,6 @@ class Config():
     INDEX_NAME = os.environ.get("INDEX_NAME")
     KEY_PREFIX = os.environ.get("KEY_PREFIX")
     LLM_API_KEY = os.environ.get("LLM_API_KEY")
+    LLM_MODEL = os.environ.get("LLM_MODEL")
 
 config = Config()
