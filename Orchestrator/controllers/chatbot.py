@@ -5,7 +5,7 @@ api_key = "sk-proj-1UMjYeWv8mJJc-wLOarn0HxPrh8YWONH1ukrfNnsRxFbO6qUmrJ_vSYs63rjH
 model = "gpt-5-nano"
 client = OpenAI(api_key=api_key)
 
-instructions = """
+prompt = """
     take the following Redis Query template: 
     'Query:'
     @Tag:{} 
@@ -55,6 +55,8 @@ instructions = """
 
     Have in mind that if a property is not mentioned for searching, you should not include it in the response template
     the same applies for the properties to update, if they are not mentioned, do not return them.
+
+    Answer the user:
 """
 
 tools = [
@@ -78,7 +80,7 @@ tools = [
 
 # Create a running input list we will add to over time
 input_list = [
-    {"role": "user", "content": "I desire you to make float all purple chairs"}
+    {"role": "user", "content": f"{prompt} I desire you to make float all purple chairs"}
 ]
 
 # 2. Prompt the model with tools defined
@@ -129,7 +131,7 @@ print(input_list)
 
 response = client.responses.create(
     model=model,
-    instructions=instructions,
+    instructions="Return a Redis Query and property template.",
     tools=tools,
     input=input_list,
 )
@@ -148,7 +150,6 @@ def get_properties_to_update():
     class GameUpdateConfig:
         property: str
         value: Union[str | float]
-
 
 def get_query_config(search_query):
     from typing import Union
