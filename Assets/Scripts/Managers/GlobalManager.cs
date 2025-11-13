@@ -104,8 +104,11 @@ namespace AIControlMagicVR.Managers
                     {
                         Color updatedColor;
                         ColorUtility.TryParseHtmlString(updatedGameObject.Components.Color, out updatedColor);
+                        
                         renderer.material.color = updatedColor;
                         Debug.Log("Changed color of object with ID " + updatedGameObject.Id);
+                        Debug.Log(updatedColor);
+                        Debug.Log("Color displayed");
                     }
                     else
                     {

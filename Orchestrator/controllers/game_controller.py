@@ -37,7 +37,17 @@ async def ask_question(request: Request):
     for game_object in game_objects:
         client.json().set(f"{KEY_PREFIX}{game_object['Id']}" , '$', game_object)
 
-    template = ask_chatbot(str(body["Prompt"]))
+    #template = ask_chatbot(str(body["Prompt"]))
+    template = """```
+    Query:
+    @Tag:{cube} 
+    @ComponentColor:{} 
+    @ComponentConstantForceY:[]
+
+    Properties:
+    $.Components.ConstantForce.Y = 9.83
+    $.Components.Color = 'green'
+    ```"""
     config = get_formatted_config(template)
 
     updated_gameobjects = []
@@ -67,9 +77,9 @@ def get_formatted_config(template):
     for line in template.split("\n"):
         if len(line) == 0:
             continue
-        if "@" == line[0] and "[]" not in line and "{}" not in line:
+        if "@" == line.strip()[0] and "[]" not in line and "{}" not in line:
             query = f"{query} {line}".strip()
-        if "$" == line[0]:
+        if "$" == line.strip()[0]:
             update = line.split("=")
             gameupdate_config = GameUpdateConfig()
             gameupdate_config.property = update[0].strip()
