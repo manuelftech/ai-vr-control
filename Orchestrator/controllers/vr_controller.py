@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 from services.chatbot_service import ask_chatbot
+from services.formatter import get_formatted_config
 from repository.vr_repository import VRRepository
 import logging
 
