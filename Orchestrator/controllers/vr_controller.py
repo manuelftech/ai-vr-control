@@ -56,14 +56,11 @@ def get_formatted_config(template):
             vrupdate_config.value = update[1].strip()
             properties.append(vrupdate_config)
     
-    class GameModificationConfig():
+    class VRModificationConfig():
         search_query: str
         properties_to_update: list[VRUpdateConfig]
     
-    conf = GameModificationConfig()
+    conf = VRModificationConfig()
     conf.search_query = query
     conf.properties_to_update = properties
-    print(f"[FORMATTING] Query: {conf.search_query}")
-    for prop in conf.properties_to_update:
-        print(f"[FORMATTING] Property: {prop}")
     return conf
