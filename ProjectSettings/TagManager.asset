@@ -7,6 +7,11 @@ TagManager:
   - Anchor
   - cube
   - keyboardText
+  - television
+  - sofa
+  - table
+  - rack
+  - chair
   layers:
   - Default
   - TransparentFX
