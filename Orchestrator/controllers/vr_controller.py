@@ -22,25 +22,15 @@ async def ask_question(request: Request):
     vr_repository = VRRepository()
 
     # Save virtual reality state to Redis
-    vr_repository.saveAll(return_result=False, vr_states=request_body["VirtualRealityState"])
+    vr_repository.saveAll(return_saved=False, vr_states=request_body["VirtualRealityState"])
 
     # Obtain the modification template for Redis from the Chatbot
-    #template_query = ask_chatbot(prompt)
+    template_query = ask_chatbot(prompt)
 
-    template_query = """```
-        Query:
-        @Tag:{cube} 
-        @ComponentColor:{#00FF00}
-        @ComponentConstantForceY:[]
-    
-        Properties:
-        $.Components.Color = #00FF00
-        $.Components.ConstantForce.Y = 9.83
-        ```"""
     template_query = get_formatted_config(template_query)
 
     # Search and update the required VR elements in Redis
-    updated_vr_state = vr_repository.updateAllWithTemplate(return_result=False, template_query=template_query)
+    updated_vr_state = vr_repository.updateAllWithTemplate(return_saved=True, template=template_query)
     
     return {"VirtualRealityState": updated_vr_state}
 
@@ -56,7 +46,7 @@ def get_formatted_config(template):
         value: Union[str | float]
     
     for line in template.split("\n"):
-        if len(line) == 0:
+        if len(line.strip()) == 0:
             continue
         if "@" == line.strip()[0] and "[]" not in line and "{}" not in line:
             query = f"{query} {line}".strip()
@@ -64,7 +54,10 @@ def get_formatted_config(template):
             update = line.split("=")
             vrupdate_config = VRUpdateConfig()
             vrupdate_config.property = update[0].strip()
-            vrupdate_config.value = update[1].strip()
+            try:
+                vrupdate_config.value = float(update[1].strip())
+            except:
+                vrupdate_config.value = update[1].strip()
             properties.append(vrupdate_config)
     
     class VRModificationConfig():

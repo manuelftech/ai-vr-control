@@ -87,7 +87,7 @@ def ask_chatbot(prompt):
         """```
         Query:
         @Tag:{cube} 
-        @ComponentColor:{#00FF00}
+        @ComponentColor:{\#808080}
         @ComponentConstantForceY:[]
     
         Properties:

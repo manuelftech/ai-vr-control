@@ -60,7 +60,7 @@ namespace AIControlMagicVR.Managers
 
                 ComponentsProperties components = new ComponentsProperties();
                 components.ConstantForce = constantForceProps;
-                components.Color = ColorUtility.ToHtmlStringRGB(renderer.material.color);
+                components.Color = "#" + ColorUtility.ToHtmlStringRGB(renderer.material.color);
 
                 props.Components = components;
 
@@ -120,7 +120,7 @@ namespace AIControlMagicVR.Managers
                     ConstantForce constantForce = localGameObject.GetComponent<ConstantForce>();
                     if (constantForce != null)
                     {
-                        constantForce.force = new Vector3(updatedVRState.Components.ConstantForce.X, updatedGameObject.Components.ConstantForce.Y, updatedGameObject.Components.ConstantForce.Z);
+                        constantForce.force = new Vector3(updatedVRState.Components.ConstantForce.X, updatedVRState.Components.ConstantForce.Y, updatedVRState.Components.ConstantForce.Z);
                         Debug.Log("Changed ConstantForce of VR State with ID " + updatedVRState.Id);
                     }
                     else

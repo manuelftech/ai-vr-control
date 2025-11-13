@@ -11,7 +11,7 @@ namespace AIControlMagicVR.Data.ScriptableObjects
     public class VirtualKeyboardActions : MonoBehaviour
     {
         private static readonly string Tag = "keyboardText";
-        private APIGameProperties apiGameProperties = new APIGameProperties();
+        private APIVRProperties apiVRProperties = new APIVRProperties();
         public string CaptureKeyboardInputText()
         {
             GameObject keyboardText = GameObject.FindWithTag(Tag);
@@ -43,10 +43,10 @@ namespace AIControlMagicVR.Data.ScriptableObjects
         public async void RequestActionToChatbot()
         {
             // Send both the prompt, and the VR states' current properties to the chatbot, to command it to calculate the new rquested properties to be assigned to these VR States
-            APIChatbotRequest request = APIChatbotRequest.Builder()
-                    .Prompt(this.CaptureKeyboardInputText())
-                    .VirtualRealityState(GlobalManager.Instance.GetFormattedVirtualRealityState()).Build();
-            ObjectsProperties response = await apiGameProperties.CallChatbotExecuteAction(request);
+            APIChatbotRequest request = new APIChatbotRequest();
+            request.Prompt = this.CaptureKeyboardInputText();
+            request.VirtualRealityState = GlobalManager.Instance.GetFormattedVirtualRealityState();
+            ObjectsProperties response = await apiVRProperties.CallChatbotExecuteAction(request);
             GlobalManager.Instance.UpdateVRStateProperties(response.VirtualRealityState);
         }
     }
