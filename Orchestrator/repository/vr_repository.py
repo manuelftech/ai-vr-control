@@ -1,5 +1,5 @@
 from config import db
-from config import environment
+from config.environment import config
 
 class VRRepository():
     def _get_client(self):
@@ -10,7 +10,7 @@ class VRRepository():
         client = self._get_client()
         modified_ids = []
         for vr_state in vr_states:
-            id = f"{environment.config.KEY_PREFIX}{vr_state['Id']}"
+            id = f"{config.KEY_PREFIX}{vr_state['Id']}"
             modified_ids.append(id)
             self._save_single_object(client=client, id=id, property="$", vr_state=vr_state)
         if return_result:
@@ -27,7 +27,7 @@ class VRRepository():
     
     def updateAllWithTemplate(self, return_result=False, template=None):
         client = self._get_client()
-        search_results = client.ft(environment.config.INDEX_NAME).search(template.search_query)
+        search_results = client.ft(config.INDEX_NAME).search(template.search_query)
 
         modified_ids = []
         for doc in search_results.docs:

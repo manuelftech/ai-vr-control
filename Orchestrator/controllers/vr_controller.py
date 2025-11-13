@@ -25,7 +25,18 @@ async def ask_question(request: Request):
     vr_repository.saveAll(return_result=False, vr_states=request_body["VirtualRealityState"])
 
     # Obtain the modification template for Redis from the Chatbot
-    template_query = ask_chatbot(prompt)
+    #template_query = ask_chatbot(prompt)
+
+    template_query = """```
+        Query:
+        @Tag:{cube} 
+        @ComponentColor:{#00FF00}
+        @ComponentConstantForceY:[]
+    
+        Properties:
+        $.Components.Color = #00FF00
+        $.Components.ConstantForce.Y = 9.83
+        ```"""
     template_query = get_formatted_config(template_query)
 
     # Search and update the required VR elements in Redis

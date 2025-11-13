@@ -3,7 +3,7 @@ import json
 import logging
 import redis
 import os
-from environment import config
+from config.environment import config
 logging.basicConfig(level=logging.DEBUG)
 logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
