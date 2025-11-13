@@ -47,29 +47,45 @@ namespace AIControlMagicVR.Managers
                 ConstantForce constantForce = sceneGameObject.Value.GetComponent<ConstantForce>();
                 Renderer renderer = sceneGameObject.Value.GetComponent<Renderer>();
 
-                objectsProperties.Add(ObjectProperties.Builder()
-                    .Id(sceneGameObject.Key)
-                    .Tag(sceneGameObject.Value.tag)
-                    .Name(sceneGameObject.Value.name)
-                    .Components(ComponentsProperties.Builder()
-                        .ConstantForce(CoordinatesProperties.Builder()
-                            .X(constantForce.force.x)
-                            .Y(constantForce.force.y)
-                            .Z(constantForce.force.z).Build())
-                        .Color(renderer.material.color.ToString()).Build())
-                    .Transform(TransformProperties.Builder()
-                        .Position(CoordinatesProperties.Builder()
-                            .X(sceneGameObject.Value.transform.position.x)
-                            .Y(sceneGameObject.Value.transform.position.y)
-                            .Z(sceneGameObject.Value.transform.position.z).Build())
-                        .Rotation(CoordinatesProperties.Builder()
-                            .X(sceneGameObject.Value.transform.rotation.x)
-                            .Y(sceneGameObject.Value.transform.rotation.y)
-                            .Z(sceneGameObject.Value.transform.rotation.z).Build())
-                        .Scale(CoordinatesProperties.Builder()
-                            .X(sceneGameObject.Value.transform.localScale.x)
-                            .Y(sceneGameObject.Value.transform.localScale.y)
-                            .Z(sceneGameObject.Value.transform.localScale.z).Build()).Build()).Build());
+                ObjectProperties props = new ObjectProperties();
+                props.Id = sceneGameObject.Key;
+                props.Tag = sceneGameObject.Value.tag;
+                props.Name = sceneGameObject.Value.name;
+
+                CoordinatesProperties constantForceProps = new CoordinatesProperties();
+                constantForceProps.X = constantForce.force.x;
+                constantForceProps.Y = constantForce.force.y;
+                constantForceProps.Z = constantForce.force.z;
+
+                ComponentsProperties components = new ComponentsProperties();
+                components.ConstantForce = constantForceProps;
+                components.Color = renderer.material.color.ToString();
+
+                props.Components = components;
+
+                CoordinatesProperties position = new CoordinatesProperties();
+                position.X = sceneGameObject.Value.transform.position.x;
+                position.Y = sceneGameObject.Value.transform.position.y;
+                position.Z = sceneGameObject.Value.transform.position.z;
+
+                CoordinatesProperties rotation = new CoordinatesProperties();
+                rotation.X = sceneGameObject.Value.transform.rotation.x;
+                rotation.Y = sceneGameObject.Value.transform.rotation.y;
+                rotation.Z = sceneGameObject.Value.transform.rotation.z;
+
+                CoordinatesProperties scale = new CoordinatesProperties();
+                scale.X = sceneGameObject.Value.transform.localScale.x;
+                scale.Y = sceneGameObject.Value.transform.localScale.y;
+                scale.Z = sceneGameObject.Value.transform.localScale.z;
+
+                TransformProperties transform = new TransformProperties();
+                transform.Position = position;
+                transform.Rotation = rotation;
+                transform.Scale = scale;
+
+                props.Transform = transform;
+
+                objectsProperties.Add(props);
             }
             Debug.Log("[GlobalManager] Completed GetFormattedGameObjects()");
             return objectsProperties;
@@ -86,8 +102,9 @@ namespace AIControlMagicVR.Managers
                     Renderer renderer = localGameObject.GetComponent<Renderer>();
                     if (renderer != null)
                     {
-                        // renderer.material.color = newGameObject.components.color;
-                        renderer.material.color = Color.red;
+                        Color updatedColor;
+                        ColorUtility.TryParseHtmlString(updatedGameObject.Components.Color, out updatedColor);
+                        renderer.material.color = updatedColor;
                         Debug.Log("Changed color of object with ID " + updatedGameObject.Id);
                     }
                     else
@@ -99,8 +116,7 @@ namespace AIControlMagicVR.Managers
                     ConstantForce constantForce = localGameObject.GetComponent<ConstantForce>();
                     if (constantForce != null)
                     {
-                        // constantForce.force = newGameObject.components.constantForce;
-                        constantForce.force = new Vector3(0, 9.82f, 0);
+                        constantForce.force = new Vector3(updatedGameObject.Components.ConstantForce.X, updatedGameObject.Components.ConstantForce.Y, updatedGameObject.Components.ConstantForce.Z);
                         Debug.Log("Changed ConstantForce of object with ID " + updatedGameObject.Id);
                     }
                     else
