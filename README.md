@@ -13,14 +13,14 @@ Tools integrated and used for the creation, testing and validation of the projec
 * Unity Engine (https://unity.com/)
 * Redis Database (https://redis.io/)
 
-### Project Structure (Programming modules and scripts)
+### Project Structure
 
-*   `Assets/`# Static materials, prefabs and scenes to create a 3D environment 
-    *   `Scripts/` # C# programming scripts to control the 3D environment
-*   `Orchestrator/` # OpenAI ChatGPT main application folder
-    *   `config/` # Extraction of configuration properties
-    *   `controllers/` # API Endpoints and receiving user input
-    *   `core/` # Main application managers
-    *   `prompts/` # Structure and templates for prompt configuration
-    *   `repository/` # Database integration
-    *   `services/` # External Chatbot Tools
+*   `Assets/`# Static materials, prefabs and scenes to create a 3D scene
+    *   `Scripts/`Programming scripts in C# to control the environment
+*   `Orchestrator/` OpenAI ChatGPT main application folder
+    *   `config/` Extraction of configuration properties
+    *   `controllers/` API Endpoints and receiving user input
+    *   `core/` Main application managers
+    *   `prompts/` Structure and templates for prompt configuration
+    *   `repository/` Database integration
+    *   `services/` External Chatbot Tools
