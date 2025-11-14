@@ -5,7 +5,7 @@ logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 def get_formatted_vr_state(template):
-    logger.info("[get_formatted_vr_state] Received template: %s", template["template"])
+    logger.debug("[get_formatted_vr_state] Received template: %s", template["template"])
     conf = {"properties_to_update": []}
     query = ""
     

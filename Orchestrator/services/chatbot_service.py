@@ -38,7 +38,7 @@ def ask_chatbot(prompt):
                     })
                 })
 
-    logger.debug("Final input:")
+    logger.debug("Complete input:")
     logger.debug(input_list)
 
     response = client.responses.create(
@@ -48,9 +48,9 @@ def ask_chatbot(prompt):
         input=input_list,
     )
 
-    logger.info("Final output:")
+    logger.debug("Complete output:")
     logger.debug(response.model_dump_json(indent=2))
-    logger.info("Final output formatted:\n" + response.output_text)
+    logger.info("Chatbot Response:\n" + response.output_text)
 
     return json.loads(response.output_text)
 
