@@ -4,6 +4,7 @@
 Orchestrator/__pycache__/
 Orchestrator/*/__pycache__/
 Orchestrator/venv/
+Orchestrator/.env
 
 # Unity:
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
