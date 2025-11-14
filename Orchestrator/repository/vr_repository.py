@@ -30,14 +30,14 @@ class VRRepository():
         return modified_vr_objects
     
     def updateAllWithTemplate(self, return_saved=False, template=None):
-        logging.debug("[updateAllWithTemplate] query: %s", template.search_query)
-        search_results = self.redis_client.ft(config.INDEX_NAME).search(template.search_query)
+        logging.debug("[updateAllWithTemplate] query: %s", template["search_query"])
+        search_results = self.redis_client.ft(config.INDEX_NAME).search(template["search_query"])
 
         modified_ids = []
         for doc in search_results.docs:
-            for doc_update in template.properties_to_update:
-                logging.debug("[updateAllWithTemplate] doc_update.property: %s, doc_update.value: %s", doc_update.property, doc_update.value)
-                self.redis_client.json().set(doc.id, doc_update.property, doc_update.value)
+            for doc_update in template["properties_to_update"]:
+                logging.debug("[updateAllWithTemplate] doc_update.property: %s, doc_update.value: %s", doc_update["property"], doc_update["value"])
+                self.redis_client.json().set(doc.id, doc_update["property"], doc_update["value"])
                 modified_ids.append(doc.id)
 
         if return_saved:

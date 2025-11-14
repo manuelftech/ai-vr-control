@@ -24,9 +24,6 @@ async def ask_question(request: Request):
     # Obtain the modification template for Redis from the Chatbot
     template_query = ask_chatbot(prompt)
 
-    # extract from the template the query and properties to be updated
-    template_query = get_formatted_config(template_query)
-
     # Search and update the required VR elements in Redis
     updated_vr_state = vr_repository.updateAllWithTemplate(return_saved=True, template=template_query)
     

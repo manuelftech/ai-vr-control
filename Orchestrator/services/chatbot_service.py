@@ -48,7 +48,7 @@ def ask_chatbot(prompt):
     print(response.model_dump_json(indent=2))
     print("\n" + response.output_text)
 
-    return response.output_text
+    return json.loads(response.output_text)
 
 def get_tools():
     return [
