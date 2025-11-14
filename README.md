@@ -15,7 +15,7 @@ Tools integrated and used for the creation, testing and validation of the projec
 
 ### Project Structure
 
-*   `Assets/`# Static materials, prefabs and scenes to create a 3D scene
+*   `Assets/` Scenes, Materials and prefabs to create a 3D scene
     *   `Scripts/`Programming scripts in C# to control the environment
 *   `Orchestrator/` OpenAI ChatGPT main application folder
     *   `config/` Extraction of configuration properties
