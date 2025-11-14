@@ -38,6 +38,10 @@ $.Components.Color = #FFFFFF
 $.Components.ConstantForce.Y = 9.83
 $.Components.Color = #FFA500
 
+6) If the user asks: 'I want the chairs to start levitating', you as an agent have to convert it to the following template:
+@Tag:{chair}
+$.Components.ConstantForce.Y = 9.83
+
 Have in mind that if an object or state is not mentioned for searching, you should not include it in the response template
 the same applies for the new desired states, if they are not mentioned, do not return them in the template.
 
