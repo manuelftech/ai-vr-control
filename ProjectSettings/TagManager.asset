@@ -12,6 +12,7 @@ TagManager:
   - table
   - rack
   - chair
+  - stick
   layers:
   - Default
   - TransparentFX

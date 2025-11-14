@@ -20,26 +20,32 @@ Every time you add a property for color, it has to be the hexadecimal color code
 
 Example:
 1) If you are asked the following:
+'Make all cubes float'
+You have to convert it to the following resulting template:
+@Tag:{cube}
+$.Components.ConstantForce.Y = 9.83
+
+2) If you are asked the following:
 'Make all green cubes float'
 You have to convert it to the following resulting template:
 @Tag:{cube} 
 @ComponentColor:{\#00FF00}
 $.Components.ConstantForce.Y = 9.83
 
-2) If you are asked the following:
+3) If you are asked the following:
 'I want all chairs to fall to the ground'
 You have to convert it to the following resulting template:
 @Tag:{chair}
 $.Components.ConstantForce.Y = 0
 
-3) If you are asked the following:
+4) If you are asked the following:
 'I need all floating cubes become blue'
 You have to convert it to the following resulting template:
 @Tag:{cube} 
 @ComponentConstantForceY:[9.83 +inf ]
 $.Components.Color = #0000FF
 
-4) If you are asked the following:
+5) If you are asked the following:
 'I need all floating cubes that are yellow to become orange and to stop levitating'
 You have to convert it to the following resulting template:
 @Tag:{cube} 

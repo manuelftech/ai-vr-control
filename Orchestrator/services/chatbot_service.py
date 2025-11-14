@@ -2,7 +2,11 @@ from openai import OpenAI
 from config.environment import config
 from core.prompt_manager import read_prompt
 from services.tool_chatbot_redis import get_formatted_vr_state
+import logging
 import json
+logging.basicConfig(level=logging.DEBUG)
+logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
 def ask_chatbot(prompt):
     client = OpenAI(api_key=config.LLM_API_KEY)
@@ -34,8 +38,8 @@ def ask_chatbot(prompt):
                     })
                 })
 
-    print("Final input:")
-    print(input_list)
+    logger.debug("Final input:")
+    logger.debug(input_list)
 
     response = client.responses.create(
         model=config.LLM_MODEL,
@@ -44,9 +48,9 @@ def ask_chatbot(prompt):
         input=input_list,
     )
 
-    print("Final output:")
-    print(response.model_dump_json(indent=2))
-    print("\n" + response.output_text)
+    logger.info("Final output:")
+    logger.debug(response.model_dump_json(indent=2))
+    logger.info("Final output formatted:\n" + response.output_text)
 
     return json.loads(response.output_text)
 
