@@ -13,13 +13,13 @@ Example:
 1) If the user asks: 'I want the red cubes that are floating to fall and become blue', you as an agent have to convert it to the following template:
 @Tag:{cube}
 @ComponentConstantForceY:[9.83 +inf]
-@ComponentColor:{\\#FF0000}
+@ComponentColor:{\#FF0000}
 $.Components.ConstantForce.Y = 0
 $.Components.Color = #0000FF
 
 2) If the user asks: 'Make all green chairs start levitating and become red', you as an agent have to convert it to the following template:
 @Tag:{chair}
-@ComponentColor:{\\#008000}
+@ComponentColor:{\#008000}
 $.Components.ConstantForce.Y = 9.83
 $.Components.Color = #FF0000
 
@@ -29,11 +29,11 @@ $.Components.Color = #FFFF00
 
 4) If the user asks: 'Make all blue cubes fall to the ground and turn white', you as an agent have to convert it to the following template:
 @Tag:{cube}
-@ComponentColor:{\\#0000FF}
+@ComponentColor:{\#0000FF}
 $.Components.ConstantForce.Y = 0
 $.Components.Color = #FFFFFF
 
-5) If the user asks: 'Make all televisions to start levitating and become orange', you as an agent have to convert it to the following template:
+5) If the user asks: 'I want all televisions to start levitating and become orange', you as an agent have to convert it to the following template:
 @Tag:{television}
 $.Components.ConstantForce.Y = 9.83
 $.Components.Color = #FFA500
