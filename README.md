@@ -17,10 +17,10 @@ Tools integrated and used for the creation, testing and validation of the projec
 
 *   `Assets/` Scenes, Materials and prefabs to create a 3D scene
     *   `Scripts/`Programming scripts in C# to control the environment
-*   `Orchestrator/` OpenAI ChatGPT main application folder
+*   `Orchestrator/` Python OpenAI main application
     *   `config/` Extraction of configuration properties
     *   `controllers/` API Endpoints and receiving user input
     *   `core/` Main application managers
     *   `prompts/` Structure and templates for prompt configuration
     *   `repository/` Database integration
-    *   `services/` External Chatbot Tools
+    *   `services/` Chatbot Tools
