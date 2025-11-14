@@ -5,9 +5,8 @@ logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 def get_formatted_vr_state(template):
-    logger.debug("[get_formatted_config] Received template: %s", template["template"])
+    logger.info("[get_formatted_vr_state] Received template: %s", template["template"])
     conf = {"properties_to_update": []}
-    properties_to_update = {}
     query = ""
     
     for line in template["template"].split("\n"):
@@ -17,6 +16,7 @@ def get_formatted_vr_state(template):
             query = f"{query} {line}".strip()
         if "$" == line.strip()[0]:
             update = line.split("=")
+            properties_to_update = {}
             properties_to_update["property"] = update[0].strip()
             try:
                 properties_to_update["value"] = float(update[1].strip())

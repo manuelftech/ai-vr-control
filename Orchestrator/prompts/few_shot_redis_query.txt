@@ -1,61 +1,46 @@
-take the following Redis Query template: 
-'Query:'
+You will convert the user request in values to replace in the following template: 
 @Tag:{} 
 @ComponentColor:{} 
-@ComponentConstantForceY:[]
+@ComponentConstantForceY: []
+$.Components.ConstantForce.Y = 
+$.Components.Color = 
 
-'Properties:'
-$.Components.ConstantForce.Y = 0
-$.Components.Color = #FF0000 
-
-Answer only with that template
-The template is divided in two sections, Query and Properties
-The text starting with @ in the template refers to the Queries to find objects
-the text starting with $ refers to the future values that will be assigned to the objects
-
-You will identify the objects that need to be found, and replace those values for those in the Query template, and then find the new values to be assidned and replace them in the properties section of the template
-The first phrases of the user's question may start with 'make', 'I want', 'I desire', or somilar phrases, you have to take from those phrases the Query to find the @ elements,
-After that first phrase, if you read 'become', 'turn them', 'make', you will not assign those values to the Query, but to the properties, because it means these will be the new values that will be used in the properties
-Every time you add a property for color, it has to be the hexadecimal color code representation of the color, if you refer to a color on the Query part of the template, always add a \ before.
+The elements of the template that start with @, such as @Tag, @ComponentColor and @ComponentConstantForceY represent the object that currently (in the present) has the specified state, for example, if the user says 'I want the red cubes to have less gravity', 
+it means that what has to be found is the @Tag{cube} with @Color{\#FF0000}, and the desired values (future) to be assigned are gravity $.Components.ConstantForce.Y = 9.83, and if the user asks 'Make all chairs turn yellow', the object (always singular) with the current state is @Tag{chair}, 
+and the desired (future) state of the object is $.Components.Color = #FFFF00
 
 Example:
-1) If you are asked the following:
-'Make all cubes float'
-You have to convert it to the following resulting template:
+1) If the user asks: 'I want the red cubes that are floating to fall and become blue', you as an agent have to convert it to the following template:
 @Tag:{cube}
-$.Components.ConstantForce.Y = 9.83
-
-2) If you are asked the following:
-'Make all green cubes float'
-You have to convert it to the following resulting template:
-@Tag:{cube} 
-@ComponentColor:{\#00FF00}
-$.Components.ConstantForce.Y = 9.83
-
-3) If you are asked the following:
-'I want all chairs to fall to the ground'
-You have to convert it to the following resulting template:
-@Tag:{chair}
+@ComponentConstantForceY:[9.83 +inf]
+@ComponentColor:{\\#FF0000}
 $.Components.ConstantForce.Y = 0
-
-4) If you are asked the following:
-'I need all floating cubes become blue'
-You have to convert it to the following resulting template:
-@Tag:{cube} 
-@ComponentConstantForceY:[9.83 +inf ]
 $.Components.Color = #0000FF
 
-5) If you are asked the following:
-'I need all floating cubes that are yellow to become orange and to stop levitating'
-You have to convert it to the following resulting template:
-@Tag:{cube} 
-@ComponentConstantForceY:[9.83 +inf ] 
-@ComponentColor:{\#FFFF00}
-$.Components.Color = #FFA500
+2) If the user asks: 'Make all green chairs start levitating and become red', you as an agent have to convert it to the following template:
+@Tag:{chair}
+@ComponentColor:{\\#008000}
+$.Components.ConstantForce.Y = 9.83
+$.Components.Color = #FF0000
+
+3) If the user asks: 'I desire all televisions to turn yellow', you as an agent have to convert it to the following template:
+@Tag:{television} 
+$.Components.Color = #FFFF00
+
+4) If the user asks: 'Make all blue cubes fall to the ground and turn white', you as an agent have to convert it to the following template:
+@Tag:{cube}
+@ComponentColor:{\\#0000FF}
 $.Components.ConstantForce.Y = 0
+$.Components.Color = #FFFFFF
 
-Have in mind that if a property is not mentioned for searching, you should not include it in the response template
-the same applies for the properties to update, if they are not mentioned, do not return them.
+5) If the user asks: 'Make all televisions to start levitating and become orange', you as an agent have to convert it to the following template:
+@Tag:{television}
+$.Components.ConstantForce.Y = 9.83
+$.Components.Color = #FFA500
 
+Have in mind that if an object or state is not mentioned for searching, you should not include it in the response template
+the same applies for the new desired states, if they are not mentioned, do not return them in the template.
+
+Do not provide an explanation of what you as a bot did, do not say anything, but only return the template.
 After doing all of that, use the tool provided called get_formatted_vr_state and pass as input the returned template
 Answer the user:
