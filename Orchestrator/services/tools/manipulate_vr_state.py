@@ -1,13 +1,15 @@
-import json
+from Orchestrator.services.tools.base_tool import _Tool
 
-class _VirtualRealityTool():
+class _VirtualRealityTool(_Tool):
     """
     Manages the virtual environment, updating its state using a Redis Database
     """
+    def __init__(self):
+        super().__init__("formatted_vr_state")
+    
     def _get_function(self, input):
         conf = {"properties_to_update": []}
         query = ""
-        
         for line in input["template"].split("\n"):
             if len(line.strip()) == 0:
                 continue
@@ -29,7 +31,7 @@ class _VirtualRealityTool():
     def _get_definition(self):
          return {
                 "type": "function",
-                "name": "get_formatted_vr_state",
+                "name": self.function_name,
                 "description": "Format your response for proper handling",
                 "parameters": {
                     "type": "object",
