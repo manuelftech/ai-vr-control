@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from Orchestrator.services.chatbot_service import ask_chatbot
+from Orchestrator.services.chatgpt_service import ChatGPT
 from repository.vr_repository import VRRepository
 import logging
 
@@ -21,7 +21,7 @@ async def ask_question(request: Request):
     vr_repository.saveAll(return_saved=False, vr_states=request_body["VirtualRealityState"])
 
     # Obtain the modification template for Redis from the Chatbot
-    template_query = ask_chatbot(prompt)
+    template_query = ChatGPT().ask(prompt)
 
     # Search and update the required VR elements in Redis
     updated_vr_state = vr_repository.updateAllWithTemplate(return_saved=True, template=template_query)
