@@ -1,7 +1,7 @@
 import logging
 import json
 from config.environment import config
-from config.chat import chatgpt_client
+from config.chat import chatgpt
 from Orchestrator.services.tools.tool_manager import ToolManager
 logging.basicConfig(level=logging.DEBUG)
 logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -12,7 +12,7 @@ class ChatGPT():
         tools = ToolManager()
         chat_history = tools.initialize_chat_history(prompt)
         
-        response = chatgpt_client.responses.create(
+        response = chatgpt.client.responses.create(
             model=config.LLM_MODEL,
             tools=tools.prompt_handling_definition,
             input=chat_history,
@@ -24,7 +24,7 @@ class ChatGPT():
         # Append a specialized prompt depending on the user's intent
         chat_history.append(tools.prompt_handling(response.output))
 
-        response = chatgpt_client.responses.create(
+        response = chatgpt.client.responses.create(
             model=config.LLM_MODEL,
             tools=tools.tool_definitions,
             input=chat_history,
