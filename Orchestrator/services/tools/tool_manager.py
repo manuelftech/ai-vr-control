@@ -39,7 +39,7 @@ class ToolManager():
 
     def call_tool(self, chatbot_response):
         # Executes the function logic depending on the tool the chat needs to use
-        for item in chatbot_response.output:
+        for item in chatbot_response:
             if item.type == "function_call":
                 result = self._identify_function(item)
                 return {
@@ -54,12 +54,12 @@ class ToolManager():
                case 'instruction':
                     return {
                         "role": "system",
-                        "content": f"{read_prompt('few_shot_redis_query.txt')} {user_prompt}"
+                        "content": f"{read_prompt('no_shot_knowledge_base.txt')} {user_prompt}"
                         }
                case 'update_vr_state':
                     return {
                         "role": "system",
-                        "content": f"{read_prompt('no_shot_knowledge_base.txt')} {user_prompt}"
+                        "content": f"{read_prompt('few_shot_redis_query.txt')} {user_prompt}"
                         }
                case _:
                     raise RuntimeError("No additional_prompt received")
