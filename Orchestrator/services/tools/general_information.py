@@ -1,4 +1,4 @@
-from Orchestrator.services.tools.base_tool import _Tool
+from services.tools.base_tool import _Tool
 import textwrap
 
 class _GeneralInformationTool(_Tool):

@@ -1,5 +1,5 @@
-from Orchestrator.services.tools.base_tool import _Tool
-from Orchestrator.core.utils import read_prompt
+from services.tools.base_tool import _Tool
+from core.utils import read_prompt
 
 class _PromptTool(_Tool):
     """

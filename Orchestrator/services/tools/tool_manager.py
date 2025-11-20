@@ -1,7 +1,7 @@
-from Orchestrator.services.tools.manipulate_vr_state import _VirtualRealityTool
-from Orchestrator.services.tools.general_information import _GeneralInformationTool
-from Orchestrator.services.tools.prompt_handling import _PromptTool
-from Orchestrator.core.utils import read_prompt
+from services.tools.manipulate_vr_state import _VirtualRealityTool
+from services.tools.general_information import _GeneralInformationTool
+from services.tools.prompt_handling import _PromptTool
+from core.utils import read_prompt
 import logging
 import json
 logging.basicConfig(level=logging.DEBUG)

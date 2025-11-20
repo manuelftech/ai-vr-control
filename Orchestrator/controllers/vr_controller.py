@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from Orchestrator.services.chatgpt_service import ChatGPT
+from services.chatgpt_service import ChatGPT
 from repository.vr_repository import VRRepository
 import logging
 

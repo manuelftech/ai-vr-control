@@ -15,4 +15,4 @@ class ChatGPTClient():
     def get_status(self):
         return self.connection_status
 
-chatgpt_client = ChatGPTClient()
+chatgpt = ChatGPTClient()

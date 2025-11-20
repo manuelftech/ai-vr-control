@@ -2,7 +2,7 @@ import logging
 import json
 from config.environment import config
 from config.chat import chatgpt
-from Orchestrator.services.tools.tool_manager import ToolManager
+from services.tools.tool_manager import ToolManager
 logging.basicConfig(level=logging.DEBUG)
 logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
