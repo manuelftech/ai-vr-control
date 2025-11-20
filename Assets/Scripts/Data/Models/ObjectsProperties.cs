@@ -27,6 +27,7 @@ namespace AIControlMagicVR.Data.Models
     {
         public CoordinatesProperties ConstantForce ;
         public string Color;
+        public string Text;
         public ComponentsProperties() { }
     }
 

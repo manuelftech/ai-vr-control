@@ -1,23 +1,18 @@
-import redis
+from openai import OpenAI
 from config.environment import config
 
-class RedisClient():
+class ChatGPTClient():
     def __init__(self):
         self.connection = self.connect()
         self.connection_status = "Connected"
 
     def connect(self):
         try:
-            return redis.StrictRedis(
-                host=config.REDIS_HOST,
-                port=config.REDIS_PORT,
-                password=config.REDIS_PASSWORD,
-                decode_responses=True,
-            )
+            return OpenAI(api_key=config.LLM_API_KEY)
         except Exception as e:
             raise Exception(e)
-        
+    
     def get_status(self):
         return self.connection_status
 
-redis_client = RedisClient()
+chatgpt_client = ChatGPTClient()

@@ -1,4 +1,4 @@
-from config.db import get_redis_db_client
+from config.db import redis_client
 from config.environment import config
 import logging
 
@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class VRRepository():
     def __init__(self):
-        self.redis_client = get_redis_db_client()
+        self.redis_client = redis_client
 
     def saveAll(self, return_saved=False, vr_states=[]):
         modified_ids = []

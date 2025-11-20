@@ -26,3 +26,5 @@ def get_formatted_vr_state(template):
     
     conf["search_query"] = query
     return json.dumps(conf)
+
+

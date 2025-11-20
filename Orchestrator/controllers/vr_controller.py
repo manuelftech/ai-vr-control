@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from services.chatbot_service import ask_chatbot
+from Orchestrator.services.chatbot_service import ask_chatbot
 from repository.vr_repository import VRRepository
 import logging
 
