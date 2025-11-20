@@ -3,7 +3,7 @@ from config.environment import config
 
 class RedisClient():
     def __init__(self):
-        self.connection = self.connect()
+        self.client = self.connect()
         self.connection_status = "Connected"
 
     def connect(self):
@@ -20,4 +20,4 @@ class RedisClient():
     def get_status(self):
         return self.connection_status
 
-redis_client = RedisClient()
+redis_db = RedisClient()

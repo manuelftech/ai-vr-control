@@ -1,4 +1,4 @@
-from config.db import redis_client
+from config.db import redis_db
 from config.environment import config
 import logging
 
@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class VRRepository():
     def __init__(self):
-        self.redis_client = redis_client
+        self.redis = redis_db
 
     def saveAll(self, return_saved=False, vr_states=[]):
         modified_ids = []
@@ -20,24 +20,24 @@ class VRRepository():
             return self._find_ids(modified_ids=modified_ids)
 
     def _save_single_object(self, id, property, vr_state):
-        self.redis_client.json().set(id, property, vr_state)
+        self.redis.client.json().set(id, property, vr_state)
     
     def _find_ids(self, ids):
         modified_vr_objects = []
         for id in ids:
             modified_vr_objects.append(self.redis_client.json(id).get(id))
-            logging.debug("[updateAllWithTemplate] VR Status found: %s", self.redis_client.json(id).get(id))
+            logging.debug("[updateAllWithTemplate] VR Status found: %s", self.redis.client.json(id).get(id))
         return modified_vr_objects
     
     def updateAllWithTemplate(self, return_saved=False, template=None):
         logging.debug("[updateAllWithTemplate] query: %s", template["search_query"])
-        search_results = self.redis_client.ft(config.INDEX_NAME).search(template["search_query"])
+        search_results = self.redis.client.ft(config.INDEX_NAME).search(template["search_query"])
 
         modified_ids = []
         for doc in search_results.docs:
             for doc_update in template["properties_to_update"]:
                 logging.debug("[updateAllWithTemplate] doc_update.property: %s, doc_update.value: %s", doc_update["property"], doc_update["value"])
-                self.redis_client.json().set(doc.id, doc_update["property"], doc_update["value"])
+                self.redis.client.json().set(doc.id, doc_update["property"], doc_update["value"])
                 modified_ids.append(doc.id)
 
         if return_saved:

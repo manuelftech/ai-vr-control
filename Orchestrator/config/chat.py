@@ -3,7 +3,7 @@ from config.environment import config
 
 class ChatGPTClient():
     def __init__(self):
-        self.connection = self.connect()
+        self.client = self.connect()
         self.connection_status = "Connected"
 
     def connect(self):
