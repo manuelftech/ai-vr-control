@@ -1,5 +1,5 @@
-import redis
 from config.environment import config
+import redis
 
 class RedisClient():
     def __init__(self):

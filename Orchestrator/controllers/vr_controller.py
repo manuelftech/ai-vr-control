@@ -1,10 +1,7 @@
-from fastapi import APIRouter, Request
-from services.chatgpt_service import ChatGPT
 from repository.vr_repository import VRRepository
+from services.chatgpt_service import ChatGPT
+from fastapi import APIRouter, Request
 import logging
-
-logging.basicConfig(level=logging.DEBUG)
-logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/virtual-reality-environment")

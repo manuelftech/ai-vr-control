@@ -1,11 +1,11 @@
-using UnityEngine;
-using TMPro;
-using System;
-using System.Reflection;
-using AIControlMagicVR.Managers;
-using AIControlMagicVR.Data.Models;
 using AIControlMagicVR.Managers.Networking;
+using AIControlMagicVR.Data.Models;
+using AIControlMagicVR.Managers;
+using System.Reflection;
 using System.Threading;
+using UnityEngine;
+using System;
+using TMPro;
 
 namespace AIControlMagicVR.Data.ScriptableObjects
 {

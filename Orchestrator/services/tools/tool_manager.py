@@ -4,8 +4,7 @@ from services.tools.prompt_handling import _PromptTool
 from core.utils import read_prompt
 import logging
 import json
-logging.basicConfig(level=logging.DEBUG)
-logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
 logger = logging.getLogger(__name__)
 
 class ToolManager():
@@ -29,7 +28,7 @@ class ToolManager():
     def _get_tool_definitions(self):
         return [tool.definition for tool in self._get_tools()]
     
-    def _identify_function(self, item):
+    def _find_function(self, item):
         for (function_name, function) in self._get_tool_functions():
             if item.name == function_name:
                 logger.debug("Function called: %s", function_name)
@@ -41,7 +40,7 @@ class ToolManager():
         # Executes the function logic depending on the tool the chat needs to use
         for item in chatbot_response:
             if item.type == "function_call":
-                result = self._identify_function(item)
+                result = self._find_function(item)
                 return {
                     "type": "function_call_output",
                     "call_id": item.call_id, 

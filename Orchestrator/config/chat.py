@@ -1,5 +1,5 @@
-from openai import OpenAI
 from config.environment import config
+from openai import OpenAI
 
 class ChatGPTClient():
     def __init__(self):

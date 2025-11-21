@@ -1,12 +1,12 @@
-using UnityEngine;
-using UnityEngine.Networking;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using AIControlMagicVR.Data.Models;
-using System;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine.Networking;
 using System.Reflection;
+using Newtonsoft.Json;
+using System.Text;
+using UnityEngine;
+using System;
 
 namespace AIControlMagicVR.Managers.Networking
 {

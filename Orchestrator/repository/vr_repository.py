@@ -1,9 +1,6 @@
-from config.db import redis_db
 from config.environment import config
+from config.db import redis_db
 import logging
-
-logging.basicConfig(level=logging.DEBUG)
-logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 class VRRepository():

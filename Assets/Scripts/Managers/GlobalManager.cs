@@ -1,9 +1,10 @@
-using UnityEngine;
-using System.Collections.Generic;
-using System;
 using AIControlMagicVR.Data.Models;
-using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using UnityEngine;
+using System;
+using TMPro;
 
 namespace AIControlMagicVR.Managers
 {
