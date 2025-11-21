@@ -10,5 +10,6 @@ class Config():
     KEY_PREFIX = os.environ.get("KEY_PREFIX")
     LLM_API_KEY = os.environ.get("LLM_API_KEY")
     LLM_MODEL = os.environ.get("LLM_MODEL")
+    ENDPOINT_PREFIX = os.environ.get("ENDPOINT_PREFIX")
 
 config = Config()

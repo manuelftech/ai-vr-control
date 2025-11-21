@@ -129,7 +129,7 @@ namespace AIControlMagicVR.Managers
                         Debug.LogError("VR State with ID " + updatedVRState.Id + " has no Renderer component.");
                     }
 
-                    // Change displayed text on television
+                    // Change displayed text on television (a maximum of 539 continuous characters)
                     var tmpInputField = localGameObject.GetComponent<TMP_InputField>();
                     if (tmpInputField != null)
                     {
