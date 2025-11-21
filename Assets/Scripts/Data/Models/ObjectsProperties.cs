@@ -44,9 +44,9 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class CoordinatesProperties
     {
-        public float X; // 1.98
-        public float Y; // 1.287
-        public float Z; // 0.03871146
+        public float X;
+        public float Y;
+        public float Z;
         public CoordinatesProperties() { }
     }
 }

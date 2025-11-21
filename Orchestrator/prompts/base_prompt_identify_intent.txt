@@ -1,3 +1,0 @@
-Discern the user intent:
-If the user wants to know how to use the system, you will use the function general_information
-If the user wants to modify the contents of the elements or to change something, you will use the function manipulate_virtual_reality

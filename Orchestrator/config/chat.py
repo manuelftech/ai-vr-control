@@ -1,12 +1,17 @@
-from config.environment import config
 from openai import OpenAI
+import config
 
-class ChatGPTClient():
+class ChatGPT():
+    _singleton = None
+    _is_already_initialized = False
+
     def __init__(self):
-        self.client = self.connect()
-        self.connection_status = "Connected"
+        if not self._is_already_initialized:
+            self.client = self._connect()
+            self.connection_status = "Connected"
+            self._is_already_initialized = True
 
-    def connect(self):
+    def _connect(self):
         try:
             return OpenAI(api_key=config.LLM_API_KEY)
         except Exception as e:
@@ -15,4 +20,7 @@ class ChatGPTClient():
     def get_status(self):
         return self.connection_status
 
-chatgpt = ChatGPTClient()
+    def __new__(cls, *args, **kwargs):
+        if cls._singleton is None:
+            cls._singleton = super(ChatGPT, cls).__new__(cls)
+        return cls._singleton
