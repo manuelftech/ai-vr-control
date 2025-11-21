@@ -1,4 +1,5 @@
 from services.tools.base_tool import _Tool
+from core.utils import read_prompt
 
 class _GeneralInformationTool(_Tool):
     """
@@ -9,11 +10,14 @@ class _GeneralInformationTool(_Tool):
         super().__init__("general_information")
     
     def _get_function(self, input):
-          search_subject = input["subject"]
+          result = input["subject"]
           # Do semantic search on the PDF chunks that have the instructions to use the program
-          return """
+          result["information"] = """
             In order to manipulate this 3D environment, you must use the keyboard that is floating in this livingroom, you can ask to modify the state of the elements of the environment, for example, you may ask 'I want all the cubes to float and turn green', and they will indeed start floating and become green, then you may ask: 'make all the cubes fall' and the cubes will fall, you can control what is happening in this Virtual environment
             """
+          result["continue_workflow"] = True
+          result["additional_prompt"] = read_prompt('few_shot_redis_query.txt')
+          return result
         
     def _get_definition(self):
          return {

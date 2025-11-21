@@ -1,7 +1,6 @@
-from services.tools.manipulate_vr_state import _VirtualRealityTool
 from services.tools.general_information import _GeneralInformationTool
-from services.tools.prompt_handling import _PromptTool
-from core.utils import read_prompt
+from services.tools.format_query_template_vr import _FormatQueryVR
+from services.tools.manipulate_vr import _VirtualRealityTool
 import logging
 import json
 
@@ -11,15 +10,14 @@ class ToolManager():
     def __init__(self):
         # We obtain all the JSON definitions of the tools to be used
         self.tool_definitions = self._get_tool_definitions()
-        # We initialize our first prompt, which allow us to choose from a variety of prompts to append
-        self.prompt_handling_definition = [_PromptTool().definition]
-        self.initialize_chat_history = self._initialize_chat_history
+        self.continue_workflow = True
 
     def _get_tools(self):
         # Add more tools as needed
         return [
             _VirtualRealityTool(), 
-            _GeneralInformationTool()
+            _GeneralInformationTool(),
+            _FormatQueryVR()
             ]
 
     def _get_tool_functions(self):
@@ -41,29 +39,15 @@ class ToolManager():
         for item in chatbot_response:
             if item.type == "function_call":
                 result = self._find_function(item)
-                return {
-                    "type": "function_call_output",
-                    "call_id": item.call_id, 
-                    "output": json.dumps({"result": result})
-                    }
-
-    def prompt_handling(self, additional_prompt, user_prompt):
-        # Chooses from a variety of prompts to add to the chat history
-        match additional_prompt:
-               case 'instruction':
-                    return {
-                        "role": "system",
-                        "content": f"{read_prompt('no_shot_knowledge_base.txt')} {user_prompt}"
-                        }
-               case 'update_vr_state':
-                    return {
-                        "role": "system",
-                        "content": f"{read_prompt('few_shot_redis_query.txt')} {user_prompt}"
-                        }
-               case _:
-                    raise RuntimeError("No additional_prompt received")
-    
-    def _initialize_chat_history(slef, prompt):
-        # First prompt to be added, where we identify the user's intentions to then append additional prompts
-        base_prompt_user_intent = read_prompt("base_prompt_identify_intent.txt")
-        return [{"role": "user", "content": f"{base_prompt_user_intent} {prompt}"}]
+                workflow = []
+                # Wee return the response from the function logic
+                workflow.append({
+                    "type": "function_call_output","call_id": item.call_id, 
+                    "output": json.dumps({"result": result})})
+                # If the workflow continues and needs an additional prompt, we return it as well
+                if result["continue_workflow"]:
+                    workflow.append({"role": "system","content": result["additional_prompt"]})
+                    self.continue_workflow = True
+                else:
+                    self.continue_workflow = False
+                return workflow

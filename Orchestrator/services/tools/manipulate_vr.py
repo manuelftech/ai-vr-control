@@ -1,32 +1,19 @@
 from services.tools.base_tool import _Tool
+from core.utils import read_prompt
 
 class _VirtualRealityTool(_Tool):
     """
     Manages the virtual environment, updating its state using a Redis Database
     """
     def __init__(self):
-        super().__init__("formatted_vr_state")
+        super().__init__("manipulate_virtual_reality")
     
     def _get_function(self, input):
-        conf = {"properties_to_update": []}
-        query = ""
-        for line in input["template"].split("\n"):
-            if len(line.strip()) == 0:
-                continue
-            if "@" == line.strip()[0] and "[]" not in line and "{}" not in line:
-                query = f"{query} {line}".strip()
-            if "$" == line.strip()[0]:
-                update = line.split("=")
-                properties_to_update = {}
-                properties_to_update["property"] = update[0].strip()
-                try:
-                    properties_to_update["value"] = float(update[1].strip())
-                except:
-                    properties_to_update["value"] = update[1].strip()
-                conf["properties_to_update"].append(properties_to_update)
+        result = {"properties_to_update": []}
         
-        conf["search_query"] = query
-        return conf
+        result["continue_workflow"] = True
+        result["additional_prompt"] = read_prompt('few_shot_virtual_reality.txt')
+        return result
 
     def _get_definition(self):
          return {
