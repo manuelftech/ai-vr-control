@@ -8,7 +8,12 @@ class _ManipulateVR(_Tool):
     """
     def _get_function(self, input):
         # We need to use self.has_additional_prompt if we want to make a subsequent call to the chatbot with an additional prompt
-        self.has_additional_prompt = f"{read_prompt('format_virtual_reality_query.txt')} {input['previous_prompt']}"
+        instructions = read_prompt('format_virtual_reality_query.txt')
+        self.has_additional_prompt = f"""
+            {instructions}
+
+            {input['previous_prompt']}
+        """
 
     def _get_definition(self):
          return {

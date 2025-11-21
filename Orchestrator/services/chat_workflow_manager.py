@@ -1,6 +1,5 @@
-from services.tools.function_tools.format_virtual_reality_query import _FormatVRQuery
-from services.tools.prompt_tools.instructions_virtual_reality import _InstructionsVR
-from services.tools.prompt_tools.manipulate_virtual_reality import _ManipulateVR
+from services.tools.instructions_virtual_reality import _InstructionsVR
+from services.tools.manipulate_virtual_reality import _ManipulateVR
 from core.utils import read_prompt
 from config.chat import ChatGPT
 from config import config
@@ -21,7 +20,6 @@ class Workflow():
     def _get_tools(self):
         # Add more tools as needed
         return [
-            _FormatVRQuery(),
             _ManipulateVR(), 
             _InstructionsVR(),
             ]
@@ -58,7 +56,7 @@ class Workflow():
     def _find_function(self, item):
         for tool in self._get_tool_functions():
             if item.name == tool.definition['name']:
-                logger.debug("Function called: %s", tool.function_name)
+                logger.debug("Function called: %s", tool.definition['name'])
                 result = tool.function(json.loads(item.arguments))
                 # We pass the value of the child instance to know if we should continue our workflow
                 self.has_additional_prompt = tool.has_additional_prompt
@@ -70,12 +68,16 @@ class Workflow():
         for item in chatbot_response:
             if item.type == "function_call":
                 result = self._find_function(item)
+                completed_step = [{
+                    "type": "function_call_output", 
+                    "call_id": item.call_id, 
+                    "output": json.dumps({"result": result, "status": "Function called successfully"})}]
                 # If the workflow continues and needs an additional prompt, we append it
                 if self.has_additional_prompt:
-                    return [{"type": "function_call_output", "call_id": item.call_id, 
-                             "output": json.dumps({"result": result, "status": "Function called successfully"})},
-                            {"role": "system","content": self.has_additional_prompt}]
-                else:
-                    return json.loads(result)
+                    completed_step.append({
+                        "role": "system", 
+                        "content": self.has_additional_prompt})
+                return completed_step
         # If there are no additional prompts and no function calls, we return the final result
-        return json.loads(chatbot_response['output'])['result']
+        self.has_additional_prompt = False
+        return json.loads(chatbot_response[-1].content[-1].text)

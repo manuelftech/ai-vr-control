@@ -9,8 +9,7 @@ router = APIRouter(prefix=config.ENDPOINT_PREFIX)
 @router.post("/state")
 async def state(request: Request):
     request_body = await request.json()
-    prompt = request_body["Prompt"]
-    logging.debug("Prompt: %s", prompt)
+    logging.debug("Prompt: %s", request_body["Prompt"])
 
     # Get the repository to interact with the Redis Database
     vr_repository = VRRepository()
@@ -19,7 +18,7 @@ async def state(request: Request):
     vr_repository.saveAll(return_saved=False, vr_states=request_body["VirtualRealityState"])
 
     # Retrieves the modification template for Redis from the Chatbot
-    template_query = Workflow.start(prompt)
+    template_query = Workflow().start(prompt=request_body["Prompt"])
 
     # Search and update the required VR elements in Redis
     updated_vr_state = vr_repository.updateAllWithTemplate(return_saved=True, template=template_query)

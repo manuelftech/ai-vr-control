@@ -1,7 +1,6 @@
 from services.tools.base_tool import _Tool
-from core.utils import get_function_name
-from core.utils import read_prompt
-from config.chat import ChatGPT
+from core.utils import get_function_name, search_vector_store, read_prompt
+from config import config
 
 class _InstructionsVR(_Tool):
     """
@@ -9,24 +8,17 @@ class _InstructionsVR(_Tool):
     thus saving tokens in a subsequent API call
     """
     def _get_function(self, input):
-        # Do semantic search and append this to the prompt to summarize it
-        vector_store = ChatGPT().client.vector_stores.retrieve("")
+        # Semantic search and appending of the returned context to the new prompt
+        context_info = search_vector_store(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['previous_prompt'])
+        instructions = read_prompt('instructions_virtual_reality.txt')
 
-        results = ChatGPT().client.vector_stores.search(
-            vector_store_id=vector_store.id,
-            query=input['previous_prompt'],
-        )
-
-        # Concatenate all the returned information to pass it to the new prompt
-        context_info = ""
-        for info in results['data']:
-            complete_information += f"{info['content']['text']}\n"
-        
         self.has_additional_prompt = f"""
-            {read_prompt('instructions_virtual_reality.txt')}
-            Context: {context_info}
-            Answer the user: {input['previous_prompt']} 
-        """
+            User Request: {input["previous_prompt"]}
+
+            Guidance: Utilize the provided context to address the user's query: {context_info}
+
+            Execution Plan: Perform the following steps and actions: {instructions}
+            """
         
     def _get_definition(self):
          return {

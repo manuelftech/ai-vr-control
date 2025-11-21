@@ -1,5 +1,5 @@
 from openai import OpenAI
-import config
+from config import config
 
 class ChatGPT():
     _singleton = None
