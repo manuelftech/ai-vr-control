@@ -7,7 +7,7 @@ class CoordinatesProperties(BaseModel):
 
 class ComponentsProperties(BaseModel):
     ConstantForce: CoordinatesProperties = Field(None, description="Force applied to the virtual reality object")
-    Color: str = Field(None, description="Color property of the Component", pattern=r"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
+    Color: str = Field(None, description="Color property of the Component", pattern=r"^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|)$")
     Text: str = Field(None, description="Text property of the Component")
 
 class TransformProperties(BaseModel):
