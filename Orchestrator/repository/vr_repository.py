@@ -22,7 +22,7 @@ class VRRepository():
     def _find_ids(self, ids):
         modified_vr_objects = []
         for id in ids:
-            modified_vr_objects.append(self.redis_client.json(id).get(id))
+            modified_vr_objects.append(self.redis.client.json(id).get(id))
             logging.debug("[updateAllWithTemplate] VR Status found: %s", self.redis.client.json(id).get(id))
         return modified_vr_objects
     

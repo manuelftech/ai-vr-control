@@ -5,6 +5,7 @@ from config.chat import ChatGPT
 from config import config
 import logging
 import json
+import ast
 
 logger = logging.getLogger(__name__)
 
@@ -44,24 +45,8 @@ class Workflow():
             chat_history.extend(self._call_tool(response.output))
 
         # Get the final result of the workflow
-        logger.info("Final response: %s" + chat_history[-1])
+        logger.info("Final response: %s" + json.dumps(chat_history[-1]))
         return chat_history[-1]
-
-    def _get_tool_functions(self):
-        return [tool for tool in self._get_tools()]
-
-    def _get_tool_definitions(self):
-        return [tool.definition for tool in self._get_tools()]
-    
-    def _find_function(self, item):
-        for tool in self._get_tool_functions():
-            if item.name == tool.definition['name']:
-                logger.debug("Function called: %s", tool.definition['name'])
-                result = tool.function(json.loads(item.arguments))
-                # We pass the value of the child instance to know if we should continue our workflow
-                self.has_additional_prompt = tool.has_additional_prompt
-                logger.debug("Function result: %s", result)
-                return result
 
     def _call_tool(self, chatbot_response):
         # Executes the function logic depending on the tool the chat needs to use
@@ -80,4 +65,26 @@ class Workflow():
                 return completed_step
         # If there are no additional prompts and no function calls, we return the final result
         self.has_additional_prompt = False
-        return json.loads(chatbot_response[-1].content[-1].text)
+        return self._format_result(chatbot_response)
+    
+    def _find_function(self, item):
+        for tool in self._get_tool_functions():
+            if item.name == tool.definition['name']:
+                logger.debug("Function called: %s", tool.definition['name'])
+                result = tool.function(json.loads(item.arguments))
+                # We pass the value of the child instance to know if we should continue our workflow
+                self.has_additional_prompt = tool.has_additional_prompt
+                logger.debug("Function result: %s", result)
+                return result
+    
+    def _format_result(self, chatbot_response):
+        try:
+            return [ast.literal_eval(chatbot_response[-1].content[-1].text)]
+        except:
+            raise NotImplementedError("The action provided does not return a Redis Query Template %s", chatbot_response[-1].content[-1].text)
+    
+    def _get_tool_functions(self):
+        return [tool for tool in self._get_tools()]
+
+    def _get_tool_definitions(self):
+        return [tool.definition for tool in self._get_tools()]

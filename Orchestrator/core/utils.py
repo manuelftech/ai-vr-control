@@ -1,5 +1,4 @@
 from config.chat import ChatGPT
-from config import config
 import os
 
 def read_prompt(filename):

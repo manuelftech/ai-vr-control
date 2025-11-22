@@ -1,6 +1,5 @@
 from services.tools.base_tool import _Tool
-from core.utils import get_function_name
-from core.utils import read_prompt
+from core.utils import get_function_name, read_prompt
 
 class _ManipulateVR(_Tool):
     """
