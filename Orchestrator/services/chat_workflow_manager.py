@@ -6,7 +6,6 @@ from config import config
 import logging
 import json
 import ast
-
 logger = logging.getLogger(__name__)
 
 class Workflow():
@@ -59,6 +58,7 @@ class Workflow():
                     "output": json.dumps({"result": result, "status": "Function called successfully"})}]
                 # If the workflow continues and needs an additional prompt, we append it
                 if self.has_additional_prompt:
+                    logger.debug("Additional prompt: %s" + self.has_additional_prompt)
                     completed_step.append({
                         "role": "system", 
                         "content": self.has_additional_prompt})

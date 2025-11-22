@@ -15,12 +15,6 @@ def create_vector_store(vector_store_name):
     )
     return vector_store.id
 
-def upload_file_to_vector_store(vector_store_id, filename):
-    ChatGPT().client.vector_stores.files.upload_and_poll(
-        vector_store_id=vector_store_id,
-        file=open(filename, "rb")
-    )
-
 def search_vector_store(vector_store_id, search_query):
     results = ChatGPT().client.vector_stores.search(
         vector_store_id=vector_store_id,

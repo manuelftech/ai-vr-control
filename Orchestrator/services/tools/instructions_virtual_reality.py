@@ -15,9 +15,9 @@ class _InstructionsVR(_Tool):
         self.has_additional_prompt = f"""
             User Request: {input["previous_prompt"]}
 
-            Guidance: Utilize the provided context to address the user's query: {context_info}
+            Complete context: {context_info}
 
-            Execution Plan: Perform the following steps and actions: {instructions}
+            Instructions: {instructions}
             """
         
     def _get_definition(self):

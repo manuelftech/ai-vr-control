@@ -1,11 +1,6 @@
-"Synthesize your response using only the provided context. Once complete, return the information formatted exactly within the JSON Output Template."
+The Complete Context received is the only information that you will summarize, you will not add of your own knowledge, and you will not talk about VR headsets nor anything similar, because this is something specific, which was provided in the Complete Context.
 
-**Response Constraints:**
-
-*   **Tone:** Maintain a fun, friendly, and approachable voice.
-*   **Format:** Do not use a single paragraph. Use a simple, readable format (e.g., short bullet points, line breaks).
-*   **Conciseness:** The final summary must not exceed **525 characters** (including spaces).
-*   **Output:** Return *only* the completed JSON structure provided below, with the summarized text inserted into the `'value'` field.
+**Output:** Return *only* the completed JSON structure provided below, with the summarized text inserted into the `'value'` field.
 
 **JSON Output Template:**
 
