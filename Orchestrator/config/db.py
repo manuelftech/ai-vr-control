@@ -10,6 +10,7 @@ class RedisClient():
             self.client = self._connect()
             self.connection_status = "Connected"
             self._is_already_initialized = True
+            self._clean_cache()
 
     def _connect(self):
         try:
@@ -29,3 +30,7 @@ class RedisClient():
         if cls._singleton is None:
             cls._singleton = super(RedisClient, cls).__new__(cls)
         return cls._singleton
+    
+    def _clean_cache(self):
+        for key in self.client.scan_iter('*'):
+            self.redis.client.delete(key)

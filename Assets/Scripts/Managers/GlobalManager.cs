@@ -46,46 +46,59 @@ namespace AIControlMagicVR.Managers
             List<ObjectProperties> objectsProperties = new List<ObjectProperties>();
             foreach (var sceneVRState in vrStateObjects)
             {
-                ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
+                CoordinatesProperties position = new CoordinatesProperties.Builder()
+                    .X(sceneVRState.Value.transform.position.x)
+                    .Y(sceneVRState.Value.transform.position.y)
+                    .Z(sceneVRState.Value.transform.position.z)
+                    .build();
+
+                CoordinatesProperties rotation = new CoordinatesProperties.Builder()
+                    .X(sceneVRState.Value.transform.rotation.x)
+                    .Y(sceneVRState.Value.transform.rotation.y)
+                    .Z(sceneVRState.Value.transform.rotation.z)
+                    .build();
+
+                CoordinatesProperties scale = new CoordinatesProperties.Builder()
+                    .X(sceneVRState.Value.transform.localScale.x)
+                    .Y(sceneVRState.Value.transform.localScale.y)
+                    .Z(sceneVRState.Value.transform.localScale.z)
+                    .build();
+
+                TransformProperties transform = new TransformProperties.Builder()
+                    .Position(position)
+                    .Rotation(rotation)
+                    .Scale(scale)
+                    .build();
+
+                // Obtain the hexadecimal formatted color of the Renderer Component (e.g, #FFFFFF)
+                string formattedColor = null;
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
+                if (renderer != null){
+                    formattedColor = "#" + ColorUtility.ToHtmlStringRGB(renderer.material.color);
+                }
 
-                ObjectProperties props = new ObjectProperties();
-                props.Id = sceneVRState.Key;
-                props.Tag = sceneVRState.Value.tag;
-                props.Name = sceneVRState.Value.name;
+                CoordinatesProperties constantForceProps = null;
+                ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
+                if (constantForce != null){
+                    constantForceProps = new CoordinatesProperties.Builder()
+                    .X(constantForce.force.x)
+                    .Y(constantForce.force.y)
+                    .Z(constantForce.force.z)
+                    .build();
+                }
+                
+                ComponentsProperties components = new ComponentsProperties.Builder()
+                    .ConstantForce(constantForceProps)
+                    .Color(formattedColor)
+                    .build();
 
-                CoordinatesProperties constantForceProps = new CoordinatesProperties();
-                constantForceProps.X = constantForce.force.x;
-                constantForceProps.Y = constantForce.force.y;
-                constantForceProps.Z = constantForce.force.z;
-
-                ComponentsProperties components = new ComponentsProperties();
-                components.ConstantForce = constantForceProps;
-                components.Color = "#" + ColorUtility.ToHtmlStringRGB(renderer.material.color);
-
-                props.Components = components;
-
-                CoordinatesProperties position = new CoordinatesProperties();
-                position.X = sceneVRState.Value.transform.position.x;
-                position.Y = sceneVRState.Value.transform.position.y;
-                position.Z = sceneVRState.Value.transform.position.z;
-
-                CoordinatesProperties rotation = new CoordinatesProperties();
-                rotation.X = sceneVRState.Value.transform.rotation.x;
-                rotation.Y = sceneVRState.Value.transform.rotation.y;
-                rotation.Z = sceneVRState.Value.transform.rotation.z;
-
-                CoordinatesProperties scale = new CoordinatesProperties();
-                scale.X = sceneVRState.Value.transform.localScale.x;
-                scale.Y = sceneVRState.Value.transform.localScale.y;
-                scale.Z = sceneVRState.Value.transform.localScale.z;
-
-                TransformProperties transform = new TransformProperties();
-                transform.Position = position;
-                transform.Rotation = rotation;
-                transform.Scale = scale;
-
-                props.Transform = transform;
+                ObjectProperties props = new ObjectProperties.Builder()
+                    .Id(sceneVRState.Key)
+                    .Tag(sceneVRState.Value.tag)
+                    .Name(sceneVRState.Value.name)
+                    .Components(components)
+                    .Transform(transform)
+                    .build();
 
                 objectsProperties.Add(props);
             }
@@ -95,7 +108,6 @@ namespace AIControlMagicVR.Managers
 
         public void UpdateVRStateProperties(List<ObjectProperties> updatedVRStates)
         {
-            Debug.Log("[UpdateVRStateProperties] Loop");
             foreach (ObjectProperties updatedVRState in updatedVRStates)
             {
                 if (vrStateObjects.TryGetValue(updatedVRState.Id, out GameObject localGameObject))
@@ -108,13 +120,11 @@ namespace AIControlMagicVR.Managers
                         ColorUtility.TryParseHtmlString(updatedVRState.Components.Color, out updatedColor);
 
                         renderer.material.color = updatedColor;
-                        Debug.Log("Changed color of VR State with ID " + updatedVRState.Id);
-                        Debug.Log(updatedColor);
-                        Debug.Log("Color displayed");
+                        Debug.Log("[Renderer] Changed color of VR State with Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id + ", New color: " + updatedColor);
                     }
                     else
                     {
-                        Debug.LogError("VR State with ID " + updatedVRState.Id + " has no Renderer component.");
+                        Debug.LogWarning("[Renderer] component not found in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id);
                     }
 
                     // Change constant force
@@ -122,23 +132,23 @@ namespace AIControlMagicVR.Managers
                     if (constantForce != null)
                     {
                         constantForce.force = new Vector3(updatedVRState.Components.ConstantForce.X, updatedVRState.Components.ConstantForce.Y, updatedVRState.Components.ConstantForce.Z);
-                        Debug.Log("Changed ConstantForce of VR State with ID " + updatedVRState.Id);
+                        Debug.Log("[ConstantForce] Changed in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id + ", New Y Force: " + updatedVRState.Components.ConstantForce.Y);
                     }
                     else
                     {
-                        Debug.LogError("VR State with ID " + updatedVRState.Id + " has no Renderer component.");
+                        Debug.LogWarning("[ConstantForce] component not found in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id);
                     }
 
                     // Change displayed text on television (a maximum of 539 continuous characters)
-                    var tmpInputField = localGameObject.GetComponent<TMP_InputField>();
+                    var tmpInputField = localGameObject.GetComponent<TextMeshProUGUI>();
                     if (tmpInputField != null)
                     {
                         tmpInputField.text = updatedVRState.Components.Text;
-                        Debug.Log("Changed Text of VR State with ID " + updatedVRState.Id);
+                        Debug.Log("[TMP_InputField] Changed in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id + ", New text: " + updatedVRState.Components.Text);
                     }
                     else
                     {
-                        Debug.LogWarning("Could not find an VR State with ID: " + updatedVRState.Id);
+                        Debug.LogWarning("[TMP_InputField] component not found in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id);
                     }
                 }
             }

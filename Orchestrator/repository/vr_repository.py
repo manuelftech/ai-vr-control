@@ -10,7 +10,7 @@ class VRRepository():
     def saveAll(self, return_saved=False, vr_states=[]):
         modified_ids = []
         for vr_state in vr_states:
-            id = f"{config.KEY_PREFIX}{vr_state['Id']}"
+            id = f"{config.KEY_PREFIX}{vr_state.Id}"
             modified_ids.append(id)
             self._save_single_object(id=id, property="$", vr_state=vr_state)
         if return_saved:
