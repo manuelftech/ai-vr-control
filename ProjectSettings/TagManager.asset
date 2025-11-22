@@ -13,6 +13,7 @@ TagManager:
   - rack
   - chair
   - stick
+  - television_display_text
   layers:
   - Default
   - TransparentFX

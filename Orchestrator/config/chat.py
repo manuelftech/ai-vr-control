@@ -1,7 +1,7 @@
+from openai import OpenAI
 from config import config
-import redis
 
-class RedisClient():
+class ChatGPT():
     _singleton = None
     _is_already_initialized = False
 
@@ -13,19 +13,14 @@ class RedisClient():
 
     def _connect(self):
         try:
-            return redis.StrictRedis(
-                host=config.REDIS_HOST,
-                port=config.REDIS_PORT,
-                password=config.REDIS_PASSWORD,
-                decode_responses=True,
-            )
+            return OpenAI(api_key=config.LLM_API_KEY)
         except Exception as e:
             raise Exception(e)
-        
+    
     def get_status(self):
         return self.connection_status
-    
+
     def __new__(cls, *args, **kwargs):
         if cls._singleton is None:
-            cls._singleton = super(RedisClient, cls).__new__(cls)
+            cls._singleton = super(ChatGPT, cls).__new__(cls)
         return cls._singleton

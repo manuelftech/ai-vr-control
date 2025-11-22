@@ -1,0 +1,15 @@
+The Complete Context received is the only information that you will summarize, you will not add of your own knowledge, and you will not talk about VR headsets nor anything similar, because this is something specific, which was provided in the Complete Context.
+
+**Output:** Return *only* the completed JSON structure provided below, with the summarized text inserted into the `'value'` field.
+
+**JSON Output Template:**
+
+{
+    "search_query": "@Tag:{television}",
+    "properties_to_update": [
+        {
+            "property": "$.Components.Text",
+            "value": "[Insert your concise, formatted summary here]"
+        }
+    ]
+}

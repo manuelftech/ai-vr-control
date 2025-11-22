@@ -1,9 +1,10 @@
-using UnityEngine;
-using System.Collections.Generic;
-using System;
 using AIControlMagicVR.Data.Models;
-using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using UnityEngine;
+using System;
+using TMPro;
 
 namespace AIControlMagicVR.Managers
 {
@@ -105,7 +106,7 @@ namespace AIControlMagicVR.Managers
                     {
                         Color updatedColor;
                         ColorUtility.TryParseHtmlString(updatedVRState.Components.Color, out updatedColor);
-                        
+
                         renderer.material.color = updatedColor;
                         Debug.Log("Changed color of VR State with ID " + updatedVRState.Id);
                         Debug.Log(updatedColor);
@@ -127,10 +128,18 @@ namespace AIControlMagicVR.Managers
                     {
                         Debug.LogError("VR State with ID " + updatedVRState.Id + " has no Renderer component.");
                     }
-                }
-                else
-                {
-                    Debug.LogWarning("Could not find an VR State with ID: " + updatedVRState.Id);
+
+                    // Change displayed text on television (a maximum of 539 continuous characters)
+                    var tmpInputField = localGameObject.GetComponent<TMP_InputField>();
+                    if (tmpInputField != null)
+                    {
+                        tmpInputField.text = updatedVRState.Components.Text;
+                        Debug.Log("Changed Text of VR State with ID " + updatedVRState.Id);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Could not find an VR State with ID: " + updatedVRState.Id);
+                    }
                 }
             }
         }

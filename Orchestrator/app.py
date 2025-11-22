@@ -1,8 +1,10 @@
+from controllers.vr_controller import router
+from config.logger import init_logging
 from fastapi import FastAPI
 import uvicorn
-from controllers.vr_controller import router
 
 app = FastAPI()
+init_logging()
 app.include_router(router)
 
 if __name__ == "__main__":

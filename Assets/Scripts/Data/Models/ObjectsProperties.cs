@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System;
 
 namespace AIControlMagicVR.Data.Models
 {
@@ -27,6 +27,7 @@ namespace AIControlMagicVR.Data.Models
     {
         public CoordinatesProperties ConstantForce ;
         public string Color;
+        public string Text;
         public ComponentsProperties() { }
     }
 
@@ -43,9 +44,9 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class CoordinatesProperties
     {
-        public float X; // 1.98
-        public float Y; // 1.287
-        public float Z; // 0.03871146
+        public float X;
+        public float Y;
+        public float Z;
         public CoordinatesProperties() { }
     }
 }

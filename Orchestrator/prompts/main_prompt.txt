@@ -1,0 +1,6 @@
+Identify the user's intent and choose the correct function.
+
+- **`instructions_virtual_reality`**: Use this for questions about functionality.
+  - *Example prompts:* "How do I get started?", "What are the features?", "Explain the system's purpose."
+- **`manipulate_virtual_reality`**: Use this for requests that modify the environment.
+  - *Example prompts:* "Change the color of the wall to blue.", "Add a new element.", "Remove the chair."
