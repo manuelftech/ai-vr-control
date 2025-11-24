@@ -37,11 +37,11 @@ class RedisClient():
         return cls._singleton
     
     def _clean_cache(self):
-        logger.debug("Scanning for cache elements for cleaning")
+        logger.debug("Scanning for existing cache")
         cache = list(self.client.scan_iter('*'))
         if len(cache) < 1:
             logger.debug("No cache found")
             return
         for key in cache:
             self.client.delete(key)
-            logger.debug("Cache deleted: Key %s", key)
+        logger.debug("Cache successfully deleted")
