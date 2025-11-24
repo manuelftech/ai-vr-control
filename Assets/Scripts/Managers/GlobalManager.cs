@@ -10,6 +10,7 @@ namespace AIControlMagicVR.Managers
 {
     public class GlobalManager : MonoBehaviour
     {
+        public string ApiURL;
         public static GlobalManager Instance { get; private set; }
         public Dictionary<string, GameObject> vrStateObjects = new Dictionary<string, GameObject>();
 
@@ -25,6 +26,15 @@ namespace AIControlMagicVR.Managers
                 Instance = this;
             }
             Debug.Log("GlobalManager instance created.");
+            this.GetEnvironmentVariables();
+        }
+
+        private void GetEnvironmentVariables(){
+            ApiURL = Environment.GetEnvironmentVariable("VR_ENDPOINT") ?? "http://localhost:5000/virtual-reality-environment/state";
+            if (string.IsNullOrEmpty(ApiURL)){
+                throw new System.Exception("Environment variables not found.");
+            }
+            Debug.Log("Environment variables successfully configured.");
         }
 
         public void RegisterObject(GameObject obj)
@@ -33,11 +43,11 @@ namespace AIControlMagicVR.Managers
             string universalId = Guid.NewGuid().ToString();
             if (vrStateObjects.TryAdd(universalId, obj))
             {
-                Debug.Log("[GlobalManager] VR state registered. Universal Id: " + universalId);
+                Debug.Log($"GlobalManager VR state registered. Universal Id: {universalId}");
             }
             else
             {
-                Debug.Log("[GlobalManager] VR state with Universal Id: " + universalId + " already registered");
+                Debug.Log($"GlobalManager VR state with Universal Id: {universalId} already registered.");
             }
         }
 
@@ -113,7 +123,7 @@ namespace AIControlMagicVR.Managers
 
                 objectsProperties.Add(props);
             }
-            Debug.Log("[GlobalManager] Completed GetFormattedVirtualRealityState()");
+            Debug.Log("GlobalManager Completed formatting VR states");
             return objectsProperties;
         }
 
@@ -131,11 +141,11 @@ namespace AIControlMagicVR.Managers
                         ColorUtility.TryParseHtmlString(updatedVRState.Components.Color, out updatedColor);
 
                         renderer.material.color = updatedColor;
-                        Debug.Log("[Renderer] Changed color of VR State with Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id + ", New color: " + updatedColor);
+                        Debug.Log($"Renderer: Changed color of VR State with Name: {updatedVRState.Name} and ID: {updatedVRState.Id} New color: {updatedColor}");
                     }
                     else
                     {
-                        Debug.LogWarning("[Renderer] component not found in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id);
+                        Debug.LogWarning($"Renderer component not found in Name: : {updatedVRState.Name} and ID: {updatedVRState.Id}");
                     }
 
                     // Change constant force
@@ -144,23 +154,23 @@ namespace AIControlMagicVR.Managers
                     {
                         constantForce.force = new Vector3(updatedVRState.Components.ConstantForce.Force.X, updatedVRState.Components.ConstantForce.Force.Y, updatedVRState.Components.ConstantForce.Force.Z);
                         constantForce.relativeTorque = new Vector3(updatedVRState.Components.ConstantForce.RelativeTorque.X, updatedVRState.Components.ConstantForce.RelativeTorque.Y, updatedVRState.Components.ConstantForce.RelativeTorque.Z);
-                        Debug.Log("[ConstantForce] Changed in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id);
+                        Debug.Log($"ConstantForce: Changed in Name: {updatedVRState.Name} and ID: {updatedVRState.Id}");
                     }
                     else
                     {
-                        Debug.LogWarning("[ConstantForce] component not found in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id);
+                        Debug.LogWarning($"ConstantForce component not found in Name: : {updatedVRState.Name} and ID: {updatedVRState.Id}");
                     }
 
                     // Change displayed text on television (a maximum of 539 continuous characters)
-                    var tmpInputField = localGameObject.GetComponent<TextMeshProUGUI>();
+                    var tmpInputField = localGameObject.GetComponent<TextMeshPro>();
                     if (tmpInputField != null)
                     {
                         tmpInputField.text = updatedVRState.Components.Text;
-                        Debug.Log("[TMP_InputField] Changed in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id + ", New text: " + updatedVRState.Components.Text);
+                        Debug.Log($"TextMeshPro component Text Changed in Name: {updatedVRState.Name} and ID: {updatedVRState.Id} New text: {updatedVRState.Components.Text}");
                     }
                     else
                     {
-                        Debug.LogWarning("[TMP_InputField] component not found in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id);
+                        Debug.LogWarning($"TextMeshPro component not found in Name: : {updatedVRState.Name} and ID: {updatedVRState.Id}");
                     }
                 }
             }
