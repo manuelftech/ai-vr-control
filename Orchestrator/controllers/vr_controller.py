@@ -28,5 +28,5 @@ async def state(request: ObjectsProperties):
 
     # Search and update the required VR elements in Redis
     updated_vr_state = vr_repository.updateAllWithTemplate(return_saved=True, template=template_query)
-    
+    logger.debug("Response: %s", updated_vr_state)
     return VirtualRealityResponse(virtual_reality_state=updated_vr_state)

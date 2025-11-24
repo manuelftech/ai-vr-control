@@ -1,5 +1,5 @@
 from controllers.vr_controller import router
-from config.logger import configure_logging
+from config.logger import configure_logger
 from config.openai_agent import ChatGPT
 from config.redis_db import RedisClient
 from fastapi import FastAPI
@@ -8,7 +8,7 @@ import uvicorn
 
 if __name__ == "__main__":
     # Set up log
-    configure_logging()
+    configure_logger()
 
     # Set up Services' configurations
     ChatGPT()

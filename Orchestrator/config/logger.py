@@ -1,7 +1,7 @@
 from config import config
 import logging.config
 
-def configure_logging():
+def configure_logger():
     """
     Initializes the main logger
     """
