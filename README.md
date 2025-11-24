@@ -6,14 +6,9 @@ Project to control a Virtual Reality environment using Python with ChatGPT
 
 The Virtual Reality environment is programmed in C# for Unity Engine, it allows ChatGPT to change the state of the 3D elements of the scene.
 
-Controlling levitation:
 ![Levitating](docs/img/levitating.gif)
-
-Controlling Color
-![Levitating](docs/img/levitating.gif)
-
-Controlling Spinning
-![Levitating](docs/img/levitating.gif)
+![Color](docs/img/color.gif)
+![Spinning](docs/img/spinning.gif)
 
 
 Tools integrated and used for the creation, testing and validation of the project:
@@ -32,3 +27,55 @@ Tools integrated and used for the creation, testing and validation of the projec
     *   `prompts/` Structure and templates for prompt configuration
     *   `repository/` Database integration
     *   `services/` Chatbot Tools
+
+### The following is the structure used to manipulate the environment:
+```json
+{
+    "Prompt": "I want the red sofas to levitate, become blue and start spinning",
+    "VirtualRealityState": [
+        {
+            "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
+            "Tag": "sofa",
+            "Name": "Sofa_1",
+            "Components": {
+                "ConstantForce": {
+                    "Force": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "RelativeTorque": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    }
+                },
+                "Color": "#FFFFFF",
+                "Text": null
+            },
+            "Transform": {
+                "Position": {
+                    "X": 13.7924623,
+                    "Y": -0.5499997,
+                    "Z": 7.930001
+                },
+                "Rotation": {
+                    "X": 5.40021574E-08,
+                    "Y": -0.9496292,
+                    "Z": -2.83122063E-07
+                },
+                "Scale": {
+                    "X": 1.0,
+                    "Y": 1.0,
+                    "Z": 1.0
+                }
+            }
+        }
+    ]
+}
+
+```
+# Based on the previous JSON structure, we can identify many of the object's properties, including positioning, rotation, scale, force, color, and more can be added.
+
+# Workflow diagram
+
