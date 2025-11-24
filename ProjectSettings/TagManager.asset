@@ -14,6 +14,8 @@ TagManager:
   - chair
   - stick
   - television_display_text
+  - ps5
+  - joystick
   layers:
   - Default
   - TransparentFX
