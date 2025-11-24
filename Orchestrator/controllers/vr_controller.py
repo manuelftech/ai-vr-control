@@ -9,10 +9,6 @@ import logging
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix=config.ENDPOINT_PREFIX)
 
-#@router.post("/state")
-#async def state(request: Request):
-#    request_body = await request.json()
-#    logging.debug("Prompt: %s", request["Prompt"])
 @router.post("/state")
 async def state(request: ObjectsProperties):
     logging.debug("Prompt: %s", request.Prompt)

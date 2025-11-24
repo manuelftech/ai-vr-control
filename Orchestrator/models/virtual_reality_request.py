@@ -5,8 +5,12 @@ class CoordinatesProperties(BaseModel):
     Y: float = Field(None, description="Y axis of the virtual reality object")
     Z: float = Field(None, description="Z axis of the virtual reality object")
 
+class ConstantForceProps(BaseModel):
+    Force: CoordinatesProperties | None = Field(None, description="Force against gravity applied to the virtual reality object")
+    RelativeTorque: CoordinatesProperties | None = Field(None, description="Rotation applied to the virtual reality object")
+
 class ComponentsProperties(BaseModel):
-    ConstantForce: CoordinatesProperties | None = Field(None, description="Force applied to the virtual reality object")
+    ConstantForce: ConstantForceProps | None = Field(None, description="Force applied to the virtual reality object")
     Color: str| None = Field(None, description="Color property of the Component", pattern=r"^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|)$")
     Text: str | None = Field(None, description="Text property of the Component")
 

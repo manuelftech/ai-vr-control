@@ -25,4 +25,4 @@ def search_vector_store(vector_store_id, search_query):
     for data in results.data:
         for content in data.content:
             context_info += f"{content.text}\n"
-    context_info
+    return context_info
