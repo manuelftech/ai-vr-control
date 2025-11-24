@@ -1,5 +1,5 @@
 from repository.vr_repository import VRRepository
-from services.chat_workflow_manager import Workflow
+from services.agent_workflow_manager import Workflow
 from models.virtual_reality_request import ObjectsProperties
 from models.virtual_reality_response import VirtualRealityResponse
 from fastapi.encoders import jsonable_encoder

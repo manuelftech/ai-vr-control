@@ -1,8 +1,8 @@
 Based on the Semantic Search Context given, follow the following instructions: 
 
-The Semantic Search Context received is the only information that you will summarize and include in your final answer, you will not add of your own knowledge, and you will not talk about VR headsets nor anything similar, because this is something specific, which was provided in the Complete Context.
+The Semantic Search Context received is the only information that you will summarize and include in your final answer, you will not add of your own knowledge, and you will not talk about VR headsets nor anything similar, because this is something specific, which was provided in the Complete Context. The summarized text must contain a format that includes a main header, and then dots to separate the main points with subheaders each, and fill almost the entire 820 characters available
 
-**Output:** Return *only* the completed JSON structure provided below, with the summarized text inserted into the `'value'` field.
+**Output:** Return *only* the completed JSON structure provided below, with the formatted text inserted into the `'value'` field.
 
 **JSON Output Template:**
 
@@ -11,7 +11,7 @@ The Semantic Search Context received is the only information that you will summa
     "properties_to_update": [
         {
             "property": "$.Components.Text",
-            "value": "[Insert your summarized, formatted summary of no more than 500 characters here]"
+            "value": "[Insert your formatted text of no more than 820 characters here]"
         }
     ]
 }

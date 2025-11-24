@@ -152,11 +152,11 @@ namespace AIControlMagicVR.Managers
                     }
 
                     // Change displayed text on television (a maximum of 539 continuous characters)
-                    var tmpInputField = localGameObject.GetComponent<TextMeshProUGUI>();
+                    var tmpInputField = localGameObject.GetComponent<TextMeshPro>();
                     if (tmpInputField != null)
                     {
                         tmpInputField.text = updatedVRState.Components.Text;
-                        Debug.Log("[TMP_InputField] Changed in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id + ", New text: " + updatedVRState.Components.Text);
+                        Debug.Log("[TextMeshProUGUI] Changed in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id + ", New text: " + updatedVRState.Components.Text);
                     }
                     else
                     {
