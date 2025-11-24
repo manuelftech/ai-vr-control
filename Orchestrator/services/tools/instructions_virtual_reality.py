@@ -13,11 +13,9 @@ class _InstructionsVR(_Tool):
         instructions = read_prompt('instructions_virtual_reality.txt')
 
         self.has_additional_prompt = f"""
-            User Request: {input["previous_prompt"]}
+            Semantic Search Context: {context_info}
 
-            Complete context: {context_info}
-
-            Instructions: {instructions}
+            {instructions}
             """
         
     def _get_definition(self):

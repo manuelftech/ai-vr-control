@@ -32,7 +32,6 @@ namespace AIControlMagicVR.Managers.Networking
             {
                 Debug.Log("[APIVRProperties] API Response: " + request.downloadHandler.text);
                 var response = JsonUtility.FromJson<ObjectsProperties>(request.downloadHandler.text);
-                Debug.Log("[APIVRProperties] Conversion completed");
                 return response;
             }
         }

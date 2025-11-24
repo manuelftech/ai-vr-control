@@ -3,6 +3,7 @@
 # Python:
 Orchestrator/__pycache__/
 Orchestrator/*/__pycache__/
+Orchestrator/*/*/__pycache__/
 Orchestrator/venv/
 Orchestrator/.env
 

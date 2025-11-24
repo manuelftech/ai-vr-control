@@ -1,6 +1,7 @@
+from config.redis_db import RedisClient
 from config import config
-from config.db import RedisClient
 import logging
+import json
 logger = logging.getLogger(__name__)
 
 class VRRepository():

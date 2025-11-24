@@ -1,7 +1,6 @@
 from services.tools.instructions_virtual_reality import _InstructionsVR
-from services.tools.manipulate_virtual_reality import _ManipulateVR
 from core.utils import read_prompt
-from config.chat import ChatGPT
+from config.openai_agent import ChatGPT
 from config import config
 import logging
 import json
@@ -20,7 +19,6 @@ class Workflow():
     def _get_tools(self):
         # Add more tools as needed
         return [
-            _ManipulateVR(), 
             _InstructionsVR(),
             ]
     
@@ -38,8 +36,7 @@ class Workflow():
                 tools=self.tool_definitions,
                 input=chat_history,
             )
-            # We append the response to our chat history
-            chat_history.extend(response.output)
+            
             # We find the tools to be used during the workflow
             chat_history.extend(self._call_tool(response.output))
 
@@ -52,20 +49,21 @@ class Workflow():
         for item in chatbot_response:
             if item.type == "function_call":
                 result = self._find_function(item)
-                completed_step = [{
+                chatbot_response.append({
                     "type": "function_call_output", 
                     "call_id": item.call_id, 
-                    "output": json.dumps({"result": result, "status": "Function called successfully"})}]
+                    "output": json.dumps({"result": result, "status": "Function called successfully"})})
                 # If the workflow continues and needs an additional prompt, we append it
                 if self.has_additional_prompt:
                     logger.debug("Additional prompt: %s" + self.has_additional_prompt)
-                    completed_step.append({
+                    chatbot_response.append({
                         "role": "system", 
                         "content": self.has_additional_prompt})
-                return completed_step
+                return chatbot_response
         # If there are no additional prompts and no function calls, we return the final result
         self.has_additional_prompt = False
-        return self._format_result(chatbot_response)
+        chatbot_response.append(self._format_result(chatbot_response))
+        return chatbot_response
     
     def _find_function(self, item):
         for tool in self._get_tool_functions():
@@ -79,7 +77,7 @@ class Workflow():
     
     def _format_result(self, chatbot_response):
         try:
-            return [ast.literal_eval(chatbot_response[-1].content[-1].text)]
+            return ast.literal_eval(chatbot_response[-1].content[-1].text)
         except:
             raise NotImplementedError("The action provided does not return a Redis Query Template %s", chatbot_response[-1].content[-1].text)
     
