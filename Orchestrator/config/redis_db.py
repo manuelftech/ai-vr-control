@@ -1,6 +1,6 @@
 from config import config
-import redis
 import logging
+import redis
 logger = logging.getLogger(__name__)
 
 class RedisClient():

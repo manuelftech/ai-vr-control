@@ -12,6 +12,7 @@ Material:
   m_Parent: {fileID: 2100000, guid: cb339679d860eb649a63a72e8aaa0ee0, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ALPHATEST_ON
   - _METALLICSPECGLOSSMAP
   - _NORMALMAP
   - _SPECGLOSSMAP
@@ -22,7 +23,7 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap:
-    RenderType: Opaque
+    RenderType: TransparentCutout
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 

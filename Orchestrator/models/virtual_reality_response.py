@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
 from models.virtual_reality_request import ObjectProperties
+from pydantic import BaseModel, Field
 
 class VirtualRealityResponse(BaseModel):
     VirtualRealityState: list[ObjectProperties] | None = Field(None, description="List of elements with their virtual reality state")

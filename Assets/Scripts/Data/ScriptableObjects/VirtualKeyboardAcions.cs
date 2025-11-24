@@ -11,33 +11,27 @@ namespace AIControlMagicVR.Data.ScriptableObjects
 {
     public class VirtualKeyboardActions : MonoBehaviour
     {
-        private static readonly string Tag = "keyboardText";
+        private string Tag = "keyboardText";
         private APIVRProperties apiVRProperties = new APIVRProperties();
         public string CaptureKeyboardInputText()
         {
             GameObject keyboardText = GameObject.FindWithTag(Tag);
             if (keyboardText != null)
             {
-                Debug.Log("Found the Keyboard Input GameObject");
                 var tmpInputField = keyboardText.GetComponent<TMP_InputField>();
                 if (tmpInputField != null)
                 {
                     var text = tmpInputField.text;
-                    Debug.Log("Text entered: " + text);
+                    Debug.Log($"Keyboard input: {text}");
                     tmpInputField.text = "";
                     return text;
                 }
                 else
                 {
-                    Debug.LogError("GameObject tagged '" + Tag + "' does not have a TMP_InputField component attached!");
-                    throw new Exception("GameObject tagged '" + Tag + "' does not have a TMP_InputField component attached!");
+                    Debug.LogWarning($"TMPInputField component not found in Tag: : {Tag}");
                 }
             }
-            else
-            {
-                Debug.LogWarning("No GameObject with the tag '" + Tag + "' found in the scene.");
-                throw new Exception("No GameObject with the tag '" + Tag + "' found in the scene.");
-            }
+            throw new Exception($"Element with Tag: {this.Tag} not found in the scene."); 
         }
 
 
