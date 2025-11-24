@@ -30,7 +30,7 @@ namespace AIControlMagicVR.Managers
         }
 
         private void GetEnvironmentVariables(){
-            ApiURL = Environment.GetEnvironmentVariable("VR_ENDPOINT");
+            ApiURL = Environment.GetEnvironmentVariable("VR_ENDPOINT") ?? "http://localhost:5000/virtual-reality-environment/state";
             if (string.IsNullOrEmpty(ApiURL)){
                 throw new System.Exception("Environment variables not found.");
             }
