@@ -1,5 +1,7 @@
 from config import config
 import redis
+import logging
+logger = logging.getLogger(__name__)
 
 class RedisClient():
     _singleton = None
@@ -13,13 +15,16 @@ class RedisClient():
             self._clean_cache()
 
     def _connect(self):
+        logger.debug("Connecting to Redis Database")
         try:
-            return redis.StrictRedis(
+            redis_client = redis.StrictRedis(
                 host=config.REDIS_HOST,
                 port=config.REDIS_PORT,
                 password=config.REDIS_PASSWORD,
                 decode_responses=True,
             )
+            logger.debug("Successfuly connected to Redis Database")
+            return redis_client
         except Exception as e:
             raise Exception(e)
         
@@ -32,5 +37,11 @@ class RedisClient():
         return cls._singleton
     
     def _clean_cache(self):
-        for key in self.client.scan_iter('*'):
-            self.redis.client.delete(key)
+        logger.debug("Scanning for cache elements for cleaning")
+        cache = list(self.client.scan_iter('*'))
+        if len(cache) < 1:
+            logger.debug("No cache found")
+            return
+        for key in cache:
+            self.client.delete(key)
+            logger.debug("Cache deleted: Key %s", key)

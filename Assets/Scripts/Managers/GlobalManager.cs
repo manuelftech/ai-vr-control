@@ -50,25 +50,25 @@ namespace AIControlMagicVR.Managers
                     .X(sceneVRState.Value.transform.position.x)
                     .Y(sceneVRState.Value.transform.position.y)
                     .Z(sceneVRState.Value.transform.position.z)
-                    .build();
+                    .Build();
 
                 CoordinatesProperties rotation = new CoordinatesProperties.Builder()
                     .X(sceneVRState.Value.transform.rotation.x)
                     .Y(sceneVRState.Value.transform.rotation.y)
                     .Z(sceneVRState.Value.transform.rotation.z)
-                    .build();
+                    .Build();
 
                 CoordinatesProperties scale = new CoordinatesProperties.Builder()
                     .X(sceneVRState.Value.transform.localScale.x)
                     .Y(sceneVRState.Value.transform.localScale.y)
                     .Z(sceneVRState.Value.transform.localScale.z)
-                    .build();
+                    .Build();
 
                 TransformProperties transform = new TransformProperties.Builder()
                     .Position(position)
                     .Rotation(rotation)
                     .Scale(scale)
-                    .build();
+                    .Build();
 
                 // Obtain the hexadecimal formatted color of the Renderer Component (e.g, #FFFFFF)
                 string formattedColor = null;
@@ -84,13 +84,13 @@ namespace AIControlMagicVR.Managers
                     .X(constantForce.force.x)
                     .Y(constantForce.force.y)
                     .Z(constantForce.force.z)
-                    .build();
+                    .Build();
                 }
                 
                 ComponentsProperties components = new ComponentsProperties.Builder()
                     .ConstantForce(constantForceProps)
                     .Color(formattedColor)
-                    .build();
+                    .Build();
 
                 ObjectProperties props = new ObjectProperties.Builder()
                     .Id(sceneVRState.Key)
@@ -98,7 +98,7 @@ namespace AIControlMagicVR.Managers
                     .Name(sceneVRState.Value.name)
                     .Components(components)
                     .Transform(transform)
-                    .build();
+                    .Build();
 
                 objectsProperties.Add(props);
             }

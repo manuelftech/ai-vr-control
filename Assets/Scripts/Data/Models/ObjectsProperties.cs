@@ -12,13 +12,13 @@ namespace AIControlMagicVR.Data.Models
         public class Builder
         {
             private ObjectsProperties _build = new ObjectsProperties();
-            public Builder VirtualRealityState(ObjectsProperties properties)
+            public Builder VirtualRealityState(List<ObjectProperties> VirtualRealityState)
             {
                 if (_build.VirtualRealityState == null)
                 {
                     _build.VirtualRealityState = new List<ObjectProperties>();
                 }
-                 _build.VirtualRealityState.Add(properties);
+                 _build.VirtualRealityState = VirtualRealityState;
                  return this;
             }
             public ObjectsProperties Build()
@@ -144,11 +144,11 @@ namespace AIControlMagicVR.Data.Models
                 return this;
             }
             public Builder Y(float y) { 
-                _build.X = y; 
+                _build.Y = y; 
                 return this;
             }
             public Builder Z(float z) { 
-                _build.X = z; 
+                _build.Z = z; 
                 return this;
             }
             public CoordinatesProperties Build()

@@ -1,7 +1,6 @@
 from services.tools.instructions_virtual_reality import _InstructionsVR
-from services.tools.manipulate_virtual_reality import _ManipulateVR
 from core.utils import read_prompt
-from config.chat import ChatGPT
+from config.openai_agent import ChatGPT
 from config import config
 import logging
 import json
@@ -20,7 +19,6 @@ class Workflow():
     def _get_tools(self):
         # Add more tools as needed
         return [
-            _ManipulateVR(), 
             _InstructionsVR(),
             ]
     
@@ -64,7 +62,8 @@ class Workflow():
                 return chatbot_response
         # If there are no additional prompts and no function calls, we return the final result
         self.has_additional_prompt = False
-        return chatbot_response.append(self._format_result(chatbot_response))
+        chatbot_response.append(self._format_result(chatbot_response))
+        return chatbot_response
     
     def _find_function(self, item):
         for tool in self._get_tool_functions():

@@ -6,9 +6,9 @@ class CoordinatesProperties(BaseModel):
     Z: float = Field(None, description="Z axis of the virtual reality object")
 
 class ComponentsProperties(BaseModel):
-    ConstantForce: CoordinatesProperties = Field(None, description="Force applied to the virtual reality object")
-    Color: str = Field(None, description="Color property of the Component", pattern=r"^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|)$")
-    Text: str = Field(None, description="Text property of the Component")
+    ConstantForce: CoordinatesProperties | None = Field(None, description="Force applied to the virtual reality object")
+    Color: str| None = Field(None, description="Color property of the Component", pattern=r"^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|)$")
+    Text: str | None = Field(None, description="Text property of the Component")
 
 class TransformProperties(BaseModel):
     Position: CoordinatesProperties = Field(None, description="Position of the virtual reality object in the environment")
@@ -25,3 +25,4 @@ class ObjectProperties(BaseModel):
 class ObjectsProperties(BaseModel):
     Prompt: str = Field(None, description="Message sent to the chatbot by the user")
     VirtualRealityState: list[ObjectProperties] = Field(None, description="List of elements with their virtual reality state")
+

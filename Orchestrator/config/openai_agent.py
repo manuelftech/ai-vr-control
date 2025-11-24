@@ -1,5 +1,7 @@
 from openai import OpenAI
 from config import config
+import logging
+logger = logging.getLogger(__name__)
 
 class ChatGPT():
     _singleton = None
@@ -12,8 +14,11 @@ class ChatGPT():
             self._is_already_initialized = True
 
     def _connect(self):
+        logger.debug("Connecting to OpenAI agent")
         try:
-            return OpenAI(api_key=config.LLM_API_KEY)
+            agent = OpenAI(api_key=config.LLM_API_KEY)
+            logger.debug("Successfuly connected to OpenAI agent")
+            return agent
         except Exception as e:
             raise Exception(e)
     

@@ -1,4 +1,4 @@
-from config.chat import ChatGPT
+from config.openai_agent import ChatGPT
 import os
 
 def read_prompt(filename):
