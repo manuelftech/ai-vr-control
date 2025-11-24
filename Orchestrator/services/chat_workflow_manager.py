@@ -49,21 +49,16 @@ class Workflow():
         for item in chatbot_response:
             if item.type == "function_call":
                 result = self._find_function(item)
-                chatbot_response.append({
-                    "type": "function_call_output", 
-                    "call_id": item.call_id, 
+                chatbot_response.append({"type": "function_call_output", "call_id": item.call_id, 
                     "output": json.dumps({"result": result, "status": "Function called successfully"})})
                 # If the workflow continues and needs an additional prompt, we append it
                 if self.has_additional_prompt:
                     logger.debug("Additional prompt: %s" + self.has_additional_prompt)
-                    chatbot_response.append({
-                        "role": "system", 
-                        "content": self.has_additional_prompt})
+                    chatbot_response.append({"role": "system", "content": self.has_additional_prompt})
                 return chatbot_response
         # If there are no additional prompts and no function calls, we return the final result
         self.has_additional_prompt = False
-        chatbot_response.append(self._format_result(chatbot_response))
-        return chatbot_response
+        return self._format_result(chatbot_response)
     
     def _find_function(self, item):
         for tool in self._get_tool_functions():
@@ -77,7 +72,8 @@ class Workflow():
     
     def _format_result(self, chatbot_response):
         try:
-            return ast.literal_eval(chatbot_response[-1].content[-1].text)
+            chatbot_response.append(ast.literal_eval(chatbot_response[-1].content[-1].text))
+            return chatbot_response
         except:
             raise NotImplementedError("The action provided does not return a Redis Query Template %s", chatbot_response[-1].content[-1].text)
     

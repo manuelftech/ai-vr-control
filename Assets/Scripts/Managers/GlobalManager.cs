@@ -77,13 +77,24 @@ namespace AIControlMagicVR.Managers
                     formattedColor = "#" + ColorUtility.ToHtmlStringRGB(renderer.material.color);
                 }
 
-                CoordinatesProperties constantForceProps = null;
+                ConstantForceProps constantForceProps = null;
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
                 if (constantForce != null){
-                    constantForceProps = new CoordinatesProperties.Builder()
+                    var force = new CoordinatesProperties.Builder()
                     .X(constantForce.force.x)
                     .Y(constantForce.force.y)
                     .Z(constantForce.force.z)
+                    .Build();
+
+                    var relativeTorque = new CoordinatesProperties.Builder()
+                    .X(constantForce.relativeTorque.x)
+                    .Y(constantForce.relativeTorque.y)
+                    .Z(constantForce.relativeTorque.z)
+                    .Build();
+
+                    constantForceProps = new ConstantForceProps.Builder()
+                    .Force(force)
+                    .RelativeTorque(relativeTorque)
                     .Build();
                 }
                 
@@ -131,8 +142,9 @@ namespace AIControlMagicVR.Managers
                     ConstantForce constantForce = localGameObject.GetComponent<ConstantForce>();
                     if (constantForce != null)
                     {
-                        constantForce.force = new Vector3(updatedVRState.Components.ConstantForce.X, updatedVRState.Components.ConstantForce.Y, updatedVRState.Components.ConstantForce.Z);
-                        Debug.Log("[ConstantForce] Changed in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id + ", New Y Force: " + updatedVRState.Components.ConstantForce.Y);
+                        constantForce.force = new Vector3(updatedVRState.Components.ConstantForce.Force.X, updatedVRState.Components.ConstantForce.Force.Y, updatedVRState.Components.ConstantForce.Force.Z);
+                        constantForce.relativeTorque = new Vector3(updatedVRState.Components.ConstantForce.RelativeTorque.X, updatedVRState.Components.ConstantForce.RelativeTorque.Y, updatedVRState.Components.ConstantForce.RelativeTorque.Z);
+                        Debug.Log("[ConstantForce] Changed in Name: " + updatedVRState.Name + ", and ID: " + updatedVRState.Id);
                     }
                     else
                     {

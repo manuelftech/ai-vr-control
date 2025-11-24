@@ -71,7 +71,7 @@ namespace AIControlMagicVR.Data.Models
     [Serializable]
     public class ComponentsProperties
     {
-        public CoordinatesProperties ConstantForce ;
+        public ConstantForceProps ConstantForce ;
         public string Color;
         public string Text;
 
@@ -79,7 +79,7 @@ namespace AIControlMagicVR.Data.Models
         public class Builder
         {
             private ComponentsProperties _build = new ComponentsProperties();
-            public Builder ConstantForce(CoordinatesProperties constantForce) { 
+            public Builder ConstantForce(ConstantForceProps constantForce) { 
                 _build.ConstantForce = constantForce; 
                 return this;
             }
@@ -92,6 +92,31 @@ namespace AIControlMagicVR.Data.Models
                 return this;
             }
             public ComponentsProperties Build()
+            {
+                return _build;
+            }
+        }
+    }
+
+    [Serializable]
+    public class ConstantForceProps
+    {
+        public CoordinatesProperties Force;
+        public CoordinatesProperties RelativeTorque;
+
+        public ConstantForceProps() { }
+        public class Builder
+        {
+            private ConstantForceProps _build = new ConstantForceProps();
+            public Builder Force(CoordinatesProperties force) { 
+                _build.Force = force; 
+                return this;
+            }
+            public Builder RelativeTorque(CoordinatesProperties relativeTorque) { 
+                _build.RelativeTorque = relativeTorque; 
+                return this;
+            }
+            public ConstantForceProps Build()
             {
                 return _build;
             }

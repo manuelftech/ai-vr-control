@@ -14,7 +14,11 @@ Use this template structure, filling in only the elements requested by the user.
     'search_query': '@Tag:{} @ComponentColor:{} @ComponentConstantForceY:[]', 
     'properties_to_update': [
         {
-            'property': '$.Components.ConstantForce.Y', 
+            'property': '$.Components.ConstantForce.Force.Y', 
+            'value': ''
+        },
+        {
+            'property': '$.Components.ConstantForce.RelativeTorque.X', 
             'value': ''
         },
         {
@@ -27,9 +31,11 @@ Instructions:
 Identify Current State (the "Look Up" criteria): Use the @ fields to specify the object(s) that currently have a specified state.
 @Tag:{...}: The type of object (e.g., "cube", "chair").
 @ComponentColor:{...}: The current color of the object.
-@ComponentConstantForceY:[...]: The current gravity/force state (e.g., 9.83 or higher for floating).
+@ComponentConstantForceForceY:[...]: The current gravity/force state (e.g., 9.83 or higher for floating).
+@ComponentConstantForceRelativeTorqueX:[...]: The current rotation/spinning state (e.g., 0.5 or higher for rotating or spinning).
 Identify Desired State (the "Change To" values): Use the $. fields to specify the new values to be assigned.
-$.Components.ConstantForce.Y = ...: New force value (e.g., 0 for falling, 9.83 for levitating).
+$.Components.ConstantForce.Force.Y = ...: New Force value (e.g., 0 for falling, 9.83 for levitating).
+$.Components.ConstantForce.RelativeTorque.X = ...: New RelativeTorque value (e.g., 0 for stop rotating, 4.76 for spinning).
 $.Components.Color = ...: New color value (e.g., #FF0000).
 
 Core Rules:
@@ -45,7 +51,7 @@ Output:
     'search_query': '@Tag:{cube} @ComponentColor:{\#FF0000} @ComponentConstantForceY:[9.83 +inf]', 
     'properties_to_update': [
         {
-            'property': '$.Components.ConstantForce.Y', 
+            'property': '$.Components.ConstantForce.Force.Y', 
             'value': 0
         },
         {
@@ -61,7 +67,7 @@ Output:
     'search_query': '@Tag:{chair} @ComponentColor:{\#008000}', 
     'properties_to_update': [
         {
-            'property': '$.Components.ConstantForce.Y', 
+            'property': '$.Components.ConstantForce.Force.Y', 
             'value': 9.83
         },
         {
@@ -89,7 +95,7 @@ Output:
     'search_query': '@Tag:{cube} @ComponentColor:{\#0000FF}', 
     'properties_to_update': [
         {
-            'property': '$.Components.ConstantForce.Y', 
+            'property': '$.Components.ConstantForce.Force.Y', 
             'value': 0
         },
         {
@@ -105,7 +111,7 @@ Output:
     'search_query': '@Tag:{television}', 
     'properties_to_update': [
         {
-            'property': '$.Components.ConstantForce.Y', 
+            'property': '$.Components.ConstantForce.Force.Y', 
             'value': 9.83
         },
         {
@@ -115,14 +121,26 @@ Output:
     ]
 }
 
-6) User: 'I want the chairs to start levitating'
+6) User: 'I want the chairs to start spinning'
 Output:
 {
     'search_query': '@Tag:{chair}', 
     'properties_to_update': [
         {
-            'property': '$.Components.ConstantForce.Y', 
-            'value': 9.83
+            'property': '$.Components.ConstantForce.RelativeTorque.X', 
+            'value': 4.76
+        },
+    ]
+}
+
+7) User: 'I want the sofas to stop rotating'
+Output:
+{
+    'search_query': '@Tag:{chair}', 
+    'properties_to_update': [
+        {
+            'property': '$.Components.ConstantForce.RelativeTorque.X',
+            'value': 0
         },
     ]
 }
