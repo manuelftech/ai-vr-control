@@ -44,21 +44,22 @@ class Workflow():
         logger.info("Final response: %s" + json.dumps(chat_history[-1]))
         return chat_history[-1]
 
-    def _call_tool(self, chatbot_response):
+    def _call_tool(self, agent_response):
         # Executes the function logic depending on the tool the chat needs to use
-        for item in chatbot_response:
+        for item in agent_response:
             if item.type == "function_call":
                 result = self._find_function(item)
-                chatbot_response.append({"type": "function_call_output", "call_id": item.call_id, 
+                agent_response.append({"type": "function_call_output", "call_id": item.call_id, 
                     "output": json.dumps({"result": result, "status": "Function called successfully"})})
                 # If the workflow continues and needs an additional prompt, we append it
                 if self.has_additional_prompt:
                     logger.debug("Additional prompt: %s" + self.has_additional_prompt)
-                    chatbot_response.append({"role": "system", "content": self.has_additional_prompt})
-                return chatbot_response
+                    agent_response.append({"role": "system", "content": self.has_additional_prompt})
+                return agent_response
         # If there are no additional prompts and no function calls, we return the final result
         self.has_additional_prompt = False
-        return self._format_result(chatbot_response)
+        agent_response.append(self._format_result(agent_response))
+        return agent_response
     
     def _find_function(self, item):
         for tool in self._get_tool_functions():
@@ -70,12 +71,11 @@ class Workflow():
                 logger.debug("Function result: %s", result)
                 return result
     
-    def _format_result(self, chatbot_response):
+    def _format_result(self, agent_response):
         try:
-            chatbot_response.append(ast.literal_eval(chatbot_response[-1].content[-1].text))
-            return chatbot_response
+            return ast.literal_eval(agent_response[-1].content[-1].text)
         except:
-            raise NotImplementedError("The action provided does not return a Redis Query Template %s", chatbot_response[-1].content[-1].text)
+            raise NotImplementedError("The action provided does not return a Redis Query Template %s", agent_response[-1].content[-1].text)
     
     def _get_tool_functions(self):
         return [tool for tool in self._get_tools()]
