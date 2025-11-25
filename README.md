@@ -65,7 +65,7 @@ Tools integrated and used for the creation, testing and validation of the projec
                         "Z": 0.0
                     }
                 },
-                "Color": "#FFFFFF",
+                "Color": "#FF0000",
                 "Text": "the television object can display text",
             }
         }
