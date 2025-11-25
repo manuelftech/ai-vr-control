@@ -86,4 +86,4 @@ Tools integrated and used for the creation, testing and validation of the projec
 
 # Workflow diagram
 
-![Workflow diagram](docs/img/flow_diagram.png)
+<img src="docs/img/flow_diagram.png" alt="Flow diagram" width="300"/>
