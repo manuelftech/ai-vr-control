@@ -10,7 +10,6 @@ The Virtual Reality environment is programmed in C# for Unity Engine, it allows 
 ![Color](docs/img/color.gif)
 ![Spinning](docs/img/spinning.gif)
 
-
 Tools integrated and used for the creation, testing and validation of the project:
 * OpenAI Python libraries (https://platform.openai.com/docs/overview)
 * Unity Engine (https://unity.com/)
@@ -36,23 +35,7 @@ Tools integrated and used for the creation, testing and validation of the projec
         {
             "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
             "Tag": "sofa",
-            "Name": "Sofa_1",
-            "Components": {
-                "ConstantForce": {
-                    "Force": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "RelativeTorque": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    }
-                },
-                "Color": "#FFFFFF",
-                "Text": null
-            },
+            "Name": "Sofa_livingroom",
             "Transform": {
                 "Position": {
                     "X": 13.7924623,
@@ -69,13 +52,67 @@ Tools integrated and used for the creation, testing and validation of the projec
                     "Y": 1.0,
                     "Z": 1.0
                 }
+            },
+            "Components": {
+                "ConstantForce": {
+                    "Force": {
+                        "X": 0.0,
+                        "Y": 9.83,
+                        "Z": 0.0
+                    },
+                    "RelativeTorque": {
+                        "X": 4.76,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    }
+                },
+                "Color": "#FFFFFF",
+                "Text": "the television object can display text",
+            }
+        }
+        {
+            "Id": "5216cb57-eb28-453f-8b93-76a5c7118631",
+            "Tag": "television",
+            "Name": "television_display_text",
+            "Components": {
+                "ConstantForce": {
+                    "Force": {
+                        "X": 9.83,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "RelativeTorque": {
+                        "X": 4.76,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    }
+                },
+                "Color": "#000000",
+                "Text": "This text is displayed"
+            },
+            "Transform": {
+                "Position": {
+                    "X": 124.116493,
+                    "Y": -13618.65,
+                    "Z": 29.55279
+                },
+                "Rotation": {
+                    "X": 0.0504016876,
+                    "Y": -0.06976382,
+                    "Z": -0.589634538
+                },
+                "Scale": {
+                    "X": 1.0,
+                    "Y": 1.0,
+                    "Z": 1.0
+                }
             }
         }
     ]
 }
 
 ```
-# Based on the previous JSON structure, we can identify many of the object's properties, including positioning, rotation, scale, force, color, and more can be added.
 
 # Workflow diagram
 
+[Click to View Diagram](https://my.visme.co/view/dwo74p71-agent-3d-workflow)
