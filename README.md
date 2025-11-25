@@ -27,7 +27,7 @@ Tools integrated and used for the creation, testing and validation of the projec
     *   `repository/` Database integration
     *   `services/` Chatbot Tools
 
-### The following is the structure used to manipulate the environment:
+### JSON structure to manipulate the 3D environment:
 ```json
 {
     "Prompt": "I want the red sofas to levitate, become blue and start spinning",
