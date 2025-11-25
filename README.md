@@ -10,13 +10,6 @@ The Virtual Reality environment is programmed in C# for Unity Engine, it allows 
 
 ### Project Structure
 
-*   `Assets/` Project assets (scenes, materials, prefabs) of the 3D environment
-    *   `Scripts/` C# source code for environment control
-        *   `Data/` Data management and processing logic
-            *   `Models/` API data models (requests and responses)
-            *   `ScriptableObjects/` Configurable interaction elements
-        *   `Managers/` 3D element management (registration and processing)
-            *   `Networking/` API communication logic (endpoint calls, status/prompt transmission).
 *   `Orchestrator/` Python OpenAI main application
     *   `config/` Configuration property management
     *   `controllers/` API endpoints and user input handling
@@ -26,6 +19,13 @@ The Virtual Reality environment is programmed in C# for Unity Engine, it allows 
     *   `repository/` Database integration layer
     *   `services/` OpenAI agent interaction logic
         *   `tools/` Agent tool definitions
+*   `Assets/` Project assets (scenes, materials, prefabs) of the 3D environment
+    *   `Scripts/` C# source code for environment control
+        *   `Data/` Data management and processing logic
+            *   `Models/` API data models (requests and responses)
+            *   `ScriptableObjects/` Configurable interaction elements
+        *   `Managers/` 3D element management (registration and processing)
+            *   `Networking/` API communication logic (endpoint calls, status/prompt transmission).
 
 ### JSON structure to manipulate the 3D environment:
 ```json
