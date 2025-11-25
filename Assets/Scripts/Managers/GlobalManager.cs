@@ -1,4 +1,4 @@
-using AIControlMagicVR.Data.Models;
+using AIControlVR.Data.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -6,7 +6,7 @@ using UnityEngine;
 using System;
 using TMPro;
 
-namespace AIControlMagicVR.Managers
+namespace AIControlVR.Managers
 {
     public class GlobalManager : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AIControlMagicVR.Managers
+namespace AIControlVR.Managers
 {
     public class AddToManager : MonoBehaviour
     {

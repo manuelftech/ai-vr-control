@@ -1,13 +1,13 @@
-using AIControlMagicVR.Managers.Networking;
-using AIControlMagicVR.Data.Models;
-using AIControlMagicVR.Managers;
+using AIControlVR.Managers.Networking;
+using AIControlVR.Data.Models;
+using AIControlVR.Managers;
 using System.Reflection;
 using System.Threading;
 using UnityEngine;
 using System;
 using TMPro;
 
-namespace AIControlMagicVR.Data.ScriptableObjects
+namespace AIControlVR.Data.ScriptableObjects
 {
     public class VirtualKeyboardActions : MonoBehaviour
     {

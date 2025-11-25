@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace AIControlMagicVR.Data.Models
+namespace AIControlVR.Data.Models
 {
     [Serializable]
     public class ObjectsProperties

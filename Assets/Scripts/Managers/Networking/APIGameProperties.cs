@@ -1,6 +1,6 @@
-using AIControlMagicVR.Data.Models;
+using AIControlVR.Data.Models;
 using System.Collections.Generic;
-using AIControlMagicVR.Managers;
+using AIControlVR.Managers;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 using System.Reflection;
@@ -9,7 +9,7 @@ using System.Text;
 using UnityEngine;
 using System;
 
-namespace AIControlMagicVR.Managers.Networking
+namespace AIControlVR.Managers.Networking
 {
     public class APIVRProperties
     {
