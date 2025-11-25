@@ -1,30 +1,21 @@
-# Use a minimal, official base image
-FROM python:3.9-slim
+FROM python:3.12-slim
+ARG CONF_GROUP=conf
+ARG CONF_USER=conf
+ARG PORT=5000
+WORKDIR /src
+COPY . /src
+RUN apt-get update && \
+    # Install tools for container debugging and diagnostics
+    apt-get install curl -y && \
+    # Create a new system group and assign a user
+    groupadd $CONF_GROUP \
+    usermod -aG $CONF_GROUP $CONF_USER \
+    mkdir /src \
+    # Set permissions for the project directory
+    chown -R $CONF_USER:$CONF_GROUP /src \
+    # Install Python dependencies
+    pip install --no-cache-dir --upgrade -r /src/requirements.txt
 
-# Create a non-root user and set permissions
-ARG APP_USER=appuser
-ARG APP_UID=10001
-ARG APP_GID=10001
-RUN groupadd --gid $APP_GID $APP_USER && useradd --uid $APP_UID --gid $APP_GID -m $APP_USER
-RUN mkdir -p /code && chown -R $APP_USER:$APP_GID /code
-
-# Set the working directory
-WORKDIR /code
-
-# Copy only the requirements file first to leverage layer caching
-COPY requirements.txt /code
-
-# Install dependencies as root, then switch user
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-
-# Copy the rest of the application code and set ownership
-COPY --chown=$APP_USER:$APP_GID . /code
-
-# Expose the application port
-EXPOSE 5000
-
-# Switch to the non-root user
-USER $APP_USER
-
-# Run the application
+EXPOSE $PORT
+USER $CONF_USER
 CMD ["python", "app.py"]
