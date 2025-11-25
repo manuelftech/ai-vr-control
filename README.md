@@ -86,4 +86,4 @@ Tools integrated and used for the creation, testing and validation of the projec
 
 # Workflow diagram
 
-<img src="docs/img/flow_diagram.png" alt="Flow diagram" width="300"/>
+<img src="https://github.com/manuelfloresay/ai-vr-control/blob/dev/docs/img/flow_diagram.png" alt="Flow diagram" width="300"/>
