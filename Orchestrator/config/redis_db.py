@@ -23,15 +23,16 @@ class RedisClient():
                 password=config.REDIS_PASSWORD,
                 decode_responses=True,
             )
-            logger.debug("Successfuly connected to Redis Database")
-            return redis_client
+            if redis_client.ping():
+                return redis_client
+            raise Exception("Redis connection falied")
         except Exception as e:
             raise Exception(e)
         
     def get_status(self):
         return self.connection_status
     
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls):
         if cls._singleton is None:
             cls._singleton = super(RedisClient, cls).__new__(cls)
         return cls._singleton

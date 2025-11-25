@@ -17,6 +17,7 @@ class ChatGPT():
         logger.debug("Connecting to OpenAI agent")
         try:
             agent = OpenAI(api_key=config.LLM_API_KEY)
+            agent.models.list()
             logger.debug("Successfuly connected to OpenAI agent")
             return agent
         except Exception as e:
@@ -25,7 +26,7 @@ class ChatGPT():
     def get_status(self):
         return self.connection_status
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls):
         if cls._singleton is None:
             cls._singleton = super(ChatGPT, cls).__new__(cls)
         return cls._singleton
