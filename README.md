@@ -70,44 +70,6 @@ Tools integrated and used for the creation, testing and validation of the projec
                 "Text": "the television object can display text",
             }
         }
-        {
-            "Id": "5216cb57-eb28-453f-8b93-76a5c7118631",
-            "Tag": "television",
-            "Name": "television_display_text",
-            "Components": {
-                "ConstantForce": {
-                    "Force": {
-                        "X": 9.83,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "RelativeTorque": {
-                        "X": 4.76,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    }
-                },
-                "Color": "#000000",
-                "Text": "This text is displayed"
-            },
-            "Transform": {
-                "Position": {
-                    "X": 124.116493,
-                    "Y": -13618.65,
-                    "Z": 29.55279
-                },
-                "Rotation": {
-                    "X": 0.0504016876,
-                    "Y": -0.06976382,
-                    "Z": -0.589634538
-                },
-                "Scale": {
-                    "X": 1.0,
-                    "Y": 1.0,
-                    "Z": 1.0
-                }
-            }
-        }
     ]
 }
 
