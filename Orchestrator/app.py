@@ -1,3 +1,4 @@
+from config.drive import Drive
 from controllers.vr_controller import router
 from config.logger import configure_logger
 from config.openai_agent import ChatGPT
@@ -12,6 +13,7 @@ if __name__ == "__main__":
 
     # Set up Services' configurations
     ChatGPT()
+    Drive()
     RedisClient()
 
     # Initialize the Server
