@@ -6,8 +6,8 @@ Project to control a Virtual Reality environment using Python with ChatGPT
 
 The Virtual Reality environment is programmed in C# for Unity Engine, it allows ChatGPT to change the state of the 3D elements of the scene.
 
-### Application running video:
-[![Control levitation](https://i9.ytimg.com/vi/mmXELJeQ4Lw/mqdefault.jpg?sqp=CKCblMkG-oaymwEmCMACELQB8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGHIgUyg7MA8=&rs=AOn4CLDSc7-RkNNcGQFWH_UQC6i7lUm3MA)](https://www.youtube.com/watch?v=mmXELJeQ4Lw)
+### Application running:
+[![Application running](https://i9.ytimg.com/vi/mmXELJeQ4Lw/mqdefault.jpg?sqp=CKCblMkG-oaymwEmCMACELQB8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGHIgUyg7MA8=&rs=AOn4CLDSc7-RkNNcGQFWH_UQC6i7lUm3MA)](https://www.youtube.com/watch?v=mmXELJeQ4Lw)
 
 Tools integrated and used for the creation, testing and validation of the project:
 * OpenAI Python libraries (https://platform.openai.com/docs/overview)
@@ -47,8 +47,8 @@ Tools integrated and used for the creation, testing and validation of the projec
                     "Z": -2.83122063E-07
                 },
                 "Scale": {
-                    "X": 1.0,
-                    "Y": 1.0,
+                    "X": 2.04,
+                    "Y": 1.61,
                     "Z": 1.0
                 }
             },
