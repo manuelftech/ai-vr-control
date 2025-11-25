@@ -86,4 +86,4 @@ Tools integrated and used for the creation, testing and validation of the projec
 
 # Workflow diagram
 
-[Click to View Diagram](https://my.visme.co/view/dwo74p71-agent-3d-workflow)
+![Workflow diagram](docs/img/flow_diagram.png)
