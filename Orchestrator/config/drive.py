@@ -24,7 +24,6 @@ class Drive():
                     config.SERVICE_ACCOUNT_FILE, 
                     scopes=config.SCOPES)
                 )
-            # Testing the connection
             client.files().list(pageSize=1, fields="nextPageToken, files(id, name)").execute().get('files', [])
             logger.debug("Successfuly connected to Drive")
             return client

@@ -30,7 +30,7 @@ The Virtual Reality environment is programmed in C# for Unity Engine, it allows 
             *   `Models/` API data models (requests and responses)
             *   `ScriptableObjects/` Configurable interaction elements
         *   `Managers/` 3D element management (registration and processing)
-            *   `Networking/` API communication logic (endpoint calls, status/prompt transmission).
+            *   `Networking/` API communication logic (endpoint calls, status/prompt transmission)
 
 ### JSON structure to manipulate the 3D environment:
 ```json
@@ -53,8 +53,8 @@ The Virtual Reality environment is programmed in C# for Unity Engine, it allows 
                     "Z": -2.83122063E-07
                 },
                 "Scale": {
-                    "X": 2.04,
-                    "Y": 1.21,
+                    "X": 1.0,
+                    "Y": 1.2,
                     "Z": 1.0
                 }
             },
