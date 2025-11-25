@@ -10,7 +10,6 @@ class ChatGPT():
     def __init__(self):
         if not self._is_already_initialized:
             self.client = self._connect()
-            self.connection_status = "Connected"
             self._is_already_initialized = True
 
     def _connect(self):
