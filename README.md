@@ -8,6 +8,11 @@ The Virtual Reality environment is programmed in C# for Unity Engine, it allows 
 
 ### Application running:
 
+### Data Sources
+- Vector Store: Enables the Agent to access system usage instructions through semantic search.
+- Redis Database: Stores, searches, and updates the temporal 3D world status.
+- Drive: Stores and retrieves the main Agent Prompt instructions from Google Workspace to enhance behavior.
+
 ### Project Structure
 
 *   `Orchestrator/` Python OpenAI main application
@@ -78,4 +83,5 @@ The Virtual Reality environment is programmed in C# for Unity Engine, it allows 
 Tools integrated and used for the creation, testing and validation of the project:
 * OpenAI Python libraries (https://platform.openai.com/docs/overview)
 * Redis Database (https://redis.io/)
+* Drive (https://developers.google.com/workspace/drive)
 * Unity Engine (https://unity.com/)
