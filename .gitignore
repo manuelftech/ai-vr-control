@@ -1,5 +1,12 @@
 # This .gitignore file should be placed at the root of your Unity project directory
 
+# Remove MacOS files:
+.DS_Store
+/.DS_Store
+/*/.DS_Store
+/*/*/.DS_Store
+/*/*/*/.DS_Store
+
 # Python:
 Orchestrator/__pycache__/
 Orchestrator/*/__pycache__/
