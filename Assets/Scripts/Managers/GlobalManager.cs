@@ -84,7 +84,7 @@ namespace AIControlMagicVR.Managers
                 string formattedColor = null;
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 if (renderer != null){
-                    formattedColor = "#" + ColorUtility.ToHtmlStringRGB(renderer.material.color);
+                    formattedColor = $"#{ColorUtility.ToHtmlStringRGB(renderer.material.color)}";
                 }
 
                 ConstantForceProps constantForceProps = null;

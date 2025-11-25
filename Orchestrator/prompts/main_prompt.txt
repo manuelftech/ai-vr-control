@@ -136,7 +136,7 @@ Output:
 7) User: 'I want the sofas to stop rotating'
 Output:
 {
-    'search_query': '@Tag:{chair}', 
+    'search_query': '@Tag:{sofa}', 
     'properties_to_update': [
         {
             'property': '$.Components.ConstantForce.RelativeTorque.X',
