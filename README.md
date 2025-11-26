@@ -34,12 +34,12 @@ This project enables control of a Virtual Reality (VR) environment using Python 
 ### JSON structure to manipulate the 3D environment:
 ```json
 {
-    "Prompt": "I want the red sofas to levitate, become blue and start spinning",
+    "Prompt": "I want the chairs to levitate, become blue and start spinning",
     "VirtualRealityState": [
         {
             "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
-            "Tag": "sofa",
-            "Name": "Sofa_livingroom",
+            "Tag": "chair",
+            "Name": "Chair_livingroom",
             "Transform": {
                 "Position": {
                     "X": 13.7924623,
