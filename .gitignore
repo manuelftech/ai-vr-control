@@ -1,19 +1,13 @@
 # This .gitignore file should be placed at the root of your Unity project directory
 
-# Remove MacOS files:
-.DS_Store
-/.DS_Store
-/*/.DS_Store
-/*/*/.DS_Store
-/*/*/*/.DS_Store
-.gcp_key.json
-
 # Python:
-Orchestrator/__pycache__/
-Orchestrator/*/__pycache__/
-Orchestrator/*/*/__pycache__/
+Orchestrator/**/__pycache__/
 Orchestrator/venv/
 Orchestrator/.env
+Orchestrator/.gcp_key.json
+
+# MacOS:
+**/.DS_Store
 
 # Unity:
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore

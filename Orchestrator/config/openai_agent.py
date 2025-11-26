@@ -1,4 +1,4 @@
-from config import config
+from config.config_vars import config
 from openai import OpenAI
 import logging
 logger = logging.getLogger(__name__)

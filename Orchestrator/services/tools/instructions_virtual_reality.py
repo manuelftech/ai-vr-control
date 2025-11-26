@@ -1,6 +1,7 @@
-from core.utils import get_function_name, search_vector_store, read_prompt
+from core.utils import get_function_name, read_prompt
+from repository.vector_store import VectorStore
+from config.config_vars import config
 from services.tools.base_tool import _Tool
-from config import config
 
 class _InstructionsVR(_Tool):
     """
@@ -9,7 +10,7 @@ class _InstructionsVR(_Tool):
     """
     def _get_function(self, input):
         # Semantic search and appending of the returned context to the new prompt
-        context_info = search_vector_store(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['previous_prompt'])
+        context_info = VectorStore().semantic_search(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['previous_prompt'])
         instructions = read_prompt('instructions_virtual_reality.txt')
 
         self.has_additional_prompt = f"""

@@ -1,7 +1,7 @@
 from services.tools.instructions_virtual_reality import _InstructionsVR
 from config.openai_agent import ChatGPT
+from config.config_vars import config
 from core.utils import read_prompt
-from config import config
 import logging
 import json
 import ast

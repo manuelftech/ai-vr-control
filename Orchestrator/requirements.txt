@@ -6,3 +6,4 @@ python-dotenv==1.1.1
 colorlog==6.10.1
 google-api-python-client==2.187.0
 google-auth-oauthlib==1.2.3
+pydantic_settings==2.11.0

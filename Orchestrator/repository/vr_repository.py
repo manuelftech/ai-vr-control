@@ -1,5 +1,5 @@
 from config.redis_db import RedisClient
-from config import config
+from config.config_vars import config
 import logging
 logger = logging.getLogger(__name__)
 

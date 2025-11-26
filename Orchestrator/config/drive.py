@@ -1,8 +1,8 @@
 from googleapiclient.http import MediaIoBaseDownload
-from googleapiclient.errors import HttpError
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-from config import config
+from core.utils import get_base_workdir
+from config.config_vars import config
 import logging
 import io
 logger = logging.getLogger(__name__)
@@ -20,8 +20,9 @@ class Drive():
     def _connect(self):
         logger.debug("Connecting to Drive")
         try:
+            base_workdir = get_base_workdir()
             client = build('drive', 'v3', credentials=service_account.Credentials.from_service_account_file(
-                    config.SERVICE_ACCOUNT_FILE, 
+                    f"{base_workdir}/{config.SERVICE_ACCOUNT_FILE}", 
                     scopes=config.SCOPES)
                 )
             client.files().list(pageSize=1, fields="nextPageToken, files(id, name)").execute().get('files', [])
@@ -40,7 +41,8 @@ class Drive():
     
     def _download_file(self, file_id):
         file_name = self.client.files().get(fileId=file_id, fields='mimeType, name').execute().get('name')
-        download = MediaIoBaseDownload(io.FileIO(f"./Orchestrator/prompts/{file_name}", 'wb'), self.client.files().get_media(fileId=file_id))
+        base_workdir = get_base_workdir()
+        download = MediaIoBaseDownload(io.FileIO(f"{base_workdir}/prompts/{file_name}", 'wb'), self.client.files().get_media(fileId=file_id))
         while True:
             _, completed = download.next_chunk()
             if completed:

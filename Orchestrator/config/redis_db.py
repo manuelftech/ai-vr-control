@@ -1,4 +1,4 @@
-from config import config
+from config.config_vars import config
 import logging
 import redis
 logger = logging.getLogger(__name__)

@@ -1,10 +1,10 @@
-from config.drive import Drive
 from controllers.vr_controller import router
 from config.logger import configure_logger
 from config.openai_agent import ChatGPT
 from config.redis_db import RedisClient
+from config.config_vars import config
+from config.drive import Drive
 from fastapi import FastAPI
-from config import config
 import uvicorn
 
 if __name__ == "__main__":

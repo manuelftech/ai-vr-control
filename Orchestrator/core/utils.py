@@ -6,23 +6,8 @@ def read_prompt(filename):
     with open(file_path, 'r') as file_contents:
         return file_contents.read()
     
+def get_base_workdir():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "../")
+
 def get_function_name(filename):
     return os.path.basename(filename).split(".py")[0]
-
-def create_vector_store(vector_store_name):
-    vector_store = ChatGPT().client.vector_stores.create( 
-        name=vector_store_name,
-    )
-    return vector_store.id
-
-def search_vector_store(vector_store_id, search_query):
-    results = ChatGPT().client.vector_stores.search(
-        vector_store_id=vector_store_id,
-        query=search_query,
-    )
-    # Concatenate all the returned information to pass it to the new prompt
-    context_info = ""
-    for data in results.data:
-        for content in data.content:
-            context_info += f"{content.text}\n"
-    return context_info

@@ -3,8 +3,8 @@ from models.virtual_reality_request import ObjectsProperties
 from services.agent_workflow_manager import Workflow
 from repository.vr_repository import VRRepository
 from fastapi.encoders import jsonable_encoder
+from config.config_vars import config
 from fastapi import APIRouter
-from config import config
 import logging
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix=config.ENDPOINT_PREFIX)
