@@ -2,9 +2,7 @@
 
 # Python + Virtual Reality
 
-Project to control a Virtual Reality environment using Python with ChatGPT
-
-The Virtual Reality environment is programmed in C# for Unity Engine, it allows ChatGPT to change the state of the 3D elements of the scene.
+This project enables control of a Virtual Reality (VR) environment using Python and ChatGPT. The VR environment is built using C# and Unity Engine, allowing ChatGPT to modify the state of 3D elements within the scene.
 
 ### Application running:
 [![overview](https://img.youtube.com/vi/Hg86pDgOp3w/hqdefault.jpg)](https://youtu.be/Hg86pDgOp3w)
@@ -73,7 +71,7 @@ The Virtual Reality environment is programmed in C# for Unity Engine, it allows 
                     }
                 },
                 "Color": "#FF0000",
-                "Text": "the television object can display text",
+                "Text": "The television 3D object is capable of rendering text-based content",
             }
         }
     ]
