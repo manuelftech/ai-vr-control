@@ -27,7 +27,7 @@ Use this template structure, filling in only the elements requested by the user.
 
 Instructions:
 Identify Current State (the "Look Up" criteria): Use the @ fields to specify the object(s) that currently have a specified state.
-@Tag:{...}: The type of object (e.g., "cube", "chair").
+@Tag:{...}: The type of object (e.g., "cube", "chair", "rack", "television", "sofa").
 Identify Desired State (the "Change To" values): Use the $. fields to specify the new values to be assigned.
 $.Components.ConstantForce.Force.Y = ...: New Force value (e.g., 0 for falling, 9.83 for levitating).
 $.Components.ConstantForce.RelativeTorque.X = ...: New RelativeTorque value (e.g., 0 for stop rotating, 4.76 for spinning).
