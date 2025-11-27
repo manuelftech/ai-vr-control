@@ -14,8 +14,8 @@ class Drive():
     def __init__(self):
         if not self._is_already_initialized:
             self.client = self._connect()
-            self._is_already_initialized = True
             self._setup_prompts()
+            self._is_already_initialized = True
 
     def _connect(self):
         logger.debug("Connecting to Drive")
