@@ -1,4 +1,5 @@
 from services.tools.instructions_virtual_reality import _InstructionsVR
+from services.tools.agent_memory_context import _AgentMemoryContext
 from config.openai_agent import ChatGPT
 from config.config_vars import config
 from core.utils import read_prompt
@@ -19,11 +20,12 @@ class Workflow():
     def _get_tools(self):
         # Add more tools as needed
         return [
+            _AgentMemoryContext(),
             _InstructionsVR(),
             ]
     
     def start(self, prompt):
-        chat_history = [{
+        agent_messages = [{
             "role": "user",
             "content": f"{read_prompt('main_prompt.txt')} {prompt}"
         }]
@@ -34,15 +36,15 @@ class Workflow():
             response = ChatGPT().client.responses.create(
                 model=config.LLM_MODEL,
                 tools=self.tool_definitions,
-                input=chat_history,
+                input=agent_messages,
             )
             
             # We find the tools to be used during the workflow
-            chat_history.extend(self._call_tool(response.output))
+            agent_messages.extend(self._call_tool(response.output))
 
         # Get the final result of the workflow
-        logger.info("Final response: %s" + json.dumps(chat_history[-1]))
-        return chat_history[-1]
+        logger.info("Final response: %s" + json.dumps(agent_messages[-1]))
+        return agent_messages[-1]
 
     def _call_tool(self, agent_response):
         # Executes the function logic depending on the tool the chat needs to use

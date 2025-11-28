@@ -21,10 +21,7 @@ namespace AIControlVR.Data.ScriptableObjects
                 var tmpInputField = keyboardText.GetComponent<TMP_InputField>();
                 if (tmpInputField != null)
                 {
-                    var text = tmpInputField.text;
-                    Debug.Log($"Keyboard input: {text}");
-                    tmpInputField.text = "";
-                    return text;
+                    return tmpInputField.text;
                 }
                 else
                 {
@@ -34,17 +31,15 @@ namespace AIControlVR.Data.ScriptableObjects
             throw new Exception($"Element with Tag: {this.Tag} not found in the scene."); 
         }
 
-
-        public async void RequestActionToChatbot()
+        public async void RequestActionToAgent()
         {
-            // Send both the prompt, and the VR states' current properties to the chatbot, to command it to calculate the new rquested properties to be assigned to these VR States
-            APIChatbotRequest request = new APIChatbotRequest.Builder()
-                .Prompt(this.CaptureKeyboardInputText())
-                .VirtualRealityState(GlobalManager.Instance.GetFormattedVirtualRealityState())
-                .Build();
+            // Send the prompt to te Agent
+            TransformResponse response = await apiVRProperties.UpdateVRStatus(
+                new APIChatbotRequest.Builder()
+                    .Prompt(this.CaptureKeyboardInputText()).Build());
 
-            ObjectsProperties response = await apiVRProperties.CallChatbotExecuteAction(request);
-            GlobalManager.Instance.UpdateVRStateProperties(response.VirtualRealityState);
+            // Change the state of the elements in the 3D environment
+            GlobalManager.Instance.UpdateVRStateProperties(response);
         }
     }
 }

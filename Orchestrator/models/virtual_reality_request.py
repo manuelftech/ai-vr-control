@@ -25,8 +25,3 @@ class ObjectProperties(BaseModel):
     Name: str = Field(None, description="Name of the object")
     Components: ComponentsProperties = Field(None, description="Components of the object (e.g., Renderer, ConstantForce)")
     Transform: TransformProperties = Field(None, description="Position of the object in the virtual reality environment")
-
-class ObjectsProperties(BaseModel):
-    Prompt: str = Field(None, description="Message sent to the chatbot by the user")
-    VirtualRealityState: list[ObjectProperties] = Field(None, description="List of elements with their virtual reality state")
-

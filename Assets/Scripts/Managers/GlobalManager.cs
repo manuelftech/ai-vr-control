@@ -1,5 +1,6 @@
-using AIControlVR.Data.Models;
+using AIControlVR.Managers.Networking;
 using System.Collections.Generic;
+using AIControlVR.Data.Models;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -12,9 +13,10 @@ namespace AIControlVR.Managers
     {
         public string ApiURL;
         public static GlobalManager Instance { get; private set; }
+        private APIVRProperties apiVRProperties = new APIVRProperties();
         public Dictionary<string, GameObject> vrStateObjects = new Dictionary<string, GameObject>();
 
-        void Awake()
+        async void Awake()
         {
             // This general VR State manager is created only once
             if (Instance != null && Instance != this)
@@ -27,10 +29,19 @@ namespace AIControlVR.Managers
             }
             Debug.Log("GlobalManager instance created.");
             this.GetEnvironmentVariables();
+
+            // Run the following function 10 seconds after loading the 3D environment
+            await this.SaveInitialStatusToRedis();
+        }
+
+        private async Task SaveInitialStatusToRedis(){
+            // Send the initial 3D VR status to Redis
+            await apiVRProperties.SaveInitialVrStatus(this.GetFormattedVirtualRealityState());
+            Debug.Log("Initial status successfully saved to Redis.");
         }
 
         private void GetEnvironmentVariables(){
-            ApiURL = Environment.GetEnvironmentVariable("VR_ENDPOINT") ?? "http://localhost:5000/virtual-reality-environment/state";
+            ApiURL = Environment.GetEnvironmentVariable("VR_STATE_ENDPOINT") ?? "http://localhost:5000/virtual-reality-environment/state";
             if (string.IsNullOrEmpty(ApiURL)){
                 throw new System.Exception("Environment variables not found.");
             }
@@ -127,53 +138,40 @@ namespace AIControlVR.Managers
             return objectsProperties;
         }
 
-        public void UpdateVRStateProperties(List<ObjectProperties> updatedVRStates)
+        public void UpdateVRStateProperties(TransformResponse updatedVRStates)
         {
-            foreach (ObjectProperties updatedVRState in updatedVRStates)
+            foreach (var sceneVRState in vrStateObjects)
             {
-                if (vrStateObjects.TryGetValue(updatedVRState.Id, out GameObject localGameObject))
-                {
-                    // Change color
-                    Renderer renderer = localGameObject.GetComponent<Renderer>();
-                    if (renderer != null)
-                    {
+                if (!String.Equals(sceneVRState.Value.tag, updatedVRStates.Tag)){
+                    return;
+                }
+
+                Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
+                ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
+
+                foreach (ComponentSettings vr in updatedVRStates.Components){
+                    // Obtain the hexadecimal formatted color of the Renderer Component (e.g, #FFFFFF)
+                    if (renderer && vr.Component.Contains("$.Components.Color")){
                         Color updatedColor;
-                        ColorUtility.TryParseHtmlString(updatedVRState.Components.Color, out updatedColor);
-
+                        ColorUtility.TryParseHtmlString(vr.State, out updatedColor);
                         renderer.material.color = updatedColor;
-                        Debug.Log($"Renderer: Changed color of VR State with Name: {updatedVRState.Name} and ID: {updatedVRState.Id} New color: {updatedColor}");
                     }
-                    else
-                    {
-                        Debug.LogWarning($"Renderer component not found in Name: : {updatedVRState.Name} and ID: {updatedVRState.Id}");
-                    }
-
-                    // Change constant force
-                    ConstantForce constantForce = localGameObject.GetComponent<ConstantForce>();
-                    if (constantForce != null)
-                    {
-                        constantForce.force = new Vector3(updatedVRState.Components.ConstantForce.Force.X, updatedVRState.Components.ConstantForce.Force.Y, updatedVRState.Components.ConstantForce.Force.Z);
-                        constantForce.relativeTorque = new Vector3(updatedVRState.Components.ConstantForce.RelativeTorque.X, updatedVRState.Components.ConstantForce.RelativeTorque.Y, updatedVRState.Components.ConstantForce.RelativeTorque.Z);
-                        Debug.Log($"ConstantForce: Changed in Name: {updatedVRState.Name} and ID: {updatedVRState.Id}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"ConstantForce component not found in Name: : {updatedVRState.Name} and ID: {updatedVRState.Id}");
+                    // Updates the gravity of the element
+                    if (constantForce && vr.Component.Contains("$.Components.ConstantForce.Force.Y")){
+                        Vector3 updatedForce = constantForce.force;
+                        updatedForce.y = float.Parse(vr.State);
+                        constantForce.force = updatedForce;
                     }
 
-                    // Change displayed text on television (a maximum of 539 continuous characters)
-                    var tmpInputField = localGameObject.GetComponent<TextMeshPro>();
-                    if (tmpInputField != null)
-                    {
-                        tmpInputField.text = updatedVRState.Components.Text;
-                        Debug.Log($"TextMeshPro component Text Changed in Name: {updatedVRState.Name} and ID: {updatedVRState.Id} New text: {updatedVRState.Components.Text}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"TextMeshPro component not found in Name: : {updatedVRState.Name} and ID: {updatedVRState.Id}");
+                    // Updates the rotation of the element
+                    if (constantForce && vr.Component.Contains("$.Components.ConstantForce.RelativeTorque.X")){
+                        Vector3 updatedTorque = constantForce.relativeTorque;
+                        updatedTorque.x = float.Parse(vr.State);
+                        constantForce.relativeTorque = updatedTorque;
                     }
                 }
             }
+            Debug.Log("GlobalManager Completed updating 3D environment.");
         }
     }
 }

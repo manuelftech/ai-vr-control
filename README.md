@@ -8,8 +8,8 @@ This project enables control of a Virtual Reality (VR) environment using Python 
 [![overview](https://img.youtube.com/vi/Hg86pDgOp3w/hqdefault.jpg)](https://youtu.be/Hg86pDgOp3w)
 
 ### Data Sources
-- Vector Store: Enables the Agent to access system usage instructions through semantic search.
-- Redis Database: Stores, searches, and updates the temporal 3D world status.
+- Vector Store: Enables the Agent to useaccess system usage instructions through semantic search.
+- Redis Database: Stores, searches, and updates the temporal 3D world status, as well the chat history.
 - Drive: Stores and retrieves the main Agent Prompt instructions from Google Workspace to enhance behavior.
 
 ### Project Structure
@@ -34,49 +34,43 @@ This project enables control of a Virtual Reality (VR) environment using Python 
 ### JSON structure to manipulate the 3D environment:
 ```json
 {
-    "Prompt": "I want the chairs to levitate, become blue and start spinning",
-    "VirtualRealityState": [
-        {
-            "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
-            "Tag": "chair",
-            "Name": "Chair_livingroom",
-            "Transform": {
-                "Position": {
-                    "X": 13.7924623,
-                    "Y": -0.5499997,
-                    "Z": 7.930001
-                },
-                "Rotation": {
-                    "X": 5.40021574E-08,
-                    "Y": -0.9496292,
-                    "Z": -2.83122063E-07
-                },
-                "Scale": {
-                    "X": 1.0,
-                    "Y": 1.2,
-                    "Z": 1.0
-                }
-            },
-            "Components": {
-                "ConstantForce": {
-                    "Force": {
-                        "X": 0.0,
-                        "Y": 9.83,
-                        "Z": 0.0
-                    },
-                    "RelativeTorque": {
-                        "X": 4.76,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    }
-                },
-                "Color": "#FF0000",
-                "Text": "The television 3D object is capable of rendering text-based content",
-            }
+    "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
+    "Tag": "chair",
+    "Name": "Chair_livingroom",
+    "Transform": {
+        "Position": {
+            "X": 13.7924623,
+            "Y": -0.5499997,
+            "Z": 7.930001
+        },
+        "Rotation": {
+            "X": 5.40021574E-08,
+            "Y": -0.9496292,
+            "Z": -2.83122063E-07
+        },
+        "Scale": {
+            "X": 1.0,
+            "Y": 1.2,
+            "Z": 1.0
         }
-    ]
+    },
+    "Components": {
+        "ConstantForce": {
+            "Force": {
+                "X": 0.0,
+                "Y": 9.83,
+                "Z": 0.0
+            },
+            "RelativeTorque": {
+                "X": 4.76,
+                "Y": 0.0,
+                "Z": 0.0
+            }
+        },
+        "Color": "#FF0000",
+        "Text": "The television 3D object is capable of rendering text-based content",
+    }
 }
-
 ```
 
 Tools integrated and used for the creation, testing and validation of the project:

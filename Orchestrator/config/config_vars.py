@@ -20,6 +20,7 @@ class ConfigVar(BaseSettings):
     REDIS_PORT: str
     INDEX_NAME: str
     KEY_PREFIX: str
+    HISTORY_PREFIX: str
 
     # --- GCP Configuration ---
     SCOPES: list[str]
