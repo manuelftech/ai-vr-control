@@ -12,7 +12,10 @@ by the description, each Tag in a new line, with a description of no more than 5
 - If `RelativeTorque` ≥ 4.76, it's rotating. Otherwise, it's not rotating.
 - If `Color` is present and ≠ #000000, describe the color in normal words.
 
-*Second Task*
+*Third Task*
+- If the user asked about the how to use this system or environment (e.g., "how does this system work?", "provide information about how this system works") you will show a header saying "Tutorial: How to use the system", and explain how to use the system
+
+*Fourth Task*
 - You will take the summarized information, and paste it in the "value" property of the following JSOH template, and you will *only* return the completed JSON structure provided below.
 
 **JSON Output Template:**
