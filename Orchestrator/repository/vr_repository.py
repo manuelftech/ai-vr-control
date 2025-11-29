@@ -11,14 +11,14 @@ class VRRepository():
         self.redis = RedisClient()
 
     async def saveAll(self, return_saved=False, vr_state=[]):
-        modified_ids = []
+        saved_ids = []
         for state in vr_state:
             id = f"{config.VR_KEY_PREFIX}{state['Id']}"
-            modified_ids.append(id)
+            saved_ids.append(id)
             await self.save_single_object(id=id, property="$", content=state)
-        logger.info("VR states successfully saved in Redis")
+        logging.info("%s Components saved", len(saved_ids))
         if return_saved:
-            return await self._find_ids(modified_ids=modified_ids)
+            return await self._find_ids(modified_ids=saved_ids)
 
     async def save_single_object(self, id=None, property="$", content=None):
         id = self._validate_id(id)
