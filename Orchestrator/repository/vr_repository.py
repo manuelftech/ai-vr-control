@@ -33,16 +33,16 @@ class VRRepository():
         return modified_vr_objects
     
     async def updateAllWithTemplate(self, return_saved=False, vr_state=None):
-        logging.debug("Query: %s", vr_state['search_query'])
+        logging.debug("Updating Component: %s", json.loads(vr_state))
         search_results = self.search(query=vr_state['search_query'])
 
         modified_ids = []
         for doc in search_results.docs:
-            logging.debug("Updating Component with Id: %s", doc.id)
             for doc_update in vr_state["properties_to_update"]:
                 self.redis.client.json().set(doc.id, doc_update["property"], doc_update["value"])
                 modified_ids.append(doc.id)
 
+        logging.info("Components updated")
         if return_saved:
             return await self._find_ids(modified_ids)
     

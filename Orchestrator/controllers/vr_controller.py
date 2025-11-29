@@ -23,7 +23,9 @@ async def state(request: AgentRequest, background_tasks: BackgroundTasks):
     # Save updated Virtual Reality state
     background_tasks.add_task(VRRepository().updateAllWithTemplate, vr_state=vr_state)
     
-    return VRStateResponse(vr_state)
+    response = VRStateResponse(vr_state)
+    logging.debug("Modification properties Response: %s", response)
+    return response
 
 @router.post("/state")
 async def state(vr_state: list[VRStateRequest]):
