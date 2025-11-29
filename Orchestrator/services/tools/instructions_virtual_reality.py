@@ -11,7 +11,7 @@ class _InstructionsVR(_Tool):
     def _get_function(self, input):
         # Semantic search and appending of the returned context to the new prompt
         context_info = VectorStore().semantic_search(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['previous_prompt'])
-        instructions = read_prompt('vr_how_to_use_the_system_manual.pdf')
+        instructions = read_prompt('instructions_virtual_reality.txt')
 
         self.has_additional_prompt = f"""
             Semantic Search Context: {context_info}
