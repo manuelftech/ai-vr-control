@@ -10,7 +10,7 @@ class RedisClient():
     def __init__(self):
         if not self._is_already_initialized:
             self.client = self._connect()
-            #self._clean_cache()
+            self._clean_cache()
             self._is_already_initialized = True
 
     def _connect(self):

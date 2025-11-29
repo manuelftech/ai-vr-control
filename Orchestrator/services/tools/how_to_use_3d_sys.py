@@ -11,15 +11,8 @@ class _HowToUseSystem(_Tool):
     def _get_function(self, input):
         # Semantic search and appending of the returned context to the new prompt
         context_vr_handbook = VectorStore().semantic_search(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['previous_prompt'])
-        instructions = read_prompt('description_state.txt')
-
-        self.has_additional_prompt = f"""
-            <Instructions>: {instructions}
-
-            <Context>: {context_vr_handbook}
-
-            <User Question>: {input['previous_prompt']}
-                """
+        self.has_additional_prompt = read_prompt('base_template_prompt.txt')
+        return context_vr_handbook
         
     def _get_definition(self):
          return {

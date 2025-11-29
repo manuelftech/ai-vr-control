@@ -56,7 +56,7 @@ class VRRepository():
         chat_history = []
         keys_schema = ["Role", "Content"]
         for data in search_results.docs:
-            chat_history.append({key: json.loads(data.json)[key] for key in keys_schema})
+            chat_history.append({key.lower(): json.loads(data.json)[key] for key in keys_schema})
         return chat_history
     
     def search_vr_summary(self, query="-@Tag:{agent_history}"):
@@ -69,18 +69,20 @@ class VRRepository():
             tags.append(doc['Tag'])
             vr_elements.append(doc)
 
-        summary = ""
+        summary = []
         for tag in set(tags):
             for vr in vr_elements:
                 if vr['Tag'] == tag:
-                    summary += f"{vr}\n"
+                    doc = vr.copy()
+                    doc["Components"].pop("Text", None)
+                    summary.append({"Tag": tag, "Components": doc["Components"]})
                     break
         return summary
     
     def _validate_content(self, data):
         try:
             converted_data = json.loads(data.model_dump_json())
-            logging.debug("Saving content in Redis %s: ", converted_data)
+            logging.debug("Save data %s: ", converted_data)
             return converted_data
         except: 
             return data
