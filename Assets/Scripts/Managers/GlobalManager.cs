@@ -154,6 +154,7 @@ namespace AIControlVR.Managers
                 }
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
+                TextMeshProUGUI tmpInputField = localGameObject.GetComponent<TextMeshProUGUI>();
                 foreach (VRProperty vr in updatedVRStates.Properties){
                     switch(vr.Name){
                         case "$.Components.Color":
@@ -191,6 +192,13 @@ namespace AIControlVR.Managers
                             scale.z = scale.z * float.Parse(vr.State);
                             sceneVRState.Value.transform.localScale = scale;
                             Debug.Log($"Tag: {updatedVRStates.Tag}. Transform.Scale assigned: {vr.State}");
+                            continue;
+                        case "$.Components.Text":
+                            // Change displayed text on television (a maximum of 539 continuous characters)
+                            if (tmpInputField){
+                                tmpInputField.text = vr.State;
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. tmpInputField.text  assigned: {vr.State}");
+                            }
                             continue;
                     }
                 }
