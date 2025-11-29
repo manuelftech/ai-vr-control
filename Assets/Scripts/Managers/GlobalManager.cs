@@ -154,7 +154,7 @@ namespace AIControlVR.Managers
                 }
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
-                TextMeshProUGUI tmpInputField = sceneVRState.GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI tmpInputField = sceneVRState.Value.GetComponent<TextMeshProUGUI>();
                 foreach (VRProperty vr in updatedVRStates.Properties){
                     switch(vr.Name){
                         case "$.Components.Color":
