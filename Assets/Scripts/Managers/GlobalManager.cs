@@ -143,7 +143,7 @@ namespace AIControlVR.Managers
         {
             foreach (var sceneVRState in vrStateObjects)
             {
-                if (!String.Equals(sceneVRState.Value.tag, updatedVRStates.Tag)){
+                if (!sceneVRState.Value.tag.Contains(updatedVRStates.Tag, StringComparison.OrdinalIgnoreCase)){
                     continue;
                 }
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
