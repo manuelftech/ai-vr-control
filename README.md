@@ -10,7 +10,7 @@ This project demonstrates using Python and ChatGPT to control a Virtual Reality 
 ### Data Components
 - Vector Store: Facilitates semantic search capabilities, enabling the Agent to access system usage instructions and operational guidelines.
 - Redis Database: Serves as a centralized repository for storing, retrieving, and updating temporal 3D world state data, as well as maintaining a record of chat history and conversation context.
-- Drive: Provides secure storage and retrieval of primary Agent Prompt instructions, leveraging Google Workspace integration to inform and refine Agent behavior.behavior.
+- Drive: Provides secure storage and retrieval of primary Agent Prompt instructions, leveraging Google Workspace integration to inform and refine Agent behavior.
 
 ### Directory Structure
 
