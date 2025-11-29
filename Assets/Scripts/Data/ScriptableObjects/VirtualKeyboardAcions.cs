@@ -31,12 +31,12 @@ namespace AIControlVR.Data.ScriptableObjects
             throw new Exception($"Element with Tag: {this.Tag} not found in the scene."); 
         }
 
-        public async void RequestActionToAgent()
+        public async void RequestActionToChatbot()
         {
             // Send the prompt to te Agent
-            TransformResponse response = await apiVRProperties.UpdateVRStatus(
-                new APIChatbotRequest.Builder()
-                    .Prompt(this.CaptureKeyboardInputText()).Build());
+            VRStateResponse response = await apiVRProperties.UpdateVRStatus(new APIChatbotRequest.Builder()
+                    .Prompt(this.CaptureKeyboardInputText())
+                    .Build());
 
             // Change the state of the elements in the 3D environment
             GlobalManager.Instance.UpdateVRStateProperties(response);

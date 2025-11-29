@@ -35,6 +35,7 @@ namespace AIControlVR.Managers
         }
 
         private async Task SaveInitialStatusToRedis(){
+            await Task.Delay(15000);
             // Send the initial 3D VR status to Redis
             await apiVRProperties.SaveInitialVrStatus(this.GetFormattedVirtualRealityState());
             Debug.Log("Initial status successfully saved to Redis.");
@@ -138,40 +139,53 @@ namespace AIControlVR.Managers
             return objectsProperties;
         }
 
-        public void UpdateVRStateProperties(TransformResponse updatedVRStates)
+        public void UpdateVRStateProperties(VRStateResponse updatedVRStates)
         {
             foreach (var sceneVRState in vrStateObjects)
             {
                 if (!String.Equals(sceneVRState.Value.tag, updatedVRStates.Tag)){
                     return;
                 }
-
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
-
-                foreach (ComponentSettings vr in updatedVRStates.Components){
-                    // Obtain the hexadecimal formatted color of the Renderer Component (e.g, #FFFFFF)
-                    if (renderer && vr.Component.Contains("$.Components.Color")){
-                        Color updatedColor;
-                        ColorUtility.TryParseHtmlString(vr.State, out updatedColor);
-                        renderer.material.color = updatedColor;
-                    }
-                    // Updates the gravity of the element
-                    if (constantForce && vr.Component.Contains("$.Components.ConstantForce.Force.Y")){
-                        Vector3 updatedForce = constantForce.force;
-                        updatedForce.y = float.Parse(vr.State);
-                        constantForce.force = updatedForce;
-                    }
-
-                    // Updates the rotation of the element
-                    if (constantForce && vr.Component.Contains("$.Components.ConstantForce.RelativeTorque.X")){
-                        Vector3 updatedTorque = constantForce.relativeTorque;
-                        updatedTorque.x = float.Parse(vr.State);
-                        constantForce.relativeTorque = updatedTorque;
+                foreach (VRProperty vr in updatedVRStates.Properties){
+                    switch(vr.Name){
+                        case "$.Components.Color":
+                            // Modifies the color of the element
+                            if (renderer){
+                                Color updatedColor;
+                                ColorUtility.TryParseHtmlString(vr.State, out updatedColor);
+                                renderer.material.color = updatedColor;
+                            }
+                            continue;
+                        case "$.Components.ConstantForce.Force.Y":
+                            // Modifies the gravity of the element
+                            if (constantForce){
+                                Vector3 updatedForce = constantForce.force;
+                                updatedForce.y = float.Parse(vr.State);
+                                constantForce.force = updatedForce;
+                            }
+                            continue;
+                        case "$.Components.ConstantForce.RelativeTorque.X":
+                            // Modifies the spinning force of the element
+                            if (constantForce){
+                                Vector3 updatedTorque = constantForce.relativeTorque;
+                                updatedTorque.x = float.Parse(vr.State);
+                                constantForce.relativeTorque = updatedTorque;
+                            }
+                            continue;
+                        case "$.Transform.Scale":
+                            // Modifies the size of the element
+                            Vector3 scale = sceneVRState.Value.transform.localScale;
+                            scale.x = scale.x * float.Parse(vr.State);
+                            scale.y = scale.y * float.Parse(vr.State);
+                            scale.z = scale.z * float.Parse(vr.State);
+                            sceneVRState.Value.transform.localScale = scale;
+                            continue;
                     }
                 }
             }
-            Debug.Log("GlobalManager Completed updating 3D environment.");
+            Debug.Log("VR environment Successfully modified");
         }
     }
 }

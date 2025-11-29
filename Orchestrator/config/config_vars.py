@@ -18,9 +18,9 @@ class ConfigVar(BaseSettings):
     REDIS_HOST: str
     REDIS_PASSWORD: str
     REDIS_PORT: str
-    INDEX_NAME: str
-    KEY_PREFIX: str
-    HISTORY_PREFIX: str
+    VR_INDEX: str
+    VR_KEY_PREFIX: str
+    REDIS_SEARCH_LIMIT: int
 
     # --- GCP Configuration ---
     SCOPES: list[str]
