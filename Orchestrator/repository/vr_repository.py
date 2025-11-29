@@ -33,7 +33,7 @@ class VRRepository():
         return modified_vr_objects
     
     async def updateAllWithTemplate(self, return_saved=False, vr_state=None):
-        logging.debug("Updating Component: %s", json.loads(vr_state))
+        logging.debug("Updating Component: %s", vr_state)
         search_results = self.search(query=vr_state['search_query'])
 
         modified_ids = []
