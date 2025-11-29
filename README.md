@@ -34,7 +34,7 @@ This project demonstrates using Python and ChatGPT to control a Virtual Reality 
             *   `Networking/` API communication logic (endpoint calls, status/prompt transmission)
 
 
-### JSON schema for controlling the 3D environment
+### JSON schema for the 3D environment
 ```json
 {
     "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
