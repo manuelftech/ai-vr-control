@@ -154,38 +154,53 @@ namespace AIControlVR.Managers
                 }
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
-                TextMeshProUGUI tmpInputField = sceneVRState.Value.GetComponent<TextMeshProUGUI>();
+                TextMeshPro tmpInputField = sceneVRState.Value.GetComponent<TextMeshPro>();
+
+                Debug.Log($"Tag: {updatedVRStates.Tag}. Updating state.");
                 foreach (VRProperty vr in updatedVRStates.Properties){
                     switch(vr.Name){
                         case "$.Components.Color":
                             // Modifies the color of the element
+                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Color.");
+
                             if (renderer){
                                 Color updatedColor;
                                 ColorUtility.TryParseHtmlString(vr.State, out updatedColor);
                                 renderer.material.color = updatedColor;
                                 Debug.Log($"Tag: {updatedVRStates.Tag}. Color assigned: {vr.State}");
+                            } else {
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a Color component");
                             }
                             continue;
                         case "$.Components.ConstantForce.Force.Y":
                             // Modifies the gravity of the element
+                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating ConstantForce Y.");
+
                             if (constantForce){
                                 Vector3 updatedForce = constantForce.force;
                                 updatedForce.y = float.Parse(vr.State);
                                 constantForce.force = updatedForce;
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. ConstantForce.Force assigned: {vr.State}");
+                            } else {
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a ConstantForce component");
                             }
-                            Debug.Log($"Tag: {updatedVRStates.Tag}. ConstantForce.Force assigned: {vr.State}");
                             continue;
                         case "$.Components.ConstantForce.RelativeTorque.X":
                             // Modifies the spinning force of the element
+                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Relative Torque X.");
+                            
                             if (constantForce){
                                 Vector3 updatedTorque = constantForce.relativeTorque;
                                 updatedTorque.x = float.Parse(vr.State);
                                 constantForce.relativeTorque = updatedTorque;
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. ConstantForce.RelativeTorque assigned: {vr.State}");
+                            } else {
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a RelativeTorque component");
                             }
-                            Debug.Log($"Tag: {updatedVRStates.Tag}. ConstantForce.RelativeTorque assigned: {vr.State}");
                             continue;
                         case "$.Transform.Scale":
                             // Modifies the size of the element
+                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Transform Scale.");
                             Vector3 scale = sceneVRState.Value.transform.localScale;
                             scale.x = scale.x * float.Parse(vr.State);
                             scale.y = scale.y * float.Parse(vr.State);
@@ -195,9 +210,13 @@ namespace AIControlVR.Managers
                             continue;
                         case "$.Components.Text":
                             // Change displayed text on television (a maximum of 539 continuous characters)
+                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Text.");
+
                             if (tmpInputField){
                                 tmpInputField.text = vr.State;
                                 Debug.Log($"Tag: {updatedVRStates.Tag}. tmpInputField.text  assigned: {vr.State}");
+                            } else {
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a Text component");
                             }
                             continue;
                     }
