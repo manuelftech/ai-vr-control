@@ -28,14 +28,20 @@ namespace AIControlVR.Managers
                 Instance = this;
             }
             Debug.Log("GlobalManager instance created.");
-            this.GetEnvironmentVariables();
+        }
 
-            // Run the following function 10 seconds after loading the 3D environment
-            await this.SaveInitialStatusToRedis();
+        void Start(){
+            // Start the next methods after every Start method has executed
+            StartCoroutine(ConfigureScene());
+        }
+
+        IEnumerator<WaitForEndOfFrame> ConfigureScene(){
+            yield return new WaitForEndOfFrame();
+            this.GetEnvironmentVariables();
+            this.SaveInitialStatusToRedis();
         }
 
         private async Task SaveInitialStatusToRedis(){
-            await Task.Delay(13000);
             // Send the initial 3D VR status to Redis
             await apiVRProperties.SaveInitialVrStatus(this.GetFormattedVirtualRealityState());
             Debug.Log("Initial status successfully saved to Redis.");
