@@ -9,8 +9,10 @@ class VRStateResponse(BaseModel):
     Properties: list[VRProperty] | None = Field(None, description="Every component that is part of the 3D element")
 
     def __init__(self, tag=None, properties=None):
-        properties = self._format_properties(properties)
-        tag = self._format_tag(tag['search_query'])
+        if (properties):
+            properties = self._format_properties(properties)
+        if (tag):
+            tag = self._format_tag(tag['search_query'])
         super().__init__(Tag=tag, Properties=properties)
     
     def _format_properties(self, transform_query):

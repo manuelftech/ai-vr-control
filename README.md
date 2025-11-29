@@ -50,7 +50,7 @@ This project enables control of a Virtual Reality (VR) environment using Python 
         },
         "Scale": {
             "X": 1.0,
-            "Y": 1.2,
+            "Y": 1.5,
             "Z": 1.0
         }
     },

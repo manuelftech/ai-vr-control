@@ -35,7 +35,7 @@ namespace AIControlVR.Managers
         }
 
         private async Task SaveInitialStatusToRedis(){
-            await Task.Delay(15000);
+            await Task.Delay(13000);
             // Send the initial 3D VR status to Redis
             await apiVRProperties.SaveInitialVrStatus(this.GetFormattedVirtualRealityState());
             Debug.Log("Initial status successfully saved to Redis.");
@@ -144,7 +144,7 @@ namespace AIControlVR.Managers
             foreach (var sceneVRState in vrStateObjects)
             {
                 if (!String.Equals(sceneVRState.Value.tag, updatedVRStates.Tag)){
-                    return;
+                    continue;
                 }
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
@@ -156,6 +156,7 @@ namespace AIControlVR.Managers
                                 Color updatedColor;
                                 ColorUtility.TryParseHtmlString(vr.State, out updatedColor);
                                 renderer.material.color = updatedColor;
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. Color assigned: {vr.State}");
                             }
                             continue;
                         case "$.Components.ConstantForce.Force.Y":
@@ -165,6 +166,7 @@ namespace AIControlVR.Managers
                                 updatedForce.y = float.Parse(vr.State);
                                 constantForce.force = updatedForce;
                             }
+                            Debug.Log($"Tag: {updatedVRStates.Tag}. ConstantForce.Force assigned: {vr.State}");
                             continue;
                         case "$.Components.ConstantForce.RelativeTorque.X":
                             // Modifies the spinning force of the element
@@ -173,6 +175,7 @@ namespace AIControlVR.Managers
                                 updatedTorque.x = float.Parse(vr.State);
                                 constantForce.relativeTorque = updatedTorque;
                             }
+                            Debug.Log($"Tag: {updatedVRStates.Tag}. ConstantForce.RelativeTorque assigned: {vr.State}");
                             continue;
                         case "$.Transform.Scale":
                             // Modifies the size of the element
@@ -181,6 +184,7 @@ namespace AIControlVR.Managers
                             scale.y = scale.y * float.Parse(vr.State);
                             scale.z = scale.z * float.Parse(vr.State);
                             sceneVRState.Value.transform.localScale = scale;
+                            Debug.Log($"Tag: {updatedVRStates.Tag}. Transform.Scale assigned: {vr.State}");
                             continue;
                     }
                 }

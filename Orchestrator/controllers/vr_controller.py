@@ -1,11 +1,11 @@
 from services.agent_workflow_manager import Workflow
-from models.vr_state_response import VRStateResponse
-from models.vr_state_request import VRStateRequest
+from schemas.vr_state_response import VRProperty, VRStateResponse
+from schemas.vr_state_request import VRStateRequest
 from repository.vr_repository import VRRepository
 from fastapi import APIRouter, BackgroundTasks
 from fastapi.encoders import jsonable_encoder
-from models.agent_request import AgentRequest
-from dto.agent_history import AgentHistory
+from schemas.agent_request import AgentRequest
+from models.agent_history import AgentHistory
 from config.config_vars import config
 import logging
 import json
@@ -22,9 +22,8 @@ async def state(request: AgentRequest, background_tasks: BackgroundTasks):
     # Save chat history
     background_tasks.add_task(VRRepository().save_single_object, content=AgentHistory(message=request.Prompt))
     # Save updated Virtual Reality state
-    #background_tasks.add_task(VRRepository().updateAllWithTemplate, vr_state=vr_state)
-    
-    #return VRStateResponse(vr_state)
+    # background_tasks.add_task(VRRepository().updateAllWithTemplate, vr_state=vr_state)
+    # return VRStateResponse(vr_state)
 
 @router.post("/state")
 async def state(vr_state: list[VRStateRequest]):

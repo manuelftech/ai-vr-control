@@ -1,5 +1,6 @@
 from services.tools.instructions_virtual_reality import _InstructionsVR
 from services.tools.agent_memory_context import _AgentMemoryContext
+from services.tools.vr_status_summary import _VRStatusSummary
 from config.openai_agent import ChatGPT
 from config.config_vars import config
 from core.utils import read_prompt
@@ -22,6 +23,7 @@ class Workflow():
         return [
             _AgentMemoryContext(),
             _InstructionsVR(),
+            _VRStatusSummary()
             ]
     
     def start(self, prompt):

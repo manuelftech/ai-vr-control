@@ -8,12 +8,14 @@ class _AgentMemoryContext(_Tool):
     """
     def _get_function(self, input):
         # Search the chat history and return it
-        chat_history = VRRepository().search_formatted_chat_history()
+        chat_history = VRRepository().search_chat_history()
 
         self.has_additional_prompt = f"""
-            Chat history starting from earlier to latest messages: {chat_history}.
+            <Conversation History> The first line is the first question asked by the user, 
+            and so it continues line by line, in addition, every user request has been answered and applied): 
+            {chat_history}.
 
-            User question: {input['previous_prompt']}
+            <Current Prompt>: {input['previous_prompt']}
             """
         
     def _get_definition(self):
