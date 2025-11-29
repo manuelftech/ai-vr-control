@@ -1,0 +1,27 @@
+Based on the Virtual Reality elements state, follow the following instructions: 
+
+Create a summary of the object's state, including:
+- Tag elements (separated by dots)
+- Movement status (rotating or levitating)
+- Color (if applicable)
+
+*Rules:*
+- If `ConstantForce.Force.Y` ≥ 9.83, it's levitating. Otherwise, it's on the ground.
+- If `RelativeTorque` ≥ 4.76, it's rotating. Otherwise, it's not rotating.
+- If `Color` is present and ≠ #000000, describe the color in normal words.
+
+The summarized text containing the status of the elements will fill almost the entire 820 characters available
+
+**Output:** Return *only* the completed JSON structure provided below, with the formatted text inserted into the `'value'` field.
+
+**JSON Output Template:**
+
+{
+    "search_query": "@Tag:{television}",
+    "properties_to_update": [
+        {
+            "property": "$.Components.Text",
+            "value": "[Insert your formatted text of no more than 820 characters here]"
+        }
+    ]
+}

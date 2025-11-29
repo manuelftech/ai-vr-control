@@ -9,7 +9,7 @@ class _VRStatusSummary(_Tool):
     def _get_function(self, input):
         # Search the chat history and return it
         vr_status = VRRepository().search_vr_summary()
-        instructions = read_prompt('summarize_vr_status.txt')
+        instructions = read_prompt('vr_status_summary.txt')
 
         self.has_additional_prompt = f"""
             <Virtual Reality elements state:> 
