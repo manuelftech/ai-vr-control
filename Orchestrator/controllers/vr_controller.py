@@ -1,5 +1,5 @@
 from services.agent_workflow_manager import Workflow
-from schemas.vr_state_response import VRProperty, VRStateResponse
+from schemas.vr_state_response import VRStateResponse
 from schemas.vr_state_request import VRStateRequest
 from repository.vr_repository import VRRepository
 from fastapi import APIRouter, BackgroundTasks
@@ -8,7 +8,6 @@ from schemas.agent_request import AgentRequest
 from models.agent_history import AgentHistory
 from config.config_vars import config
 import logging
-import json
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix=config.ENDPOINT_PREFIX)
 

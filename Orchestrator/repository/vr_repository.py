@@ -38,9 +38,9 @@ class VRRepository():
 
         modified_ids = []
         for doc in search_results.docs:
+            logging.debug("Updating Component with Id: %s", doc.id)
             for doc_update in vr_state["properties_to_update"]:
-                logging.debug("Updating Component: %s, State: %s", doc_update["property"], doc_update["value"])
-                await self.redis.client.json().set(doc.id, doc_update["property"], doc_update["value"])
+                self.redis.client.json().set(doc.id, doc_update["property"], doc_update["value"])
                 modified_ids.append(doc.id)
 
         if return_saved:
@@ -79,7 +79,7 @@ class VRRepository():
     def _validate_content(self, data):
         try:
             converted_data = json.loads(data.model_dump_json())
-            logging.debug("Saving content %s: ", converted_data)
+            logging.debug("Saving content in Redis %s: ", converted_data)
             return converted_data
         except: 
             return data

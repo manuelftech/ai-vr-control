@@ -2,22 +2,24 @@
 
 # Python + Virtual Reality
 
-This project enables control of a Virtual Reality (VR) environment using Python and ChatGPT. The VR environment is built using C# and Unity Engine, allowing ChatGPT to modify the state of 3D elements within the scene.
+This project demonstrates using Python and ChatGPT to control a Virtual Reality (VR) environment. ChatGPT is used to modify the state of 3D elements within the scene, which is built on the C# Unity Engine.
 
 ### Application running:
 [![overview](https://img.youtube.com/vi/Hg86pDgOp3w/hqdefault.jpg)](https://youtu.be/Hg86pDgOp3w)
 
-### Data Sources
-- Vector Store: Enables the Agent to useaccess system usage instructions through semantic search.
-- Redis Database: Stores, searches, and updates the temporal 3D world status, as well the chat history.
-- Drive: Stores and retrieves the main Agent Prompt instructions from Google Workspace to enhance behavior.
+### Data Components
+- Vector Store: Facilitates semantic search capabilities, enabling the Agent to access system usage instructions and operational guidelines.
+- Redis Database: Serves as a centralized repository for storing, retrieving, and updating temporal 3D world state data, as well as maintaining a record of chat history and conversation context.
+- Drive: Provides secure storage and retrieval of primary Agent Prompt instructions, leveraging Google Workspace integration to inform and refine Agent behavior.behavior.
 
-### Project Structure
+### Directory Structure
 
-*   `Orchestrator/` Python OpenAI main application
+*   `Orchestrator/` Python OpenAI application
     *   `config/` Configuration property management
     *   `controllers/` API endpoints and user input handling
     *   `core/` Main application helpers and managers
+    *   `docs/` PDF documents ingested into the Vector Store for semantic search 
+    *   `schemas/` Data Transfer Object (DTO) models for Redis database interactions 
     *   `models/` API data models (requests and responses)
     *   `prompts/` Prompt configuration structure and templates
     *   `repository/` Database integration layer
@@ -31,7 +33,8 @@ This project enables control of a Virtual Reality (VR) environment using Python 
         *   `Managers/` 3D element management (registration and processing)
             *   `Networking/` API communication logic (endpoint calls, status/prompt transmission)
 
-### JSON structure to manipulate the 3D environment:
+
+### JSON schema for controlling the 3D environment
 ```json
 {
     "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",

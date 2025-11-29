@@ -45,7 +45,7 @@ class Workflow():
             agent_messages.extend(self._call_tool(response.output))
 
         # Get the final result of the workflow
-        logger.info("Final response: %s" + json.dumps(agent_messages[-1]))
+        logger.info("Final response: %s", json.dumps(agent_messages[-1]))
         return agent_messages[-1]
 
     def _call_tool(self, agent_response):
@@ -57,7 +57,7 @@ class Workflow():
                     "output": json.dumps({"result": result, "status": "Function called successfully"})})
                 # If the workflow continues and needs an additional prompt, we append it
                 if self.has_additional_prompt:
-                    logger.debug("Additional prompt: %s" + self.has_additional_prompt)
+                    logger.debug("Additional prompt: %s", self.has_additional_prompt)
                     agent_response.append({"role": "system", "content": self.has_additional_prompt})
                 return agent_response
         # If there are no additional prompts and no function calls, we return the final result
