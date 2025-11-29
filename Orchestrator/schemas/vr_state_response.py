@@ -16,8 +16,8 @@ class VRStateResponse(BaseModel):
     
     def _format_properties(self, properties_to_update):
         properties = []
-        vr = VRProperty()
         for state in properties_to_update:
+            vr = VRProperty()
             vr.Name = state["property"]
             vr.State = state["value"]
             properties.append(vr)
