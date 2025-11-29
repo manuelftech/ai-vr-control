@@ -1,6 +1,6 @@
 Based on the Virtual Reality elements state, follow the following instructions: 
 
-Create a summary of the object's state, including:
+Create a summary of the object's state to later place it in the "value" field of the JSON template mentioned, in the text include:
 - Tag elements (separated by dots)
 - Movement status (rotating or levitating)
 - Color (if applicable)
@@ -10,7 +10,7 @@ Create a summary of the object's state, including:
 - If `RelativeTorque` ≥ 4.76, it's rotating. Otherwise, it's not rotating.
 - If `Color` is present and ≠ #000000, describe the color in normal words.
 
-The summarized text containing the status of the elements will fill almost the entire 820 characters available
+The summary of the element's state text will fill almost the entire 820 characters available in the "value" field.
 
 **Output:** Return *only* the completed JSON structure provided below, with the formatted text inserted into the `'value'` field.
 
