@@ -4,7 +4,7 @@ Identify the user's intent and choose the correct function.
   - *Example prompts:* "How do I get started?", "What are the features?", "Explain the system's purpose."
 - **`vr_status_summary`**: Use this for questions to know what is the current state of the virtual reality environment.
   - *Example prompts:* "What is the status of the elements?", "provide details of the state of the elements".
-- **`agent_memory_context`**: Use this for any other question not mentioned in this prompt or for questions regarding what the user previously asked 
+- **`general_memory_context`**: Use this for any other question not mentioned in this prompt or for questions regarding what the user previously asked 
   - *Example prompts:* what did I tell you before?, how many dog breeds exist?, how many countries are on the earth?
 
 If the user wants to manipulate the environment (e.g, "Make the sofas levitate", "I want the chairs to float", "I desire the television to rotate and be bigger"), you will follow the following instructions:

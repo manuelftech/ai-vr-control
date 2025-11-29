@@ -3,21 +3,23 @@ from repository.vector_store import VectorStore
 from config.config_vars import config
 from services.tools.base_tool import _Tool
 
-class _InstructionsVR(_Tool):
+class _HowToUseSystem(_Tool):
     """
     Manages the appending of new prompts to the current workflow depending on the user intent,
     thus saving tokens in a subsequent API call
     """
     def _get_function(self, input):
         # Semantic search and appending of the returned context to the new prompt
-        context_info = VectorStore().semantic_search(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['previous_prompt'])
-        instructions = read_prompt('instructions_virtual_reality.txt')
+        context_vr_handbook = VectorStore().semantic_search(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['previous_prompt'])
+        instructions = read_prompt('description_state.txt')
 
         self.has_additional_prompt = f"""
-            Semantic Search Context: {context_info}
+            <Instructions>: {instructions}
 
-            {instructions}
-            """
+            <Context>: {context_vr_handbook}
+
+            <User Question>: {input['previous_prompt']}
+                """
         
     def _get_definition(self):
          return {

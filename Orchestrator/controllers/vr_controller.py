@@ -19,7 +19,7 @@ async def state(request: AgentRequest, background_tasks: BackgroundTasks):
 
     # The following processes execute without waiting for them to complete, but immediately returning the Controller response
     # Save chat history
-    background_tasks.add_task(VRRepository().save_single_object, content=AgentHistory(message=request.Prompt))
+    background_tasks.add_task(VRRepository().save_single_object, content=AgentHistory(content=request.Prompt))
     # Save updated Virtual Reality state
     background_tasks.add_task(VRRepository().updateAllWithTemplate, vr_state=vr_state)
     

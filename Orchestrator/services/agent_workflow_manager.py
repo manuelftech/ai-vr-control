@@ -1,6 +1,6 @@
-from services.tools.instructions_virtual_reality import _InstructionsVR
-from services.tools.agent_memory_context import _AgentMemoryContext
-from services.tools.vr_status_summary import _VRStatusSummary
+from repository.vr_repository import VRRepository
+from services.tools.how_to_use_3d_sys import _HowToUseSystem
+from services.tools.description_state import _DescriptionState
 from config.openai_agent import ChatGPT
 from config.config_vars import config
 from core.utils import read_prompt
@@ -21,16 +21,17 @@ class Workflow():
     def _get_tools(self):
         # Add more tools as needed
         return [
-            _AgentMemoryContext(),
-            _InstructionsVR(),
-            _VRStatusSummary()
+            _DescriptionState(),
+            _HowToUseSystem(),
             ]
     
     def start(self, prompt):
-        agent_messages = [{
+        chat_history = VRRepository().search_chat_history()
+
+        chat_history.append({
             "role": "user",
-            "content": f"{read_prompt('main_prompt.txt')} {prompt}"
-        }]
+            "content": f"Chat history: {chat_history}{read_prompt('main_prompt.txt')} {prompt}"
+        })
 
         # If we need to ask again and continue our workflow, we append subsequent responses
         while self.has_additional_prompt:
@@ -38,15 +39,15 @@ class Workflow():
             response = ChatGPT().client.responses.create(
                 model=config.LLM_MODEL,
                 tools=self.tool_definitions,
-                input=agent_messages,
+                input=chat_history,
             )
             
             # We find the tools to be used during the workflow
-            agent_messages.extend(self._call_tool(response.output))
+            chat_history.extend(self._call_tool(response.output))
 
         # Get the final result of the workflow
-        logger.info("Final response: %s", json.dumps(agent_messages[-1]))
-        return agent_messages[-1]
+        logger.info("Final response: %s", json.dumps(chat_history[-1]))
+        return chat_history[-1]
 
     def _call_tool(self, agent_response):
         # Executes the function logic depending on the tool the chat needs to use

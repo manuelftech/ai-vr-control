@@ -53,9 +53,10 @@ class VRRepository():
     def search_chat_history(self, query="@Tag:{agent_history}"):
         logging.debug("Query: %s", query)
         search_results = self.search(query=query)
-        chat_history = ""
+        chat_history = []
+        keys_schema = ["Role", "Content"]
         for data in search_results.docs:
-            chat_history += f"User: {json.loads(data.json)['Message']}\n"
+            chat_history.append({key: json.loads(data.json)[key] for key in keys_schema})
         return chat_history
     
     def search_vr_summary(self, query="-@Tag:{agent_history}"):

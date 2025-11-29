@@ -2,22 +2,21 @@ from core.utils import get_function_name, read_prompt
 from repository.vr_repository import VRRepository
 from services.tools.base_tool import _Tool
 
-class _VRStatusSummary(_Tool):
+class _DescriptionState(_Tool):
     """
     Manages the chat history to provide a way for the Agent to know previous questions asked
     """
     def _get_function(self, input):
         # Search the chat history and return it
-        vr_status = VRRepository().search_vr_summary()
-        instructions = read_prompt('vr_status_summary.txt')
+        context_vr_states = VRRepository().search_vr_summary()
+        instructions = read_prompt('description_state.txt')
 
         self.has_additional_prompt = f"""
-            <Virtual Reality elements state:> 
-            {vr_status}
+            <Instructions>: {instructions}
 
-            {instructions}
+            <Context>: {context_vr_states}
 
-            <User request:> {input['previous_prompt']}
+            <User Question>: {input['previous_prompt']}
                 """
         
     def _get_definition(self):
