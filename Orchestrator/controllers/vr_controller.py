@@ -16,14 +16,15 @@ router = APIRouter(prefix=config.ENDPOINT_PREFIX)
 async def state(request: AgentRequest, background_tasks: BackgroundTasks):
     logging.debug("Prompt: %s", request.Prompt)
     # Retrieves the modification structure from the Agent
-    #vr_state = Workflow().start(prompt=request.Prompt)
+    vr_state = Workflow().start(prompt=request.Prompt)
 
     # The following processes execute without waiting for them to complete, but immediately returning the Controller response
     # Save chat history
     background_tasks.add_task(VRRepository().save_single_object, content=AgentHistory(message=request.Prompt))
     # Save updated Virtual Reality state
-    # background_tasks.add_task(VRRepository().updateAllWithTemplate, vr_state=vr_state)
-    # return VRStateResponse(vr_state)
+    background_tasks.add_task(VRRepository().updateAllWithTemplate, vr_state=vr_state)
+    
+    return VRStateResponse(vr_state)
 
 @router.post("/state")
 async def state(vr_state: list[VRStateRequest]):
