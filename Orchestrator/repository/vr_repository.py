@@ -1,23 +1,29 @@
+from redis.commands.search.query import Query
 from config.redis_db import RedisClient
 from config.config_vars import config
 import logging
+import json
+import uuid
 logger = logging.getLogger(__name__)
 
 class VRRepository():
     def __init__(self):
         self.redis = RedisClient()
 
-    async def saveAll(self, return_saved=False, vr_states=[]):
-        modified_ids = []
-        for vr_state in vr_states:
-            id = f"{config.KEY_PREFIX}{vr_state.Id}"
-            modified_ids.append(id)
-            await self.save_single_object(id=id, property="$", vr_state=vr_state)
+    async def saveAll(self, return_saved=False, vr_state=[]):
+        saved_ids = []
+        for state in vr_state:
+            id = f"{config.VR_KEY_PREFIX}{state['Id']}"
+            saved_ids.append(id)
+            await self.save_single_object(id=id, property="$", content=state)
+        logging.info("%s Components saved", len(saved_ids))
         if return_saved:
-            return await self._find_ids(modified_ids=modified_ids)
+            return await self._find_ids(modified_ids=saved_ids)
 
-    async def save_single_object(self, id=config.HISTORY_PREFIX, property="$", state=None):
-        self.redis.client.json().set(id, property, state)
+    async def save_single_object(self, id=None, property="$", content=None):
+        id = self._validate_id(id)
+        content = self._validate_content(content)
+        self.redis.client.json().set(id, property, content)
     
     async def _find_ids(self, ids):
         modified_vr_objects = []
@@ -26,19 +32,62 @@ class VRRepository():
             logging.debug("VR Status found: %s", self.redis.client.json(id).get(id))
         return modified_vr_objects
     
-    async def updateAllWithTemplate(self, return_saved=False, template=None):
-        logging.debug("Query: %s", template['search_query'])
-        search_results = self.search(template['search_query'])
+    async def updateAllWithTemplate(self, return_saved=False, vr_state=None):
+        logging.debug("Updating Component: %s", vr_state)
+        search_results = self.search(query=vr_state['search_query'])
 
         modified_ids = []
         for doc in search_results.docs:
-            for doc_update in template["properties_to_update"]:
-                logging.debug("Updating Component: %s, State: %s", doc_update["property"], doc_update["value"])
+            for doc_update in vr_state["properties_to_update"]:
                 self.redis.client.json().set(doc.id, doc_update["property"], doc_update["value"])
                 modified_ids.append(doc.id)
 
+        logging.info("%s Components updated", len(modified_ids))
         if return_saved:
             return await self._find_ids(modified_ids)
+    
+    def search(self, query=None):
+        search_query = Query(query).paging(offset=0, num=config.REDIS_SEARCH_LIMIT)
+        return self.redis.client.ft(config.VR_INDEX).search(search_query)
+    
+    def search_chat_history(self, query="@Tag:{agent_history}"):
+        logging.debug("Query: %s", query)
+        search_results = self.search(query=query)
+        chat_history = []
+        keys_schema = ["Role", "Content"]
+        for data in search_results.docs:
+            chat_history.append({key.lower(): json.loads(data.json)[key] for key in keys_schema})
+        return chat_history
+    
+    def search_vr_summary(self, query="-@Tag:{agent_history}"):
+        logging.debug("Query: %s", query)
+        search_results = self.search(query=query)
+        tags = []
+        vr_elements = []
+        for vr in search_results.docs:
+            doc = json.loads(vr.json)
+            tags.append(doc['Tag'])
+            vr_elements.append(doc)
+
+        summary = []
+        for tag in set(tags):
+            for vr in vr_elements:
+                if vr['Tag'] == tag:
+                    doc = vr.copy()
+                    doc["Components"].pop("Text", None)
+                    summary.append({"Tag": tag, "Components": doc["Components"]})
+                    break
+        return summary
+    
+    def _validate_content(self, data):
+        try:
+            converted_data = json.loads(data.model_dump_json())
+            logging.debug("Save data %s: ", converted_data)
+            return converted_data
+        except: 
+            return data
         
-    async def search(self, query=None):
-        return self.redis.client.ft(config.INDEX_NAME).search(query)
+    def _validate_id(self, id):
+        if(id):
+            return id
+        return f"{config.VR_KEY_PREFIX}{str(uuid.uuid4())}"

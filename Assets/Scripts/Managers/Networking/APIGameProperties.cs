@@ -13,7 +13,7 @@ namespace AIControlVR.Managers.Networking
 {
     public class APIVRProperties
     {
-        public async Task<TransformResponse> UpdateVRStatus(APIChatbotRequest chatbotRequest)
+        public async Task<VRStateResponse> UpdateVRStatus(APIChatbotRequest chatbotRequest)
         {
             var jsonRequest = JsonConvert.SerializeObject(chatbotRequest);
             Debug.Log($"API Request: {jsonRequest}");
@@ -33,7 +33,7 @@ namespace AIControlVR.Managers.Networking
             else
             {
                 Debug.Log($"API State Response: {request.downloadHandler.text}");
-                var response = JsonUtility.FromJson<TransformResponse>(request.downloadHandler.text);
+                var response = JsonUtility.FromJson<VRStateResponse>(request.downloadHandler.text);
                 return response;
             }
         }

@@ -4,7 +4,7 @@
 Orchestrator/**/__pycache__/
 Orchestrator/venv/
 Orchestrator/.env
-Orchestrator/.gcp_key.json
+Orchestrator/.gcp-credentials.json
 
 # MacOS:
 **/.DS_Store

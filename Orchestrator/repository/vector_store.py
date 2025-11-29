@@ -1,4 +1,5 @@
 from config.openai_agent import ChatGPT
+from config.config_vars import config
 
 class VectorStore():
 
@@ -16,3 +17,10 @@ class VectorStore():
             for content in data.content:
                 context_info += f"{content.text}\n"
         return context_info
+    
+    def upload_pdf(self, filename):
+        with open(filename, "rb") as file:
+            self.vector_stores.file_batches.upload_and_poll(
+                vector_store_id=config.VECTOR_STORE_KNOWLEDGE_BASE_ID,
+                files=[file]
+            )
