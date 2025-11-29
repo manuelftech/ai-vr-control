@@ -42,7 +42,7 @@ class VRRepository():
                 self.redis.client.json().set(doc.id, doc_update["property"], doc_update["value"])
                 modified_ids.append(doc.id)
 
-        logging.info("Components updated")
+        logging.info("%s Components updated", len(modified_ids))
         if return_saved:
             return await self._find_ids(modified_ids)
     
