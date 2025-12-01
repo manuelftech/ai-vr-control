@@ -80,7 +80,7 @@ class Workflow():
         try:
             return ast.literal_eval(agent_response[-1].content[-1].text)
         except:
-            raise NotImplementedError("The action provided does not return a Redis Query Template %s", agent_response[-1].content[-1].text)
+            raise NotImplementedError("The action provided does not return a JSON Template %s", agent_response[-1].content[-1].text)
     
     def _get_tool_functions(self):
         return [tool for tool in self._get_tools()]

@@ -163,7 +163,7 @@ namespace AIControlVR.Managers
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
                 TextMeshPro tmpInputField = sceneVRState.Value.GetComponent<TextMeshPro>();
-
+                Rigidbody rigidBody = sceneVRState.Value.GetComponent<Rigidbody>();
                 Debug.Log($"Tag: {updatedVRStates.Tag}. Updating state.");
                 foreach (VRProperty vr in updatedVRStates.Properties){
                     switch(vr.Name){
@@ -208,13 +208,19 @@ namespace AIControlVR.Managers
                             continue;
                         case "$.Transform.Scale":
                             // Modifies the size of the element
-                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Transform Scale.");
-                            Vector3 scale = sceneVRState.Value.transform.localScale;
-                            scale.x = scale.x * float.Parse(vr.State);
-                            scale.y = scale.y * float.Parse(vr.State);
-                            scale.z = scale.z * float.Parse(vr.State);
-                            sceneVRState.Value.transform.localScale = scale;
-                            Debug.Log($"Tag: {updatedVRStates.Tag}. Transform.Scale assigned: {vr.State}");
+                            if (rigidBody){
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Transform Scale.");
+                                Vector3 scale = sceneVRState.Value.transform.localScale;
+                                scale.x = scale.x * float.Parse(vr.State);
+                                scale.y = scale.y * float.Parse(vr.State);
+                                scale.z = scale.z * float.Parse(vr.State);
+                                sceneVRState.Value.transform.localScale = scale;
+                                // Apply a small force to affect physics
+                                rigidBody.AddForce(sceneVRState.Value.transform.forward * 0.01f, ForceMode.Force);
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. Transform.Scale assigned: {vr.State}");
+                            }else {
+                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a RigidBody component");
+                            }
                             continue;
                         case "$.Components.Text":
                             // Change displayed text on television (a maximum of 539 continuous characters)
