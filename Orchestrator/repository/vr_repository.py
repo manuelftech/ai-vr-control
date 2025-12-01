@@ -10,39 +10,37 @@ class VRRepository():
     def __init__(self):
         self.redis = RedisClient()
 
-    async def saveAll(self, return_saved=False, vr_state=[]):
+    async def save_all(self, return_saved=False, content=[]):
         saved_ids = []
-        for state in vr_state:
-            id = f"{config.VR_KEY_PREFIX}{state['Id']}"
+        for state in content:
+            id = self._validate_id(state)
             saved_ids.append(id)
-            await self.save_single_object(id=id, property="$", content=state)
-        logging.info("%s Components saved", len(saved_ids))
+            await self.save_one(id=id, property="$", content=state)
+        logging.info("%s units saved", len(saved_ids))
         if return_saved:
             return await self._find_ids(modified_ids=saved_ids)
 
-    async def save_single_object(self, id=None, property="$", content=None):
-        id = self._validate_id(id)
-        content = self._validate_content(content)
+    async def save_one(self, id=None, property="$", content=None):
         self.redis.client.json().set(id, property, content)
     
     async def _find_ids(self, ids):
         modified_vr_objects = []
         for id in ids:
             modified_vr_objects.append(self.redis.client.json(id).get(id))
-            logging.debug("VR Status found: %s", self.redis.client.json(id).get(id))
+            logging.debug("Unit found: %s", self.redis.client.json(id).get(id))
         return modified_vr_objects
     
-    async def updateAllWithTemplate(self, return_saved=False, vr_state=None):
-        logging.debug("Updating Component: %s", vr_state)
-        search_results = self.search(query=vr_state['search_query'])
+    async def update_all_with_template(self, return_saved=False, content=None):
+        logging.debug("Updating units: %s", content)
+        search_results = self.search(query=content['search_query'])
 
         modified_ids = []
         for doc in search_results.docs:
-            for doc_update in vr_state["properties_to_update"]:
+            for doc_update in content["properties_to_update"]:
                 self.redis.client.json().set(doc.id, doc_update["property"], doc_update["value"])
                 modified_ids.append(doc.id)
 
-        logging.info("%s Components updated", len(modified_ids))
+        logging.info("%s units updated", len(modified_ids))
         if return_saved:
             return await self._find_ids(modified_ids)
     
@@ -78,16 +76,19 @@ class VRRepository():
                     summary.append({"Tag": tag, "Components": doc["Components"]})
                     break
         return summary
-    
-    def _validate_content(self, data):
-        try:
-            converted_data = json.loads(data.model_dump_json())
-            logging.debug("Save data %s: ", converted_data)
-            return converted_data
-        except: 
-            return data
         
-    def _validate_id(self, id):
-        if(id):
-            return id
-        return f"{config.VR_KEY_PREFIX}{str(uuid.uuid4())}"
+    def _validate_id(self, state):
+        try:
+            return f"{config.VR_KEY_PREFIX}{state['Id']}"
+        except: 
+            return f"{config.VR_KEY_PREFIX}{str(uuid.uuid4())}"
+    
+    async def purge_all(self):
+        logger.debug("Scanning for existing cache")
+        cache = list(self.redis.client.scan_iter('*'))
+        if len(cache) < 1:
+            logger.debug("No cache found")
+            return
+        for key in cache:
+            self.redis.client.delete(key)
+        logger.debug("Cache successfully deleted")

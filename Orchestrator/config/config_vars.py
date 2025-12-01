@@ -34,5 +34,6 @@ class ConfigVar(BaseSettings):
     LOGGER_LEVEL: int
     LOGGER_DATE_FORMAT: str
     LOGGER_COLOR_FORMAT: Dict[str, str]
+    CHAT_GENERIC_FULFILLED_MESSAGE: Dict[str, str]
 
 config = ConfigVar()

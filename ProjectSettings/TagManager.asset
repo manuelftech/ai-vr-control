@@ -12,10 +12,10 @@ TagManager:
   - table
   - rack
   - chair
-  - stick
-  - television_display_text
   - ps5
-  - joystick
+  - picture
+  - screen
+  - vase
   layers:
   - Default
   - TransparentFX

@@ -14,7 +14,7 @@ class Drive():
     def __init__(self):
         if not self._is_already_initialized:
             self.client = self._connect()
-            self._setup_prompts()
+            self._download_default_config_files(config.DRIVE_PROMPT_FILES)
             self._is_already_initialized = True
 
     def _connect(self):
@@ -30,9 +30,6 @@ class Drive():
             return client
         except Exception as e:
             raise Exception(e)
-        
-    def get_status(self):
-        return self.connection_status
     
     def __new__(cls):
         if cls._singleton is None:
@@ -48,8 +45,11 @@ class Drive():
             if completed:
                 return
     
-    def _setup_prompts(self):
-        logger.debug("Downloading Prompt files from Drive")
-        for file_id in config.DRIVE_PROMPT_FILES:
+    def _download_default_config_files(self, filenames=[]):
+        logger.debug("Downloading config files")
+        if len(filenames) < 1:
+            logger.warning("No default files to download")
+            return
+        for file_id in filenames:
             self._download_file(file_id)
-        logger.debug("Prompt files successfully downloaded")
+        logger.debug("Config files successfully downloaded")

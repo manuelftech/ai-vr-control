@@ -12,8 +12,11 @@ if __name__ == "__main__":
     configure_logger()
 
     # Set up Services' configurations
+    # Validate OpenAI connection
     ChatGPT()
+    # Validate Drive connection and downloads default configuration files
     Drive()
+    # Validate database connection and cleans cache
     RedisClient()
 
     # Initialize the Server

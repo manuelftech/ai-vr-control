@@ -19,16 +19,24 @@ async def state(request: AgentRequest, background_tasks: BackgroundTasks):
 
     # The following processes execute without waiting for them to complete, but immediately returning the Controller response
     # Save chat history
-    background_tasks.add_task(VRRepository().save_single_object, content=AgentHistory(content=request.Prompt))
+    background_tasks.add_task(VRRepository().save_all, content=AgentHistory(message=request.Prompt).create_completed_response())
     # Save updated Virtual Reality state
-    background_tasks.add_task(VRRepository().updateAllWithTemplate, vr_state=vr_state)
+    background_tasks.add_task(VRRepository().update_all_with_template, content=vr_state)
     
-    response = VRStateResponse(vr_state)
+    response = VRStateResponse(vr_state=vr_state)
     logging.debug("Modification properties Response: %s", response)
     return response
 
 @router.post("/state")
 async def state(vr_state: list[VRStateRequest]):
+    # The cache is cleared automatically before saving the new states
+    await VRRepository().purge_all()
+
     logging.debug("Received VR states: %s", vr_state)
     # Saves the initial Virtual Reality state to Redis
-    await VRRepository().saveAll(vr_state=jsonable_encoder(vr_state))
+    await VRRepository().save_all(content=jsonable_encoder(vr_state))
+
+@router.delete("/state")
+async def state():
+    # The cache is cleared automatically upon the finalizing of the virtual reality simulation
+    await VRRepository().purge_all()

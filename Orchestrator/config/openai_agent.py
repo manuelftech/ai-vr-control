@@ -21,9 +21,6 @@ class ChatGPT():
             return agent
         except Exception as e:
             raise Exception(e)
-    
-    def get_status(self):
-        return self.connection_status
 
     def __new__(cls):
         if cls._singleton is None:

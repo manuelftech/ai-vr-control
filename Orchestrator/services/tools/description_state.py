@@ -16,7 +16,7 @@ class _DescriptionState(_Tool):
          return {
                 "type": "function",
                 "name": get_function_name(__file__),
-                "description": "Retrieves the summary of the virtual reality status, to understand in what state the objects currently are.",
+                "description": "Retrieves the summary of the virtual reality states, to understand in what state the objects currently are.",
                 "parameters": {
                     "type": "object",
                     "properties": {
