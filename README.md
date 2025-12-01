@@ -2,7 +2,7 @@
 
 # Python + Virtual Reality
 
-This project demonstrates the integration of Python and ChatGPT for dynamic control of a Virtual Reality (VR) environment. The system utilizes a Python-based API to facilitate communication, allowing ChatGPT to modify the state of 3D elements within the scene, which is built on the Unity Engine.
+This project demonstrates the integration of Python and ChatGPT for dynamic control of a Virtual Reality (VR) environment. The system utilizes a Python-based application to facilitate communication, allowing ChatGPT to modify the state of 3D elements within the scene, which is built on the Unity Engine.
 
 ### Application running:
 [![overview](https://img.youtube.com/vi/f97EhuV3J4k/hqdefault.jpg)](https://youtu.be/f97EhuV3J4k)
@@ -71,7 +71,7 @@ This project demonstrates the integration of Python and ChatGPT for dynamic cont
             }
         },
         "Color": "#FF0000",
-        "Text": "The television 3D object is capable of rendering text-based content",
+        "Text": "The 3D television display supports text rendering",
     }
 }
 ```
