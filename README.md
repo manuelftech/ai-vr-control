@@ -34,7 +34,7 @@ This project demonstrates the integration of Python and ChatGPT for dynamic cont
             *   `Networking/` API communication logic (endpoint calls, state/prompt transmission)
 
 
-### JSON schema for the 3D environment
+### JSON Schema Definition for 3D Environment Data
 ```json
 {
     "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
