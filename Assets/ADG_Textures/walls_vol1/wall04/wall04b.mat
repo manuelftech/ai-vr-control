@@ -170,8 +170,8 @@ Material:
     - _distance_start: 10
     - _distance_transition: 33.46154
     m_Colors:
-    - _BaseColor: {r: 0.9117647, g: 0.9117647, b: 0.9117647, a: 1}
-    - _Color: {r: 0.9117647, g: 0.9117647, b: 0.9117647, a: 1}
+    - _BaseColor: {r: 0.6226415, g: 0.44311294, b: 0.16740832, a: 1}
+    - _Color: {r: 0.62264144, g: 0.4431129, b: 0.16740829, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}
     - _ReflectColor: {r: 1, g: 1, b: 1, a: 0.5}
