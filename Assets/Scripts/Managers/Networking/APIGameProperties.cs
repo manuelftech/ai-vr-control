@@ -13,14 +13,13 @@ namespace AIControlVR.Managers.Networking
 {
     public class APIVRProperties
     {
-        public async Task<VRStateResponse> UpdateVRStatus(APIChatbotRequest chatbotRequest)
+        public async Task<VRStateResponse> UpdateVRStates(APIChatbotRequest chatbotRequest)
         {
+            // Updates the virtual reality state in Redis
             var jsonRequest = JsonConvert.SerializeObject(chatbotRequest);
-            Debug.Log($"API Request: {jsonRequest}");
-
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonRequest);
             string ApiURL = GlobalManager.Instance.ApiURL;
-            Debug.Log($"State Endpoint URL: {ApiURL}");
+            Debug.Log($"Updating vr states. Endpoint URL: {ApiURL}, Request: {jsonRequest}");
             using UnityWebRequest request = new UnityWebRequest(ApiURL, "PUT");
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -38,14 +37,13 @@ namespace AIControlVR.Managers.Networking
             }
         }
 
-        public async Task SaveInitialVrStatus(List<ObjectProperties> virtualRealityState)
+        public async Task SaveInitialVrState(List<ObjectProperties> virtualRealityState)
         {
+            // Saves the initial virtual reality state in Redis
             var jsonRequest = JsonConvert.SerializeObject(virtualRealityState);
-            Debug.Log($"API Request: {jsonRequest}");
-
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonRequest);
             string ApiURL = GlobalManager.Instance.ApiURL;
-            Debug.Log($"State Endpoint URL: {ApiURL}");
+            Debug.Log($"Sending vr states. Endpoint URL: {ApiURL}, Request: {jsonRequest}");
             using UnityWebRequest request = new UnityWebRequest(ApiURL, "POST");
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -56,6 +54,21 @@ namespace AIControlVR.Managers.Networking
                 throw new Exception($"Error calling API Endpoint: {request.error}");
             }
             Debug.Log($"Data successfully saved to Redis");
+        }
+
+        public async Task DeleteVrStateCache(List<ObjectProperties> virtualRealityState)
+        {
+            // Flushes the Redis database
+            string ApiURL = GlobalManager.Instance.ApiURL;
+            Debug.Log($"Deleting cache data. Endpoint URL: {ApiURL}");
+            using UnityWebRequest request = new UnityWebRequest(ApiURL, "DELETE");
+            request.SetRequestHeader("Content-Type", "application/json");
+            await request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                throw new Exception($"Error calling Cache deletion API: {request.error}");
+            }
+            Debug.Log($"Cache data successfully deleted");
         }
     }
 }

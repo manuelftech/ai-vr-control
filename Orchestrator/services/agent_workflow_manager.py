@@ -1,5 +1,5 @@
 from repository.vr_repository import VRRepository
-from services.tools.how_to_use_3d_sys import _HowToUseSystem
+from services.tools.how_to_use_3d_system import _HowToUseSystem
 from services.tools.description_state import _DescriptionState
 from config.openai_agent import ChatGPT
 from config.config_vars import config

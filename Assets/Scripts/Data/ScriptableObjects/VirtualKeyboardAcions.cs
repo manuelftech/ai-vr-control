@@ -34,7 +34,7 @@ namespace AIControlVR.Data.ScriptableObjects
         public async void RequestActionToChatbot()
         {
             // Send the prompt to te Agent
-            VRStateResponse response = await apiVRProperties.UpdateVRStatus(new APIChatbotRequest.Builder()
+            VRStateResponse response = await apiVRProperties.UpdateVRStates(new APIChatbotRequest.Builder()
                     .Prompt(this.CaptureKeyboardInputText())
                     .Build());
 

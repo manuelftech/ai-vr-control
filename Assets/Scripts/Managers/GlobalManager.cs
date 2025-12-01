@@ -35,16 +35,24 @@ namespace AIControlVR.Managers
             StartCoroutine(ConfigureScene());
         }
 
+        void OnApplicationQuit(){
+            DeleteRedisCache();
+        }
+
         IEnumerator<WaitForEndOfFrame> ConfigureScene(){
             yield return new WaitForEndOfFrame();
             this.GetEnvironmentVariables();
-            this.SaveInitialStatusToRedis();
+            this.SaveInitialStateToRedis();
         }
 
-        private async Task SaveInitialStatusToRedis(){
-            // Send the initial 3D VR status to Redis
-            await apiVRProperties.SaveInitialVrStatus(this.GetFormattedVirtualRealityState());
-            Debug.Log("Initial status successfully saved to Redis.");
+        private async Task SaveInitialStateToRedis(){
+            // Send the initial 3D VR states to Redis
+            await apiVRProperties.SaveInitialVrState(this.GetFormattedVirtualRealityState());
+        }
+
+        private async Task DeleteRedisCache(){
+            // Cleans cache in Redis
+            await apiVRProperties.DeleteVrStateCache(this.GetFormattedVirtualRealityState());
         }
 
         private void GetEnvironmentVariables(){
