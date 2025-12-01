@@ -5,7 +5,7 @@
 This project demonstrates using Python and ChatGPT to control a Virtual Reality (VR) environment. ChatGPT is used to modify the state of 3D elements within the scene, which is built on the C# Unity Engine.
 
 ### Application running:
-[![overview](https://img.youtube.com/vi/eGInHRky4nI/hqdefault.jpg)](https://youtu.be/eGInHRky4nI)
+[![overview](https://img.youtube.com/vi/f97EhuV3J4k/hqdefault.jpg)](https://youtu.be/f97EhuV3J4k)
 
 ### Data Components
 - Vector Store: Facilitates semantic search capabilities, enabling the Agent to access system usage instructions and operational guidelines.
@@ -39,7 +39,7 @@ This project demonstrates using Python and ChatGPT to control a Virtual Reality 
 {
     "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
     "Tag": "chair",
-    "Name": "Chair_livingroom",
+    "Name": "Chair_Livingroom",
     "Transform": {
         "Position": {
             "X": 13.7924623,
@@ -54,7 +54,7 @@ This project demonstrates using Python and ChatGPT to control a Virtual Reality 
         "Scale": {
             "X": 1.0,
             "Y": 1.5,
-            "Z": 1.0
+            "Z": 0.5
         }
     },
     "Components": {
