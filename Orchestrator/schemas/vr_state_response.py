@@ -1,8 +1,9 @@
 from pydantic import BaseModel, Field
+from typing import Optional, Union
 
 class VRProperty(BaseModel):
     Name: str | None = Field(None, description="Specific component or transform element to be manipulated")
-    State: str| None = Field(None, description="New updated value for the component")
+    State: Optional[Union[str, int, float]] = Field(None, description="New updated value for the component")
 
 class VRStateResponse(BaseModel):
     Tag: str | None = Field(None, description="Search query to find the 3D elements")

@@ -129,6 +129,7 @@ namespace AIControlVR.Data.Models
         public CoordinatesProperties Position;
         public CoordinatesProperties Rotation;
         public CoordinatesProperties Scale;
+        public float Reshape;
 
         public TransformProperties() { }
         public class Builder
@@ -144,6 +145,10 @@ namespace AIControlVR.Data.Models
             }
             public Builder Scale(CoordinatesProperties scale) { 
                 _build.Scale = scale; 
+                return this;
+            }
+            public Builder Reshape(float reshape) { 
+                _build.Reshape = reshape; 
                 return this;
             }
             public TransformProperties Build()

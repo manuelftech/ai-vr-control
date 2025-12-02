@@ -5,7 +5,7 @@
 This project demonstrates the integration of Python and ChatGPT for dynamic control of a Virtual Reality (VR) environment. The system utilizes a Python-based application to facilitate communication, allowing ChatGPT to modify the state of 3D elements within the scene, which is built on the Unity Engine.
 
 ### Application running:
-[![overview](https://img.youtube.com/vi/f97EhuV3J4k/hqdefault.jpg)](https://youtu.be/f97EhuV3J4k)
+[![overview](https://img.youtube.com/vi/bB7ghHSNvR4/hqdefault.jpg)](https://youtu.be/bB7ghHSNvR4)
 
 ### Data Components
 - Vector Store: Facilitates semantic search capabilities, enabling the Agent to access system usage instructions and operational guidelines.

@@ -10,8 +10,8 @@ class _HowToUseSystem(_Tool):
     """
     def _get_function(self, input):
         # Semantic search and appending of the returned context to the new prompt
-        context_vr_handbook = VectorStore().semantic_search(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['previous_prompt'])
-        self.has_additional_prompt = read_prompt('base_template_prompt.txt')
+        context_vr_handbook = VectorStore().semantic_search(config.VECTOR_STORE_KNOWLEDGE_BASE_ID, input['search_query'])
+        self.has_additional_prompt = read_prompt('info_structure_prompt.txt')
         return context_vr_handbook
         
     def _get_definition(self):
@@ -22,11 +22,11 @@ class _HowToUseSystem(_Tool):
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "previous_prompt": {
+                        "search_query": {
                             "type": "string",
                             "description": "The natural language search query or topic the user is asking about (e.g., 'How this system works?', 'Explain how to use this environment', 'provide the system documentation?'). This query is used for a semantic search to locate the most relevant instructions.",
                         },
                     },
-                    "required": ["previous_prompt"],
+                    "required": ["search_query"],
                 },
             }

@@ -16,6 +16,7 @@ TagManager:
   - picture
   - screen
   - vase
+  - text
   layers:
   - Default
   - TransparentFX
