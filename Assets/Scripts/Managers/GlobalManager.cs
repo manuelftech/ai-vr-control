@@ -1,5 +1,6 @@
 using AIControlVR.Managers.Networking;
 using System.Collections.Generic;
+using AIControlVR;
 using AIControlVR.Data.Models;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -11,12 +12,12 @@ namespace AIControlVR.Managers
 {
     public class GlobalManager : MonoBehaviour
     {
-        public string ApiURL;
+        public Config Config;
         public static GlobalManager Instance { get; private set; }
         private APIVRProperties apiVRProperties = new APIVRProperties();
         public Dictionary<string, GameObject> vrStateObjects = new Dictionary<string, GameObject>();
 
-        async void Awake()
+        void Awake()
         {
             // This general VR State manager is created only once
             if (Instance != null && Instance != this)
@@ -41,26 +42,17 @@ namespace AIControlVR.Managers
 
         IEnumerator<WaitForEndOfFrame> ConfigureScene(){
             yield return new WaitForEndOfFrame();
-            this.GetEnvironmentVariables();
             this.SaveInitialStateToRedis();
         }
 
-        private async Task SaveInitialStateToRedis(){
+        private void SaveInitialStateToRedis(){
             // Send the initial 3D VR states to Redis
-            await apiVRProperties.SaveInitialVrState(this.GetFormattedVirtualRealityState());
+            apiVRProperties.SaveInitialVrState(this.GetFormattedVirtualRealityState());
         }
 
-        private async Task DeleteRedisCache(){
+        private void DeleteRedisCache(){
             // Cleans cache in Redis
-            await apiVRProperties.DeleteVrStateCache(this.GetFormattedVirtualRealityState());
-        }
-
-        private void GetEnvironmentVariables(){
-            ApiURL = Environment.GetEnvironmentVariable("VR_STATE_ENDPOINT") ?? "http://localhost:5000/virtual-reality-environment/state";
-            if (string.IsNullOrEmpty(ApiURL)){
-                throw new System.Exception("Environment variables not found.");
-            }
-            Debug.Log("Environment variables successfully configured.");
+            apiVRProperties.DeleteVrStateCache(this.GetFormattedVirtualRealityState());
         }
 
         public void RegisterObject(GameObject obj)
@@ -100,19 +92,20 @@ namespace AIControlVR.Managers
                     .Z(sceneVRState.Value.transform.localScale.z)
                     .Build();
 
+                const float NormalSize = 1.0f;
                 TransformProperties transform = new TransformProperties.Builder()
                     .Position(position)
                     .Rotation(rotation)
                     .Scale(scale)
+                    .Reshape(NormalSize)
                     .Build();
 
                 // Obtain the hexadecimal formatted color of the Renderer Component (e.g, #FFFFFF)
-                string formattedColor = null;
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
-                if (renderer != null){
+                string formattedColor = "";
+                if(renderer?.material.HasProperty("_Color") == true){
                     formattedColor = $"#{ColorUtility.ToHtmlStringRGB(renderer.material.color)}";
                 }
-
                 ConstantForceProps constantForceProps = null;
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
                 if (constantForce != null){
@@ -164,75 +157,68 @@ namespace AIControlVR.Managers
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
                 TextMeshPro tmpInputField = sceneVRState.Value.GetComponent<TextMeshPro>();
                 Rigidbody rigidBody = sceneVRState.Value.GetComponent<Rigidbody>();
-                Debug.Log($"Tag: {updatedVRStates.Tag}. Updating state.");
+                Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating state of Id: {sceneVRState.Key}");
                 foreach (VRProperty vr in updatedVRStates.Properties){
-                    switch(vr.Name){
-                        case "$.Components.Color":
-                            // Modifies the color of the element
-                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Color.");
+                    if (String.Equals(Config.ColorChange, vr.Name, StringComparison.OrdinalIgnoreCase) && renderer){
+                        // Modifies the color of the element
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating Color.");
+                        Color updatedColor;
+                        ColorUtility.TryParseHtmlString(vr.State, out updatedColor);
+                        renderer.material.color = updatedColor;
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Color assigned: {vr.State}");
+                        continue;
+                    }else{
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a Color component");
+                    }
 
-                            if (renderer){
-                                Color updatedColor;
-                                ColorUtility.TryParseHtmlString(vr.State, out updatedColor);
-                                renderer.material.color = updatedColor;
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. Color assigned: {vr.State}");
-                            } else {
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a Color component");
-                            }
-                            continue;
-                        case "$.Components.ConstantForce.Force.Y":
-                            // Modifies the gravity of the element
-                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating ConstantForce Y.");
-
-                            if (constantForce){
-                                Vector3 updatedForce = constantForce.force;
-                                updatedForce.y = float.Parse(vr.State);
-                                constantForce.force = updatedForce;
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. ConstantForce.Force assigned: {vr.State}");
-                            } else {
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a ConstantForce component");
-                            }
-                            continue;
-                        case "$.Components.ConstantForce.RelativeTorque.X":
-                            // Modifies the spinning force of the element
-                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Relative Torque X.");
+                    if (String.Equals(Config.LevitationChange, vr.Name, StringComparison.OrdinalIgnoreCase) && constantForce){
+                        // Modifies the gravity of the element
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating ConstantForce Y.");
+                        Vector3 updatedForce = constantForce.force;
+                        updatedForce.y = float.Parse(vr.State);
+                        constantForce.force = updatedForce;
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. ConstantForce.Force assigned: {vr.State}");
+                        continue;
+                    } else {
+                            Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a ConstantForce component");
+                    }
                             
-                            if (constantForce){
-                                Vector3 updatedTorque = constantForce.relativeTorque;
-                                updatedTorque.x = float.Parse(vr.State);
-                                constantForce.relativeTorque = updatedTorque;
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. ConstantForce.RelativeTorque assigned: {vr.State}");
-                            } else {
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a RelativeTorque component");
-                            }
-                            continue;
-                        case "$.Transform.Scale":
-                            // Modifies the size of the element
-                            if (rigidBody){
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Transform Scale.");
-                                Vector3 scale = sceneVRState.Value.transform.localScale;
-                                scale.x = scale.x * float.Parse(vr.State);
-                                scale.y = scale.y * float.Parse(vr.State);
-                                scale.z = scale.z * float.Parse(vr.State);
-                                sceneVRState.Value.transform.localScale = scale;
-                                // Apply a small force to affect physics
-                                rigidBody.AddForce(sceneVRState.Value.transform.forward * 0.01f, ForceMode.Force);
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. Transform.Scale assigned: {vr.State}");
-                            }else {
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a RigidBody component");
-                            }
-                            continue;
-                        case "$.Components.Text":
-                            // Change displayed text on television (a maximum of 539 continuous characters)
-                            Debug.Log($"Tag: {updatedVRStates.Tag}. Updating Text.");
+                    if (String.Equals(Config.RotationChange, vr.Name, StringComparison.OrdinalIgnoreCase) && constantForce){
+                        // Modifies the spinning force of the element
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating Relative Torque X.");
+                        Vector3 updatedTorque = constantForce.relativeTorque;
+                        updatedTorque.x = float.Parse(vr.State);
+                        constantForce.relativeTorque = updatedTorque;
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. ConstantForce.RelativeTorque assigned: {vr.State}");
+                        continue;
+                    } else {
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a RelativeTorque component");
+                    }
 
-                            if (tmpInputField){
-                                tmpInputField.text = vr.State;
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. tmpInputField.text  assigned: {vr.State}");
-                            } else {
-                                Debug.Log($"Tag: {updatedVRStates.Tag}. Does not contain a Text component");
-                            }
-                            continue;
+                    if (String.Equals(Config.SizeChange, vr.Name, StringComparison.OrdinalIgnoreCase) && rigidBody){
+                        // Modifies the size of the element
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating Transform Scale.");
+                        Vector3 scale = sceneVRState.Value.transform.localScale;
+                        scale.x = scale.x * float.Parse(vr.State);
+                        scale.y = scale.y * float.Parse(vr.State);
+                        scale.z = scale.z * float.Parse(vr.State);
+                        sceneVRState.Value.transform.localScale = scale;
+                        // Apply a small force to affect physics
+                        rigidBody.AddForce(sceneVRState.Value.transform.forward * 0.01f, ForceMode.Force);
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Transform.Scale assigned: {vr.State}");
+                        continue;
+                    }else {
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a RigidBody component");
+                    }
+                            
+                    if (String.Equals(Config.TextChange, vr.Name, StringComparison.OrdinalIgnoreCase) && tmpInputField){
+                        // Change displayed text on television (a maximum of 539 continuous characters)
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating Text.");
+                        tmpInputField.text = vr.State;
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. tmpInputField.text  assigned: {vr.State}");
+                        continue;
+                    } else {
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a Text component");
                     }
                 }
             }

@@ -7,4 +7,7 @@ class AgentHistory():
         self.message = message
 
     def create_completed_response(self):
-        return [{"Tag": self.tag, "Role": self.role, "Content": self.message}, config.CHAT_GENERIC_FULFILLED_MESSAGE]
+        return [{"Tag": self.tag, 
+                 "Role": self.role, 
+                 "Content": self.message}, 
+                 config.CHAT_GENERIC_FULFILLED_MESSAGE]

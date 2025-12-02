@@ -21,14 +21,16 @@ async def state(request: AgentRequest, background_tasks: BackgroundTasks):
     # Save chat history
     background_tasks.add_task(VRRepository().save_all, content=AgentHistory(message=request.Prompt).create_completed_response())
     # Save updated Virtual Reality state
-    background_tasks.add_task(VRRepository().update_all_with_template, content=vr_state)
+    background_tasks.add_task(VRRepository().update_all, content=vr_state)
+    # Save temporal real-time data for next request
+    background_tasks.add_task(VRRepository().cache_real_time_state)
     
     response = VRStateResponse(vr_state=vr_state)
     logging.debug("Modification properties Response: %s", response)
     return response
 
 @router.post("/state")
-async def state(vr_state: list[VRStateRequest]):
+async def state(vr_state: list[VRStateRequest], background_tasks: BackgroundTasks):
     # The cache is cleared automatically before saving the new states
     await VRRepository().purge_all()
 
@@ -36,7 +38,12 @@ async def state(vr_state: list[VRStateRequest]):
     # Saves the initial Virtual Reality state to Redis
     await VRRepository().save_all(content=jsonable_encoder(vr_state))
 
+    # Save temporal real-time data for next request
+    background_tasks.add_task(VRRepository().cache_real_time_state)
+    logging.info("Successfully generated environment cache")
+
 @router.delete("/state")
 async def state():
     # The cache is cleared automatically upon the finalizing of the virtual reality simulation
     await VRRepository().purge_all()
+    logging.info("Successfully deleted environment cache")

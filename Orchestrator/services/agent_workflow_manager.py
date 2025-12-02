@@ -1,6 +1,6 @@
 from repository.vr_repository import VRRepository
-from services.tools.how_to_use_3d_system import _HowToUseSystem
-from services.tools.description_state import _DescriptionState
+from services.tools.system_instructions import _HowToUseSystem
+from services.tools.generate_statistics import _GenerateStatistics
 from config.openai_agent import ChatGPT
 from config.config_vars import config
 from core.utils import read_prompt
@@ -21,17 +21,13 @@ class Workflow():
     def _get_tools(self):
         # Add more tools as needed
         return [
-            _DescriptionState(),
+            _GenerateStatistics(),
             _HowToUseSystem(),
             ]
     
     def start(self, prompt):
-        chat_history = VRRepository().search_chat_history()
-
-        chat_history.append({
-            "role": "user",
-            "content": f"Chat history: {chat_history}{read_prompt('main_prompt.txt')} {prompt}"
-        })
+        agent_context = self.get_agent_context()
+        chat_history = agent_context + [{"role": "user", "content": prompt}]
 
         # If we need to ask again and continue our workflow, we append subsequent responses
         while self.has_additional_prompt:
@@ -48,6 +44,15 @@ class Workflow():
         # Get the final result of the workflow
         logger.info("Final response: %s", json.dumps(chat_history[-1]))
         return chat_history[-1]
+    
+    def get_agent_context(self):
+        real_time_states_summary = VRRepository().get_real_time_summary()
+        main_prompt = {"role": "system", "content": read_prompt('main_prompt.txt')}
+        chat_history = VRRepository().search_chat_history()
+        chat_history.append(real_time_states_summary)
+        chat_history.append(main_prompt)
+        return chat_history
+
 
     def _call_tool(self, agent_response):
         # Executes the function logic depending on the tool the chat needs to use

@@ -18,6 +18,7 @@ class TransformProperties(BaseModel):
     Position: CoordinatesProperties = Field(None, description="Position of the virtual reality object in the environment")
     Rotation: CoordinatesProperties = Field(None, description="Rotation of the virtual reality object in the environment")
     Scale: CoordinatesProperties = Field(None, description="Size of the virtual reality object in the environment")
+    Reshape: float = Field(None, description="How much an element has changed its size.")
 
 class VRStateRequest(BaseModel):
     Id: str = Field(None, description="Automatically generated Id for the duration of the scene session")
