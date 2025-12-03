@@ -57,7 +57,7 @@ class VRRepository():
         return chat_history
     
     async def cache_real_time_state(self):
-        # This realtime state summary contains less data and is more suitable to be bassed to the agent as context
+        # This realtime state summary contains less data and is more suitable to be passed to the agent as context
 
         # First the cached elements are deleted, and then recreated
         search_results = self.search("@Tag:{summarized_state}")
