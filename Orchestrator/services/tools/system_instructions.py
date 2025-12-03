@@ -18,13 +18,13 @@ class _HowToUseSystem(_Tool):
          return {
                 "type": "function",
                 "name": get_function_name(__file__),
-                "description": "Retrieves relevant system usage instructions and documentation by searching the knowledge base for a given query.",
+                "description": "Retrieves system usage instructions or tutorials about how to use the 3D environment system.",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "search_query": {
                             "type": "string",
-                            "description": "The natural language search query or topic the user is asking about (e.g., 'How this system works?', 'Explain how to use this environment', 'provide the system documentation?'). This query is used for a semantic search to locate the most relevant instructions.",
+                            "description": "The user question that will be used to search for tutorials or instructions",
                         },
                     },
                     "required": ["search_query"],

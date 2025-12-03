@@ -18,11 +18,12 @@ Base your response solely on the previously executed function's data.
     - Calculate the most repeated color in the scene and provide its hexadecimal code
     - Provide the amount of objects in the scene with the amount of objects per Tag, without using the word "Tag"
     - Provide the total sum of elemnts of the scene and what they represent (e.g., "they represent a livingroom", "represent a bathroom")
+    - Header: "Statistics of 3D elements:"
 
 4. *System Tutorial*
 - If the user asks about using the system:
     - Header: "Tutorial: How to use the system"
-    - Explain the system's functionality based solely on extracted data (max 10 lines, 53 characters per line)
+    - Explain the system's functionality based solely on extracted data (as close to 700 characters as possible, ensuring the core meaning is preserved)
 5. *Generate JSON Output*
 - Insert your generated response into the JSON template's "value" field and return *only* the completed JSON.
 
