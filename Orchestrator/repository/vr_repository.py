@@ -81,14 +81,18 @@ class VRRepository():
 
         name = vr['Tag'].capitalize() if vr['Tag'] else None
         color = vr['Components']['Color'].capitalize() if vr.get('Components', {}).get('Color') else None
+
+        size = ""
         scale = vr.get('Transform', {}).get('Reshape', None)
-        size = "bigger size" if scale >= 1.1 else ("smaller size" if scale <= 0.9 else "normal size")
+        if scale:
+            size = "bigger size" if float(scale) >= 1.1 else ("smaller size" if float(scale) <= 0.9 else "normal size")
+        
         gravity = ""
         rotation = ""
-        constant_force = vr.get('Components', {}).get('ConstantForce')
-        if constant_force:
-            gravity = "levitating" if constant_force.get("Force", {}).get("Y", None) >= FORCE_LIMIT else "not levitating"
-            rotation = "rotating" if constant_force.get("RelativeTorque", {}).get("X", None) >= TORQUE_LIMIT else "not rotating"
+        force = vr.get('Components', {}).get('ConstantForce').get("Force", {}).get("Y", None) if vr.get('Components', {}).get('ConstantForce') else None
+        if force:
+            gravity = "levitating" if float(force) >= FORCE_LIMIT else "not levitating"
+            rotation = "rotating" if float(force) >= TORQUE_LIMIT else "not rotating"
         
         return { 
             "Tag": "summarized_state", 

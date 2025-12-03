@@ -55,7 +55,8 @@ This project demonstrates the integration of Python and ChatGPT for dynamic cont
             "X": 1.0,
             "Y": 1.5,
             "Z": 0.5
-        }
+        },
+        "Reshape": 1.5,
     },
     "Components": {
         "ConstantForce": {
