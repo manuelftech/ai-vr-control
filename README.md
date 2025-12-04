@@ -30,7 +30,7 @@ This project demonstrates the integration of Python and ChatGPT for dynamic cont
         *   `Data/` Data management and processing logic
             *   `Models/` API data models (requests and responses)
             *   `ScriptableObjects/` Configurable interaction elements
-        *   `config/` Management of environment variables and properties
+        *   `Config/` Management of environment variables and properties
         *   `Managers/` 3D element management (registration and processing)
             *   `Networking/` API communication logic (endpoint calls, state/prompt transmission)
 

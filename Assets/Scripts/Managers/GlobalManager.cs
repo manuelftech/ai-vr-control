@@ -1,21 +1,22 @@
 using AIControlVR.Managers.Networking;
 using System.Collections.Generic;
-using AIControlVR;
 using AIControlVR.Data.Models;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
+using AIControlVR;
 using System;
-using TMPro;
 
 namespace AIControlVR.Managers
 {
     public class GlobalManager : MonoBehaviour
     {
         public Config Config;
+        public bool StreamingMode = false;
         public static GlobalManager Instance { get; private set; }
         private APIVRProperties apiVRProperties = new APIVRProperties();
         public Dictionary<string, GameObject> vrStateObjects = new Dictionary<string, GameObject>();
+        const float InitialNormalSize = 1.0f;
 
         void Awake()
         {
@@ -42,17 +43,17 @@ namespace AIControlVR.Managers
 
         IEnumerator<WaitForEndOfFrame> ConfigureScene(){
             yield return new WaitForEndOfFrame();
-            this.SaveInitialStateToRedis();
+            SaveInitialStateToRedis();
         }
 
         private void SaveInitialStateToRedis(){
             // Send the initial 3D VR states to Redis
-            apiVRProperties.SaveInitialVrState(this.GetFormattedVirtualRealityState());
+            apiVRProperties.SaveInitialVrState(GetFormattedVirtualRealityState());
         }
 
         private void DeleteRedisCache(){
             // Cleans cache in Redis
-            apiVRProperties.DeleteVrStateCache(this.GetFormattedVirtualRealityState());
+            apiVRProperties.DeleteVrStateCache(GetFormattedVirtualRealityState());
         }
 
         public void RegisterObject(GameObject obj)
@@ -92,17 +93,16 @@ namespace AIControlVR.Managers
                     .Z(sceneVRState.Value.transform.localScale.z)
                     .Build();
 
-                const float NormalSize = 1.0f;
                 TransformProperties transform = new TransformProperties.Builder()
                     .Position(position)
                     .Rotation(rotation)
                     .Scale(scale)
-                    .Reshape(NormalSize)
+                    .Reshape(InitialNormalSize)
                     .Build();
 
                 // Obtain the hexadecimal formatted color of the Renderer Component (e.g, #FFFFFF)
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
-                string formattedColor = "";
+                string formattedColor = string.Empty;
                 if(renderer?.material.HasProperty("_Color") == true){
                     formattedColor = $"#{ColorUtility.ToHtmlStringRGB(renderer.material.color)}";
                 }
@@ -150,12 +150,9 @@ namespace AIControlVR.Managers
         {
             foreach (var sceneVRState in vrStateObjects)
             {
-                if (!sceneVRState.Value.tag.Contains(updatedVRStates.Tag, StringComparison.OrdinalIgnoreCase)){
-                    continue;
-                }
+                if (!sceneVRState.Value.tag.Contains(updatedVRStates.Tag, StringComparison.OrdinalIgnoreCase)) continue;
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
-                TextMeshPro tmpInputField = sceneVRState.Value.GetComponent<TextMeshPro>();
                 Rigidbody rigidBody = sceneVRState.Value.GetComponent<Rigidbody>();
                 Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating state of Id: {sceneVRState.Key}");
                 foreach (VRProperty vr in updatedVRStates.Properties){
@@ -177,6 +174,8 @@ namespace AIControlVR.Managers
                         Vector3 updatedForce = constantForce.force;
                         updatedForce.y = float.Parse(vr.State);
                         constantForce.force = updatedForce;
+                        // Apply a small force to affect physics
+                        if (rigidBody) ApplyPhysicsForce(rigidBody);
                         Debug.Log($"Tag: {sceneVRState.Value.tag}. ConstantForce.Force assigned: {vr.State}");
                         continue;
                     } else {
@@ -189,13 +188,15 @@ namespace AIControlVR.Managers
                         Vector3 updatedTorque = constantForce.relativeTorque;
                         updatedTorque.x = float.Parse(vr.State);
                         constantForce.relativeTorque = updatedTorque;
+                        // Apply a small force to affect physics
+                        if (rigidBody) ApplyPhysicsForce(rigidBody);
                         Debug.Log($"Tag: {sceneVRState.Value.tag}. ConstantForce.RelativeTorque assigned: {vr.State}");
                         continue;
                     } else {
                         Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a RelativeTorque component");
                     }
 
-                    if (String.Equals(Config.SizeChange, vr.Name, StringComparison.OrdinalIgnoreCase) && rigidBody){
+                    if (String.Equals(Config.SizeChange, vr.Name, StringComparison.OrdinalIgnoreCase)){
                         // Modifies the size of the element
                         Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating Transform Scale.");
                         Vector3 scale = sceneVRState.Value.transform.localScale;
@@ -204,25 +205,21 @@ namespace AIControlVR.Managers
                         scale.z = scale.z * float.Parse(vr.State);
                         sceneVRState.Value.transform.localScale = scale;
                         // Apply a small force to affect physics
-                        rigidBody.AddForce(sceneVRState.Value.transform.forward * 0.01f, ForceMode.Force);
+                        if (rigidBody) ApplyPhysicsForce(rigidBody);
                         Debug.Log($"Tag: {sceneVRState.Value.tag}. Transform.Scale assigned: {vr.State}");
                         continue;
                     }else {
                         Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a RigidBody component");
                     }
-                            
-                    if (String.Equals(Config.TextChange, vr.Name, StringComparison.OrdinalIgnoreCase) && tmpInputField){
-                        // Change displayed text on television (a maximum of 539 continuous characters)
-                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating Text.");
-                        tmpInputField.text = vr.State;
-                        Debug.Log($"Tag: {sceneVRState.Value.tag}. tmpInputField.text  assigned: {vr.State}");
-                        continue;
-                    } else {
-                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a Text component");
-                    }
                 }
             }
             Debug.Log("VR environment Successfully modified");
+        }
+
+        private void ApplyPhysicsForce(Rigidbody rigidBody){
+            // Apply a small force to affect physics
+            float minimalForceApplied = 0.01f;
+            rigidBody.AddForce(gameObject.transform.forward * minimalForceApplied, ForceMode.Force);
         }
     }
 }

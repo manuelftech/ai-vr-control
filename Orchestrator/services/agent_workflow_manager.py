@@ -4,9 +4,12 @@ from services.tools.generate_statistics import _GenerateStatistics
 from config.openai_agent import ChatGPT
 from config.config_vars import config
 from core.utils import read_prompt
+import asyncio
 import logging
+import random
 import json
 import ast
+import re
 logger = logging.getLogger(__name__)
 
 class Workflow():
@@ -24,17 +27,31 @@ class Workflow():
             _GenerateStatistics(),
             _HowToUseSystem(),
             ]
-    
+    async def stream_response(self, prompt):
+        #agent_context = self.get_agent_context()
+        #chat_history = agent_context + [{"role": "user", "content": prompt}]
+        chat_history = [{"role": "user", "content": prompt}]
+
+        stream = ChatGPT().client.responses.create(
+                model=config.LLM_MODEL,
+                input=chat_history,
+                tools=self.tool_definitions,
+                stream=True
+            )
+        
+        # stream the agent continuous response
+        for event in stream:
+            if event.type == 'response.output_text.delta':
+                yield event.delta
+            
     def start(self, prompt):
-        agent_context = self.get_agent_context()
-        chat_history = agent_context + [{"role": "user", "content": prompt}]
+        chat_history = [{"role": "user", "content": prompt}]
 
         # If we need to ask again and continue our workflow, we append subsequent responses
         while self.has_additional_prompt:
             # We send the prompt to the agent
             response = ChatGPT().client.responses.create(
                 model=config.LLM_MODEL,
-                tools=self.tool_definitions,
                 input=chat_history,
             )
             

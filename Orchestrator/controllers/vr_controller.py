@@ -2,10 +2,11 @@ from services.agent_workflow_manager import Workflow
 from schemas.vr_state_response import VRStateResponse
 from schemas.vr_state_request import VRStateRequest
 from repository.vr_repository import VRRepository
+from fastapi.responses import StreamingResponse
 from fastapi import APIRouter, BackgroundTasks
-from fastapi.encoders import jsonable_encoder
 from schemas.agent_request import AgentRequest
 from models.agent_history import AgentHistory
+from fastapi.encoders import jsonable_encoder
 from config.config_vars import config
 import logging
 logger = logging.getLogger(__name__)
@@ -13,9 +14,9 @@ router = APIRouter(prefix=config.ENDPOINT_PREFIX)
 
 @router.put("/state")
 async def state(request: AgentRequest, background_tasks: BackgroundTasks):
-    logging.debug("Prompt: %s", request.Prompt)
+    logging.debug("Prompt : %s", request.Prompt)
     # Retrieves the modification structure from the Agent
-    vr_state = Workflow().start(prompt=request.Prompt)
+    vr_state = await Workflow().start(prompt=request.Prompt)
 
     # The following processes execute without waiting for them to complete, but immediately returning the Controller response
     # Save chat history
@@ -28,6 +29,11 @@ async def state(request: AgentRequest, background_tasks: BackgroundTasks):
     response = VRStateResponse(vr_state=vr_state)
     logging.debug("Modification properties Response: %s", response)
     return response
+
+@router.post("/information")
+async def information(request: AgentRequest):
+    logging.debug("Prompt [streaming]: %s", request.Prompt)
+    return StreamingResponse(Workflow().stream_response(request.Prompt), media_type="text/event-stream")
 
 @router.post("/state")
 async def state(vr_state: list[VRStateRequest], background_tasks: BackgroundTasks):

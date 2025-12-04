@@ -4,15 +4,19 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.SpatialKeyboard.KeyFunction
     /// <summary>
     /// Key function used to hide the keyboard.
     /// </summary>
-    [CreateAssetMenu(fileName = "Hide Function", menuName = "XR/Spatial Keyboard/Hide Key Function", order = 1)]
-    public class HideFunction : KeyFunction
+    [CreateAssetMenu(fileName = "Change Mode Function", menuName = "XR/Spatial Keyboard/Change Mode Key Function", order = 1)]
+    public class ChangeModeFunction : KeyFunction
     {
         /// <inheritdoc />
         public override void ProcessKey(XRKeyboard keyboardContext, XRKeyboardKey key)
         {
-            if (keyboardContext != null)
-                keyboardContext.Close(false);
+            if (keyboardContext != null){
+                return;
+            }
         }
     }
 }
+
 #endif
+
+
