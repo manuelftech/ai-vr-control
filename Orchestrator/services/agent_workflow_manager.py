@@ -28,8 +28,8 @@ class Workflow():
             _HowToUseSystem(),
             ]
     async def stream_response(self, prompt):
-        #agent_context = self.get_agent_context()
-        #chat_history = agent_context + [{"role": "user", "content": prompt}]
+        agent_context = self.get_agent_context()
+        chat_history = agent_context + [{"role": "user", "content": prompt}]
         chat_history = [{"role": "user", "content": prompt}]
 
         stream = ChatGPT().client.responses.create(
