@@ -389,9 +389,9 @@ MonoBehaviour:
     m_DisplayIcon: {fileID: 21300000, guid: 17d565bb4a7744b41b7e4dc7e3a09e35, type: 3}
     m_ShiftCharacter: 
     m_ShiftDisplayCharacter: 
-    m_ShiftDisplayIcon: {fileID: 1163011659, guid: e6a95303640ef3c4188ac4583185f5ba, type: 3}
-    m_OverrideDefaultKeyFunction: 0
-    m_KeyFunction: {fileID: 11400000, guid: fafb46c355cbf0c4ab314558d216a90f, type: 2}
+    m_ShiftDisplayIcon: {fileID: 21300000, guid: 17d565bb4a7744b41b7e4dc7e3a09e35, type: 3}
+    m_OverrideDefaultKeyFunction: 1
+    m_KeyFunction: {fileID: 0}
     m_KeyCode: 0
     m_Disabled: 0
   - m_Character: \e

@@ -1,10 +1,10 @@
 using AIControlVR.Data.Models;
 using System.Collections.Generic;
+using AIControlVR.Configuration;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 using System.Reflection;
 using Newtonsoft.Json;
-using AIControlVR;
 using System.Text;
 using System.Linq;
 using UnityEngine;

@@ -2,6 +2,7 @@ using AIControlVR.Managers.Networking;
 using System.Collections.Generic;
 using AIControlVR.Data.Models;
 using System.Threading.Tasks;
+using AIControlVR.Configuration;
 using Newtonsoft.Json;
 using UnityEngine;
 using AIControlVR;

@@ -17,6 +17,7 @@ TagManager:
   - screen
   - vase
   - text
+  - streaming_visibility
   layers:
   - Default
   - TransparentFX
