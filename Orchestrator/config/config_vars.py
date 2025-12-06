@@ -1,16 +1,12 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
-from typing import Dict, Any
-import json
-import ast
-import os
+from typing import Dict
 load_dotenv()
 
 class ConfigVar(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # --- OpenAI Configuration ---
-    LLM_API_KEY: str
     LLM_MODEL: str
     VECTOR_STORE_KNOWLEDGE_BASE_ID: str
 
@@ -28,7 +24,7 @@ class ConfigVar(BaseSettings):
     DRIVE_CONFIG_FILES: list[str]
 
     # --- App Configuration ---
-    PORT: int
+    APP_PORT: int
     ENDPOINT_PREFIX: str
     LOGGER_FORMAT: str
     LOGGER_LEVEL: int

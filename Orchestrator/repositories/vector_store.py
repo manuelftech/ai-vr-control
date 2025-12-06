@@ -1,10 +1,10 @@
-from config.openai_agent import ChatGPT
+from openai import OpenAI
 from config.config_vars import config
 
 class VectorStore():
 
     def __init__(self):
-        self.vector_stores = ChatGPT().client.vector_stores
+        self.vector_stores = OpenAI().client.vector_stores
 
     def semantic_search(self, vector_store_id, search_query):
         results = self.vector_stores.search(

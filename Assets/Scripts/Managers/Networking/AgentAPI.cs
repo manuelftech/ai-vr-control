@@ -13,12 +13,12 @@ using TMPro;
 
 namespace AIControlVR.Managers.Networking
 {
-    public class APIVRProperties
+    public class AgentAPI
     {
         public Config Config;
         private const float waitingSecondsLoading = 0.2f;
         private const int loadingMessageLength = 5;
-        public async Task<VRStateResponse> UpdateVRStates(APIChatbotRequest chatbotRequest)
+        public async Task<VRStateResponse> UpdateVRStates(APIAgentRequest chatbotRequest)
         {
             // Updates the virtual reality state in Redis
             var jsonRequest = JsonConvert.SerializeObject(chatbotRequest);
@@ -27,7 +27,6 @@ namespace AIControlVR.Managers.Networking
             request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("Authorization", $"Bearer {Config.AuthenticationToken}");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
@@ -41,7 +40,7 @@ namespace AIControlVR.Managers.Networking
             }
         }
 
-        public async void SaveInitialVrState(List<ObjectProperties> virtualRealityState)
+        public async Task<ConversationStateResponse> SaveInitialVrState(List<ObjectProperties> virtualRealityState)
         {
             // Saves the initial virtual reality state in Redis
             var jsonRequest = JsonConvert.SerializeObject(virtualRealityState);
@@ -50,22 +49,23 @@ namespace AIControlVR.Managers.Networking
             request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("Authorization", $"Bearer {Config.AuthenticationToken}");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
                 throw new Exception($"Error calling API Endpoint: {request.error}");
             }
+            var response = JsonUtility.FromJson<ConversationStateResponse>(request.downloadHandler.text);
             Debug.Log($"Data successfully saved to Redis");
+            return response;
         }
 
-        public async void DeleteVrStateCache(List<ObjectProperties> virtualRealityState)
+        public async void DeleteVrStateCache(CacheDeletionRequest req)
         {
             // Flushes the Redis database
             Debug.Log($"Deleting cache data. Endpoint URL: {Config.ApiStates}");
             using UnityWebRequest request = new UnityWebRequest(Config.ApiStates, "DELETE");
+            request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(req)));
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("Authorization", $"Bearer {Config.AuthenticationToken}");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
@@ -75,7 +75,7 @@ namespace AIControlVR.Managers.Networking
         }
 
         
-        public IEnumerator<WaitForSeconds> UpdateTextStateStream(TextMeshPro textComponent, APIChatbotRequest request)
+        public IEnumerator<WaitForSeconds> UpdateTextStateStream(TextMeshPro textComponent, APIAgentRequest request)
         {
             using (UnityWebRequest webRequest = new UnityWebRequest(Config.ApiTextStreaming, "POST"))
             {
@@ -83,7 +83,6 @@ namespace AIControlVR.Managers.Networking
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request)));
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
-                webRequest.SetRequestHeader("Authorization", $"Bearer {Config.AuthenticationToken}");
                 webRequest.SendWebRequest();
 
                 // Displays the loading bar for the user

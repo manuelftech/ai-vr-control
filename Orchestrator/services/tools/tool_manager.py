@@ -9,7 +9,7 @@ class ToolManager():
         self.descriptions = self._configure_tools()
         if not self.descriptions:
             raise NotImplementedError("No function tools added")
-        self.functions = [tool.definition for tool in self.definitions]
+        self.functions = [tool.description for tool in self.descriptions]
 
     def _configure_tools(self):
         # Add more tools as needed
@@ -17,3 +17,5 @@ class ToolManager():
             _RealTimeStates(),
             _ExtractProjectDetails(),
             ]
+
+tools = ToolManager()

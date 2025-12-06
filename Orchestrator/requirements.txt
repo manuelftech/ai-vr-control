@@ -1,4 +1,4 @@
-openai==1.109.1
+openai==2.8.0
 redis==7.0.1
 fastapi==0.120.1
 uvicorn==0.38.0
@@ -8,5 +8,4 @@ google-api-python-client==2.187.0
 google-auth-oauthlib==1.2.3
 pydantic_settings==2.11.0
 structlog==25.5.0
-langsmith==0.4.38
-pyjwt==2.10.1
+openai-agents==0.6.2

@@ -1,4 +1,4 @@
-from repository.vector_store import VectorStore
+from repositories.vector_store import VectorStore
 from services.tools.base_tool import _Tool
 from config.config_vars import config
 from core.utils import get_file_name

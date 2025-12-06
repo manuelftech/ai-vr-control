@@ -16,8 +16,9 @@ namespace AIControlVR.Managers
         public Config Config;
         public bool StreamingMode = false;
         public static GlobalManager Instance { get; private set; }
-        private APIVRProperties apiVRProperties = new APIVRProperties();
+        private AgentAPI agentAPI = new AgentAPI();
         public Dictionary<string, GameObject> vrStateObjects = new Dictionary<string, GameObject>();
+        public string ConversationId;
         const float InitialNormalSize = 1.0f;
 
         void Awake()
@@ -48,14 +49,18 @@ namespace AIControlVR.Managers
             SaveInitialStateToRedis();
         }
 
-        private void SaveInitialStateToRedis(){
+        private async void SaveInitialStateToRedis(){
             // Send the initial 3D VR states to Redis
-            apiVRProperties.SaveInitialVrState(GetFormattedVirtualRealityState());
+            ConversationStateResponse resp = await agentAPI.SaveInitialVrState(GetFormattedVirtualRealityState());
+            // We save the Agent conversation Id to use it for subsequent API calls to save our states
+            ConversationId = resp.ConversationId;
         }
 
         private void DeleteRedisCache(){
             // Cleans cache in Redis
-            apiVRProperties.DeleteVrStateCache(GetFormattedVirtualRealityState());
+            agentAPI.DeleteVrStateCache(new CacheDeletionRequest.Builder()
+                    .ConversationId(ConversationId)
+                    .Build());
         }
 
         public void RegisterObject(GameObject obj)

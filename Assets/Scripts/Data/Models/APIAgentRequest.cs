@@ -4,20 +4,24 @@ using System;
 namespace AIControlVR.Data.Models
 {
     [Serializable]
-    public class APIChatbotRequest
+    public class APIAgentRequest
     {
         public string Prompt;
+        public string ConversationId;
         
-        public APIChatbotRequest() { }
+        public APIAgentRequest() { }
         public class Builder
         {
-            private APIChatbotRequest _build = new APIChatbotRequest();
+            private APIAgentRequest _build = new APIAgentRequest();
             public Builder Prompt(string prompt) { 
                 _build.Prompt = prompt; 
                 return this;
             }
-
-            public APIChatbotRequest Build()
+            public Builder ConversationId(string conversationId) { 
+                _build.ConversationId = conversationId; 
+                return this;
+            }
+            public APIAgentRequest Build()
             {
                 return _build;
             }
