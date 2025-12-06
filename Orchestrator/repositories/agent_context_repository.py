@@ -6,7 +6,7 @@ import json
 import uuid
 logger = logging.getLogger(__name__)
 
-class VRRepository():
+class AgentContextRepository():
     def __init__(self):
         self.redis = RedisClient()
 

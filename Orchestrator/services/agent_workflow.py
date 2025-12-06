@@ -1,9 +1,11 @@
-from repository.vr_repository import VRRepository
+from repositories.agent_context_repository import AgentContextRepository
 from services.tools.tool_manager import ToolManager
 from config.openai_agent import ChatGPT
 from config.config_vars import config
 from core.utils import read_file
+from fastapi.encoders import jsonable_encoder
 import logging
+import asyncio
 import json
 logger = logging.getLogger(__name__)
 
@@ -17,7 +19,7 @@ class AgentWorkflow():
 
     async def stream_vr_info(self, prompt, user_id):
         # We provide the agent with the information of previous interactions with the user
-        previous_agent_history = VRRepository().search_all("previous_agent_history")
+        previous_agent_history = AgentContextRepository().search_all("previous_agent_history")
         
         agent_history = [
             {"role": "assistant", "content": previous_agent_history},
@@ -56,12 +58,12 @@ class AgentWorkflow():
                         agent_history += self.invoke_tool(complete_tool_params)
                     else:
                         workflow_completed = True
-            # Summarizes the previous agent history to make its episodic memory more concise
-        self.summarize_conversation_history(prompt=complete_text_response, user_id=user_id)
+        # Runs function in the background to summarize the previous agent history to make its episodic memory more concise
+        asyncio.create_task(self.summarize_conversation_history(prompt=complete_text_response, user_id=user_id))
 
-    def summarize_conversation_history(prompt, user_id):
+    async def summarize_conversation_history(prompt, user_id):
         # We provide the agent with the information of previous interactions with the user
-        previous_agent_history = VRRepository().search_all("previous_agent_history")
+        previous_agent_history = AgentContextRepository().search_all("previous_agent_history")
         agent_history = [
             {"role": "assistant", "content": previous_agent_history},
             {"role": "system", "content": read_file("summarize_previous_history.txt")}]
@@ -71,9 +73,9 @@ class AgentWorkflow():
             input=agent_history)
             
         # We delete the previously generated conversation history
-        VRRepository().delete(prompt=prompt, user_id=user_id, namespace="message_history")
+        AgentContextRepository().delete(prompt=prompt, user_id=user_id, namespace="message_history")
         # We generate this episodic information in the Database
-        VRRepository().save(prompt=prompt, user_id=user_id, namespace="message_history")
+        AgentContextRepository().save(prompt=prompt, user_id=user_id, namespace="message_history")
 
     def invoke_tool(self, item):
         # Executes the function logic depending on the tool the agent needs to use
@@ -83,7 +85,7 @@ class AgentWorkflow():
                 "call_id": item.call_id, 
                 "output": json.dumps({"result": result, "status": "Function called successfully"})}
             
-    def get_vr_template(self, prompt):
+    async def get_vr_template(self, prompt):
         # We provide the instructions to understand how to structure its state response
         agent_history = [
             {"role": "system", "content": read_file("vr_json_field_descriptions.txt")},
@@ -93,6 +95,20 @@ class AgentWorkflow():
         response = ChatGPT().client.responses.create(
             model=config.LLM_MODEL,
             input=agent_history)
-            
+        
+        # Runs function in the background to summarize the previous agent history to make its episodic memory more concise
+        asyncio.create_task(self.summarize_conversation_history(prompt=complete_text_response, user_id=user_id))
+        # Save updated Virtual Reality state
+        asyncio.create_task(self.update_vr_state, content=vr_state, user_id=user_id)
         # We return the final json template provided by the agent
         return response.output[-1].content[-1].text
+    
+    async def save_initial_vr_state(self):
+        # The cache is cleared automatically before saving the new states
+        await AgentContextRepository().purge_all(user_id=user_id)
+
+        # Saves the initial Virtual Reality state to Redis
+        await AgentContextRepository().save_all(content=jsonable_encoder(vr_state,user_id=user_id))
+
+    async def clear_user_cache(self, user_id):
+        await AgentContextRepository().purge_all(user_id=user_id)
