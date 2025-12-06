@@ -1,0 +1,1 @@
+Response character limit: 700 characters (no new lines). Each new line reduces limit by 50 characters (max 11 new lines).

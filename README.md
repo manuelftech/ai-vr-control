@@ -19,8 +19,7 @@ This project demonstrates the integration of Python and ChatGPT for dynamic cont
     *   `controllers/` API endpoints and user input handling
     *   `core/` Main application helpers and managers
     *   `docs/` PDF documents ingested into the Vector Store for semantic search 
-    *   `schemas/` Data Transfer Object (DTO) models for Redis database interactions 
-    *   `models/` API data models (requests and responses)
+    *   `schemas/` API data models (requests and responses)
     *   `prompts/` Prompt configuration structure and templates
     *   `repository/` Database integration layer
     *   `services/` OpenAI agent interaction logic
@@ -40,7 +39,7 @@ This project demonstrates the integration of Python and ChatGPT for dynamic cont
 {
     "Id": "ae89ab88-6d94-4235-b8f1-68c419d9d968",
     "Tag": "chair",
-    "Name": "Chair_Livingroom",
+    "Name": "chair_livingroom",
     "Transform": {
         "Position": {
             "X": 13.7924623,
@@ -73,7 +72,7 @@ This project demonstrates the integration of Python and ChatGPT for dynamic cont
             }
         },
         "Color": "#FF0000",
-        "Text": "The 3D television display supports text rendering",
+        "Text": "Streaming data provided by the agent",
     }
 }
 ```

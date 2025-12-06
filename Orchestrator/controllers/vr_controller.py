@@ -1,55 +1,44 @@
-from services.agent_workflow_manager import Workflow
+from fastapi import APIRouter, BackgroundTasks, Depends
 from schemas.vr_state_response import VRStateResponse
 from schemas.vr_state_request import VRStateRequest
+from services.agent_workflow import AgentWorkflow
 from repository.vr_repository import VRRepository
+from core.security import get_token_user_id
 from fastapi.responses import StreamingResponse
-from fastapi import APIRouter, BackgroundTasks
 from schemas.agent_request import AgentRequest
-from models.agent_history import AgentHistory
 from fastapi.encoders import jsonable_encoder
 from config.config_vars import config
 import logging
-logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix=config.ENDPOINT_PREFIX)
+logger = logging.getLogger(__name__)
 
 @router.put("/state")
-async def state(request: AgentRequest, background_tasks: BackgroundTasks):
-    logging.debug("Prompt : %s", request.Prompt)
+async def update_vr_states(request: AgentRequest, background_tasks: BackgroundTasks, user_id: dict = Depends(get_token_user_id)):
     # Retrieves the modification structure from the Agent
-    vr_state = await Workflow().start(prompt=request.Prompt)
+    vr_state = await AgentWorkflow().get_vr_template(prompt=request.Prompt)
 
-    # The following processes execute without waiting for them to complete, but immediately returning the Controller response
-    # Save chat history
-    background_tasks.add_task(VRRepository().save_all, content=AgentHistory(message=request.Prompt).create_completed_response())
     # Save updated Virtual Reality state
-    background_tasks.add_task(VRRepository().update_all, content=vr_state)
-    # Save temporal real-time data for next request
-    background_tasks.add_task(VRRepository().cache_real_time_state)
-    
-    response = VRStateResponse(vr_state=vr_state)
-    logging.debug("Modification properties Response: %s", response)
-    return response
+    background_tasks.add_task(VRRepository().update_all, content=vr_state, user_id=user_id)
 
-@router.post("/information")
-async def information(request: AgentRequest):
-    logging.debug("Prompt [streaming]: %s", request.Prompt)
-    return StreamingResponse(Workflow().stream_response(request.Prompt), media_type="text/event-stream")
+    # Saves message history and Summarizes the previous history to make the agent episodic memory more concise
+    background_tasks.add_task(AgentWorkflow().summarize_conversation_history(prompt=request.Prompt, user_id=user_id))
+    return VRStateResponse.model_validate_json(vr_state)
 
 @router.post("/state")
-async def state(vr_state: list[VRStateRequest], background_tasks: BackgroundTasks):
+async def save_initial_state(vr_state: list[VRStateRequest], user_id: dict = Depends(get_token_user_id)):
     # The cache is cleared automatically before saving the new states
-    await VRRepository().purge_all()
+    await VRRepository().purge_all(user_id=user_id)
 
-    logging.debug("Received VR states: %s", vr_state)
     # Saves the initial Virtual Reality state to Redis
-    await VRRepository().save_all(content=jsonable_encoder(vr_state))
-
-    # Save temporal real-time data for next request
-    background_tasks.add_task(VRRepository().cache_real_time_state)
-    logging.info("Successfully generated environment cache")
+    await VRRepository().save_all(content=jsonable_encoder(vr_state,user_id=user_id))
 
 @router.delete("/state")
-async def state():
+async def delete_state(user_id: dict = Depends(get_token_user_id)):
     # The cache is cleared automatically upon the finalizing of the virtual reality simulation
-    await VRRepository().purge_all()
-    logging.info("Successfully deleted environment cache")
+    await VRRepository().purge_all(user_id=user_id)
+
+@router.post("/information")
+async def stream_info(request: AgentRequest, user_id: dict = Depends(get_token_user_id)):
+    # We return information as streaming
+    return StreamingResponse(AgentWorkflow().stream_vr_info(prompt=request.Prompt, user_id=user_id), media_type="text/event-stream")

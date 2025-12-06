@@ -1,6 +1,6 @@
-using AIControlVR.Data.Models;
 using System.Collections.Generic;
 using AIControlVR.Configuration;
+using AIControlVR.Data.Models;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 using System.Reflection;
@@ -18,9 +18,6 @@ namespace AIControlVR.Managers.Networking
         public Config Config;
         private const float waitingSecondsLoading = 0.2f;
         private const int loadingMessageLength = 5;
-        private const int rangeLoading = 30;
-        private const int maxRange = 5;
-        private const string loadingSeparator = ".";
         public async Task<VRStateResponse> UpdateVRStates(APIChatbotRequest chatbotRequest)
         {
             // Updates the virtual reality state in Redis
@@ -30,6 +27,7 @@ namespace AIControlVR.Managers.Networking
             request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Authorization", $"Bearer {Config.AuthenticationToken}");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
@@ -52,6 +50,7 @@ namespace AIControlVR.Managers.Networking
             request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Authorization", $"Bearer {Config.AuthenticationToken}");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
@@ -66,6 +65,7 @@ namespace AIControlVR.Managers.Networking
             Debug.Log($"Deleting cache data. Endpoint URL: {Config.ApiStates}");
             using UnityWebRequest request = new UnityWebRequest(Config.ApiStates, "DELETE");
             request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Authorization", $"Bearer {Config.AuthenticationToken}");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
@@ -83,33 +83,18 @@ namespace AIControlVR.Managers.Networking
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request)));
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
+                webRequest.SetRequestHeader("Authorization", $"Bearer {Config.AuthenticationToken}");
                 webRequest.SendWebRequest();
 
                 // Displays the loading bar for the user
-                textComponent.text = string.Empty;
-                foreach (int _ in Enumerable.Range(0, rangeLoading)){
-                    if(textComponent.text.Length == loadingMessageLength) textComponent.text = string.Empty;
+                while (!webRequest.isDone && webRequest.downloadHandler.text.Length < 1){
+                    if (textComponent.text.Length == loadingMessageLength) textComponent.text = string.Empty;
                     textComponent.text += Config.DefaultWaitingMessageSymbol;
                     yield return new WaitForSeconds(waitingSecondsLoading);
                 }
-
-                // Displays the prompt sent by the user
-                textComponent.text = string.Empty;
-                var waitingMessage = String.Format(Config.AgentLoadingMessage, request.Prompt).Split(" ");
-                foreach (string word in waitingMessage){
-                    textComponent.text += word.Contains("\n") ? word : $"{word} ";
-                    yield return new WaitForSeconds(waitingSecondsLoading);
-                }
-
-                // Displays the loading text for the user
-                foreach (int range in Enumerable.Range(0, maxRange)){
-                    if(range == 0) textComponent.text += " ";
-                    if(range > 0) textComponent.text += loadingSeparator;
-                    if (range == maxRange -1) textComponent.text += " ";
-                    yield return new WaitForSeconds(waitingSecondsLoading * 2);
-                }
-
+                
                 // Receives the streaming text from the API
+                textComponent.text = string.Empty;
                 string previousResponse = string.Empty;
                 while (!webRequest.isDone)
                 {

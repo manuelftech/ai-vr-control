@@ -14,7 +14,7 @@ class Drive():
     def __init__(self):
         if not self._is_already_initialized:
             self.client = self._connect()
-            self._download_default_config_files(config.DRIVE_PROMPT_FILES)
+            self._download_default_config_files(config.DRIVE_CONFIG_FILES)
             self._is_already_initialized = True
 
     def _connect(self):
@@ -50,6 +50,6 @@ class Drive():
         if len(filenames) < 1:
             logger.warning("No default files to download")
             return
-        for file_id in filenames:
-            self._download_file(file_id)
+        #for file_id in filenames:
+            #self._download_file(file_id)
         logger.debug("Config files successfully downloaded")

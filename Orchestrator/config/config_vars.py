@@ -25,7 +25,7 @@ class ConfigVar(BaseSettings):
     # --- GCP Configuration ---
     SCOPES: list[str]
     SERVICE_ACCOUNT_FILE: str
-    DRIVE_PROMPT_FILES: list[str]
+    DRIVE_CONFIG_FILES: list[str]
 
     # --- App Configuration ---
     PORT: int

@@ -10,45 +10,35 @@ class VRRepository():
     def __init__(self):
         self.redis = RedisClient()
 
-    async def save_all(self, return_saved=False, content=[]):
-        saved_ids = []
+    async def save_all(self, content, user_id, namespace):
         for state in content:
-            id = self._format_id()
-            saved_ids.append(id)
-            await self.save_one(id=id, property="$", content=state)
-        logging.info("%s units saved", len(saved_ids))
-        if return_saved:
-            return await self._find_ids(modified_ids=saved_ids)
-
-    async def save_one(self, id=None, property="$", content=None):
-        self.redis.client.json().set(id, property, content)
+            state["UserId"] = user_id
+            id = f"{namespace}{str(uuid.uuid4())}"
+            self.redis.client.json().set(id, "$", state)
+        logger.info("%s units saved", len(content))
     
-    async def _find_ids(self, ids):
+    def _find_ids(self, ids):
         modified_vr_objects = []
         for id in ids:
             modified_vr_objects.append(self.redis.client.json(id).get(id))
-            logging.debug("Unit found: %s", self.redis.client.json(id).get(id))
+            logger.debug("Unit found: %s", self.redis.client.json(id).get(id))
         return modified_vr_objects
     
-    async def update_all(self, return_saved=False, content=None):
-        logging.debug("Updating units: %s", content)
-        search_results = self.search(query=content['search_query'])
+    async def update_all(self, content=None):
+        logger.debug("Updating units: %s", content)
+        search_results = self.search(query=content['tag'])
 
-        modified_ids = []
         for doc in search_results.docs:
-            for doc_update in content["properties_to_update"]:
-                self.redis.client.json().set(doc.id, doc_update["property"], doc_update["value"])
-                modified_ids.append(doc.id)
+            for doc_update in content["state"]:
+                self.redis.client.json().set(doc.id, doc_update["prop"], doc_update["value"])
 
-        logging.info("%s units updated", len(modified_ids))
-        if return_saved:
-            return await self._find_ids(modified_ids)
+        logger.info("%s units updated", len(search_results.docs))
     
-    def search(self, query="-@Tag:{agent_history | detailed_state | summarized_state}"):
-        search_query = Query(query).paging(offset=0, num=config.REDIS_SEARCH_LIMIT)
+    def search(self, query):
+        search_query = Query(config.REDIS_SEARCH_TEMPLATE.format(query, user_id)).paging(offset=0, num=config.REDIS_SEARCH_LIMIT)
         return self.redis.client.ft(config.VR_INDEX).search(search_query)
     
-    def search_chat_history(self, query="@Tag:{agent_history}"):
+    def search_chat_history(self, query="agent_history"):
         search_results = self.search(query=query)
         chat_history = []
         keys_schema = ["Role", "Content"]
@@ -60,47 +50,10 @@ class VRRepository():
         # This realtime state summary contains less data and is more suitable to be passed to the agent as context
 
         # First the cached elements are deleted, and then recreated
-        search_results = self.search("@Tag:{summarized_state}")
+        search_results = self.search("summarized_state")
         for vr in search_results.docs:
             self.redis.client.unlink(vr.id)
 
-        # Search all 3D object's items
-        search_results = self.search()
-        unique_tags = []
-        for vr in search_results.docs:
-            doc = json.loads(vr.json)
-            tag = doc.get('Tag', '').casefold().replace(" ", "")
-            if tag not in unique_tags:
-                await self.save_one(id=self._format_id(), content=self._format_summarized_item(doc))
-                unique_tags.append(tag)
-        logging.debug("Items saved: %s", unique_tags)
-
-    def _format_summarized_item(self, vr=None):
-        FORCE_LIMIT = 9.83
-        TORQUE_LIMIT = 4.76
-
-        name = vr['Tag'].capitalize() if vr['Tag'] else None
-        color = vr['Components']['Color'].capitalize() if vr.get('Components', {}).get('Color') else None
-
-        size = ""
-        scale = vr.get('Transform', {}).get('Reshape', None)
-        if scale:
-            size = "bigger size" if float(scale) >= 1.1 else ("smaller size" if float(scale) <= 0.9 else "normal size")
-        
-        gravity = ""
-        rotation = ""
-        force = vr.get('Components', {}).get('ConstantForce').get("Force", {}).get("Y", None) if vr.get('Components', {}).get('ConstantForce') else None
-        if force:
-            gravity = "levitating" if float(force) >= FORCE_LIMIT else "not levitating"
-            rotation = "rotating" if float(force) >= TORQUE_LIMIT else "not rotating"
-        
-        return { 
-            "Tag": "summarized_state", 
-            "name": name, 
-            "color": color, 
-            "gravity": gravity, 
-            "rotation": rotation,
-            "size": size}
     
     def search_system_statistics(self):
         # This real time state much data and is not passed as the agent context, but rather it is accessed in a function tool
@@ -109,26 +62,21 @@ class VRRepository():
         for doc in search_results.docs:
             real_time_states.append(doc)
 
-        logging.debug("Found %s detailed items", len(real_time_states))
-        return {"role": "assistant", 
-                "content": f"The following is the detailed 3D state of the elements for statistics: {real_time_states}"}
+        logger.debug("Found %s detailed items", len(real_time_states))
+        return {
+            "role": "assistant", 
+            "content": f"The following is the detailed 3D state of the elements for statistics: {real_time_states}"
+                }
 
     def get_real_time_summary(self):
-        search_results = self.search("@Tag:{summarized_state}")
+        search_results = self.search("summarized_state")
         real_time_summary = []
         for doc in search_results.docs:
             real_time_summary.append(doc)
 
-        logging.debug("Found %s summarized items", len(real_time_summary))
+        logger.debug("Found %s summarized items", len(real_time_summary))
         return {"role": "assistant", 
                 "content": f"The following is the summary of the current state of the 3D elements: {real_time_summary}"}
-
-
-    def _format_id(self, id=None):
-        if id:
-            return f"{config.VR_KEY_PREFIX}{id}"
-        else:
-            return f"{config.VR_KEY_PREFIX}{str(uuid.uuid4())}"
     
     async def purge_all(self, query="*"):
         logger.debug("Scanning for existing cache")

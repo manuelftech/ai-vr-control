@@ -3,11 +3,10 @@ class _Tool():
         # We obtain the function logic
         self.function = self._get_function
         # We obtain the JSON definition of the function to be called
-        self.definition = self._get_definition()
-        self.needs_additional_prompt = None
+        self.description = self._get_description()
 
     def _get_function(self):
         raise NotImplementedError("This class must be inherited") 
                
-    def _get_definition(self):
+    def _get_description(self):
         raise NotImplementedError("This class must be inherited")

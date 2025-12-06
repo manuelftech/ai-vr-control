@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using AIControlVR;
 using System;
+using TMPro;
 
 namespace AIControlVR.Managers
 {
@@ -155,6 +156,7 @@ namespace AIControlVR.Managers
                 Renderer renderer = sceneVRState.Value.GetComponent<Renderer>();
                 ConstantForce constantForce = sceneVRState.Value.GetComponent<ConstantForce>();
                 Rigidbody rigidBody = sceneVRState.Value.GetComponent<Rigidbody>();
+                TextMeshPro textMeshPro = sceneVRState.Value.GetComponent<TextMeshPro>();
                 Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating state of Id: {sceneVRState.Key}");
                 foreach (VRProperty vr in updatedVRStates.Properties){
                     if (String.Equals(Config.ColorChange, vr.Name, StringComparison.OrdinalIgnoreCase) && renderer){
@@ -211,6 +213,15 @@ namespace AIControlVR.Managers
                         continue;
                     }else {
                         Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a RigidBody component");
+                    }
+                    if (String.Equals(Config.TextChange, vr.Name, StringComparison.OrdinalIgnoreCase) && textMeshPro){
+                        // Change displayed text on television
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Updating Text.");
+                        textMeshPro.text = vr.State;
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. TextMeshPro.text  assigned: {vr.State}");
+                        continue;
+                    } else {
+                        Debug.Log($"Tag: {sceneVRState.Value.tag}. Does not contain a TextMeshPro component");
                     }
                 }
             }

@@ -1,8 +1,0 @@
-*Intent Identification and Function Selection*
-
-- `system_instructions`: Questions about how to use the system, these types of questions will not be answered with your knowledge, but rather, you will use the mentioned function to retrieve new data to answer the question.
-- Example prompts: "How does this system work?", "How does this environment function?", "provide a tutorial of how this environment works?"
-- `generate_statistics`: Questions about the *statistics* of the virtual reality environment, not about the state but about the statistical analysis of the 3D elements.
-- Example prompts: "What is the state of the 3D elements?", "what is the state of the environment?"
-
-For different questions answer directly
