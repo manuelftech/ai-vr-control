@@ -239,7 +239,7 @@ Assets/
 
 ## 📊 Performance Metrics 
 
-Key performance metrics for the LLM system, utilizing the gpt-5-nano-2025-08-07 model, are available in the platform dashboard https://platform.openai.com/logs?api=traces.
+Key performance metrics for the LLM system, utilizing the gpt-5-nano-2025-08-07 model, were reviewed in the project platform dashboard in https://platform.openai.com/logs?api=traces.
 
 Workflow | Transmission mode | Action | Average Latency (ms) | Notes
 ---|---|---|---|---
