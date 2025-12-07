@@ -242,9 +242,9 @@ Assets/
 Key performance metrics for the LLM system, utilizing the gpt-5-nano-2025-08-07 model, are available in the platform dashboard https://platform.openai.com/logs?api=traces.
 
 Workflow | Transmission mode | Action | Average Latency (ms) | Notes
----|---|---|---
+---|---|---|---|---
 Virtual reality template | Synchronous | Generate JSON Template | ms | Total time until the complete text payload is generated
-States information | Streaming | Generate information | ms | Total time until the complete JSON payload is generated
+States information | Streaming | Provide information | ms | Total time until the complete JSON payload is generated
 
 
 Project Link: [github.com ai-vr-control](https://github.com/manuelftech/ai-vr-control)
