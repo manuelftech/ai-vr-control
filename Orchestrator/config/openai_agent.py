@@ -44,7 +44,7 @@ class OpenAIAgent():
         conversation = OpenAI().conversations.create(
             metadata={"topic": "Virtual Reality State"},
             items=[{"type": "message", "role": "assistant", 
-                    "content": "The virtual reality state conversation has been initialized"}]
+                    "content": "Initialized"}]
         )
         return conversation.id
     

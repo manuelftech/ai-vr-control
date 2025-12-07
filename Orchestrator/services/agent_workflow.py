@@ -24,7 +24,7 @@ class AgentWorkflow():
 
         workflow_completed = False
         while not workflow_completed:
-            with trace("Stream information workflow"):
+            with trace("States information"):
                 stream = OpenAIAgent(name="stream information", 
                                 instructions=instructions, 
                                 conversation_id=conversation_id,
@@ -73,9 +73,9 @@ class AgentWorkflow():
             {"role": "user", "content": prompt}
             ]
 
-        with trace("Virtual Reality state workflow"): 
+        with trace("Virtual reality template"): 
             response = await OpenAIAgent().run_agent(
-                name="virtual reality structure",
+                name="generate template",
                 instructions=instructions
             )
         
@@ -105,7 +105,7 @@ class AgentWorkflow():
         StateRepository().update()
 
     def create_conversation(self):
-        logger.info("Generating Conversation id")
+        logger.info("Creating Conversation id")
         conversation_id = OpenAIAgent().get_conversation_id()
-        logger.debug("Conversation id generated: %s", conversation_id)
+        logger.debug("Conversation id created: %s", conversation_id)
         return conversation_id
