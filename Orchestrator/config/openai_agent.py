@@ -1,8 +1,8 @@
 from config.config_vars import config
 from openai import OpenAI
-from agents import Agent, Runner
-import logging
-logger = logging.getLogger(__name__)
+from agents import Agent, AgentOutputSchema, Runner
+import structlog
+logger = structlog.get_logger()
 
 class OpenAIAgent():
     _singleton = None
@@ -10,41 +10,37 @@ class OpenAIAgent():
 
     def __init__(self):
         if not self._is_already_initialized:
-            #self.runner = self._get_runner()
+            self.runner = self._get_runner()
             self._is_already_initialized = True
 
     def _get_runner(self):
-        logger.info("Validating connection to OpenAI")
+        logger.info("Connecting to OpenAI")
         runner = Runner()
         try:
             runner.run_sync(
-                starting_agent=Agent(name="startup validation", model=config.LLM_MODEL),
-                input="Respond yes",
+                starting_agent=Agent(name="SystemCheck", model=config.LLM_MODEL),
+                input="Confirm connectivity",
                 max_turns=1
             )
         except Exception as e:
             logger.info("Error connecting to OpenAI")
             raise Exception(e)
-        logger.info("Successfully connected to OpenAI")
+        logger.info("Connected to OpenAI")
         return runner
     
-    def run_agent(self, name, instructions, tools, conversation_id, stream=False):
-        agent = Agent(
-                name=name,
-                instructions=instructions,
-                model=config.LLM_MODEL,
-                conversation_id=conversation_id,
-                tools=tools
-            )
+    async def run_agent(self, name, instructions=None, tools=[], conversation_id=None, stream=False, output_type=None):
+        agent = Agent(name=name, model=config.LLM_MODEL, tools=tools)
+        if output_type:
+            agent.output_type=AgentOutputSchema(output_type, strict_json_schema=True)
         if stream:
-            return self.runner.run_streamed(agent=agent)
-        return self.runner.run(agent=agent)
+            return self.runner.run_streamed(agent, conversation_id=conversation_id)
+        return await self.runner.run(agent, input=instructions, conversation_id=conversation_id)
     
     def get_conversation_id(self):
         conversation = OpenAI().conversations.create(
-            metadata={"topic": "Virtual Reality State"},
+            metadata={"topic": "VR State"},
             items=[{"type": "message", "role": "assistant", 
-                    "content": "Initialized"}]
+                    "content": "VR State Ready"}]
         )
         return conversation.id
     

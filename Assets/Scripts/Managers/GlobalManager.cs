@@ -51,7 +51,10 @@ namespace AIControlVR.Managers
 
         private async void SaveInitialStateToRedis(){
             // Send the initial 3D VR states to Redis
-            ConversationStateResponse resp = await agentAPI.SaveInitialVrState(GetFormattedVirtualRealityState());
+            ConversationStateResponse resp = await agentAPI.SaveInitialVrState(
+                new ObjectsProperties.Builder()
+                .VirtualRealityState(GetFormattedVirtualRealityState())
+                .Build());
             // We save the Agent conversation Id to use it for subsequent API calls to save our states
             ConversationId = resp.ConversationId;
         }
@@ -140,7 +143,7 @@ namespace AIControlVR.Managers
                     .Build();
 
                 ObjectProperties props = new ObjectProperties.Builder()
-                    .Id(sceneVRState.Key)
+                    .VRId(sceneVRState.Key)
                     .Tag(sceneVRState.Value.tag)
                     .Name(sceneVRState.Value.name)
                     .Components(components)

@@ -3,9 +3,9 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from core.utils import get_base_workdir
 from config.config_vars import config
-import logging
 import io
-logger = logging.getLogger(__name__)
+import structlog
+logger = structlog.get_logger()
 
 class Drive():
     _singleton = None

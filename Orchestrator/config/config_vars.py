@@ -17,6 +17,8 @@ class ConfigVar(BaseSettings):
     VR_INDEX: str
     VR_KEY_PREFIX: str
     REDIS_SEARCH_LIMIT: int
+    CONVERSATION_ID_SEARCH: str
+    TAG_SEARCH: str
 
     # --- GCP Configuration ---
     SCOPES: list[str]

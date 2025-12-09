@@ -18,69 +18,74 @@ namespace AIControlVR.Managers.Networking
         public Config Config;
         private const float waitingSecondsLoading = 0.2f;
         private const int loadingMessageLength = 5;
-        public async Task<VRStateResponse> UpdateVRStates(APIAgentRequest chatbotRequest)
+        public async Task<VRStateResponse> UpdateVRStates(APIStateRequest apiStateRequest)
         {
             // Updates the virtual reality state in Redis
-            var jsonRequest = JsonConvert.SerializeObject(chatbotRequest);
-            Debug.Log($"Updating vr states. Endpoint URL: {Config.ApiStates}, Request: {jsonRequest}");
-            using UnityWebRequest request = new UnityWebRequest(Config.ApiStates, "PUT");
+            string method = "PUT";
+            var jsonRequest = JsonConvert.SerializeObject(apiStateRequest);
+            Debug.Log($"Endpoint URL: {Config.ApiSessionStates}, Method: {method} Request: {jsonRequest}");
+            using UnityWebRequest request = new UnityWebRequest(Config.ApiTemplate, method);
             request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                throw new Exception($"Error calling API State Endpoint: {request.error}");
+                throw new Exception($"Error calling API State Endpoint {Config.ApiTemplate}: Error: {request.error}");
             }
             else
             {
-                Debug.Log($"API State Response: {request.downloadHandler.text}");
+                Debug.Log($"Endpoint URL: {Config.ApiTemplate}, Response: {request.downloadHandler.text}");
                 var response = JsonUtility.FromJson<VRStateResponse>(request.downloadHandler.text);
                 return response;
             }
         }
 
-        public async Task<ConversationStateResponse> SaveInitialVrState(List<ObjectProperties> virtualRealityState)
+        public async Task<ConversationStateResponse> SaveInitialVrState(ObjectsProperties objectsProperties)
         {
             // Saves the initial virtual reality state in Redis
-            var jsonRequest = JsonConvert.SerializeObject(virtualRealityState);
-            Debug.Log($"Sending vr states. Endpoint URL: {Config.ApiStates}, Request: {jsonRequest}");
-            using UnityWebRequest request = new UnityWebRequest(Config.ApiStates, "POST");
+            string method = "POST";
+            var jsonRequest = JsonConvert.SerializeObject(objectsProperties);
+            Debug.Log($"Endpoint URL: {Config.ApiSessionStates}, Method: {method} Request: {jsonRequest}");
+            using UnityWebRequest request = new UnityWebRequest(Config.ApiSessionStates, method);
             request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                throw new Exception($"Error calling API Endpoint: {request.error}");
+                throw new Exception($"Error calling API State Endpoint {Config.ApiSessionStates}: Error: {request.error}");
             }
+            Debug.Log($"Endpoint URL: {Config.ApiSessionStates}, Response: {request.downloadHandler.text}");
             var response = JsonUtility.FromJson<ConversationStateResponse>(request.downloadHandler.text);
-            Debug.Log($"Data successfully saved to Redis");
             return response;
         }
 
-        public async void DeleteVrStateCache(CacheDeletionRequest req)
+        public async void DeleteVrStateCache(CacheDeletionRequest cacheDeletionRequest)
         {
             // Flushes the Redis database
-            Debug.Log($"Deleting cache data. Endpoint URL: {Config.ApiStates}");
-            using UnityWebRequest request = new UnityWebRequest(Config.ApiStates, "DELETE");
-            request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(req)));
+            string method = "DELETE";
+            var jsonRequest = JsonConvert.SerializeObject(cacheDeletionRequest);
+            Debug.Log($"Endpoint URL: {Config.ApiSessionStates}, Method: {method} Request: {jsonRequest}");
+            using UnityWebRequest request = new UnityWebRequest(Config.ApiSessionStates, method);
+            request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
             request.SetRequestHeader("Content-Type", "application/json");
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                throw new Exception($"Error calling Cache deletion API: {request.error}");
+                throw new Exception($"Error calling API State Endpoint {Config.ApiSessionStates}: Error: {request.error}");
             }
-            Debug.Log("Cache data successfully deleted");
+            Debug.Log($"Endpoint URL: {Config.ApiSessionStates} Successfully deleted cache.");
         }
-
         
-        public IEnumerator<WaitForSeconds> UpdateTextStateStream(TextMeshPro textComponent, APIAgentRequest request)
+        public IEnumerator<WaitForSeconds> UpdateTextStateStream(TextMeshPro textComponent, APIStateRequest apiStateRequest)
         {
-            using (UnityWebRequest webRequest = new UnityWebRequest(Config.ApiTextStreaming, "POST"))
+            string method = "POST";
+            var jsonRequest = JsonConvert.SerializeObject(apiStateRequest);
+            using (UnityWebRequest webRequest = new UnityWebRequest(Config.ApiSessionStatesStream, "POST"))
             {
-                Debug.Log($"Calling streaming endpoint {Config.ApiTextStreaming}");
-                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request)));
+                Debug.Log($"Endpoint URL: {Config.ApiSessionStatesStream}, Method: {method} Request: {jsonRequest}");
+                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SendWebRequest();
@@ -104,12 +109,12 @@ namespace AIControlVR.Managers.Networking
                     }
                     yield return null;
                 }
-                if (webRequest.result != UnityWebRequest.Result.Success) throw new Exception($"Error calling information streaming API: {webRequest.error}");
+                if (webRequest.result != UnityWebRequest.Result.Success) throw new Exception($"Error calling API State Endpoint {Config.ApiSessionStatesStream}: Error: {webRequest.error}");
                 if (webRequest.downloadHandler.text != previousResponse)
                 {
                     textComponent.text += webRequest.downloadHandler.text.Substring(previousResponse.Length); 
                 }
-                Debug.Log($"Information streaming completed. Complete Text: {textComponent.text}");
+                Debug.Log($"Endpoint URL: {Config.ApiSessionStatesStream}, Response: {textComponent.text}");
             }
         }
         

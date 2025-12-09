@@ -31,7 +31,7 @@ namespace AIControlVR.Data.Models
     [Serializable]
     public class ObjectProperties
     {
-        public string Id;
+        public string VRId;
         public string Tag;
         public string Name;
         public ComponentsProperties Components;
@@ -41,8 +41,8 @@ namespace AIControlVR.Data.Models
         public class Builder
         {
             private ObjectProperties _build = new ObjectProperties();
-            public Builder Id(string id) { 
-                _build.Id = id; 
+            public Builder VRId(string vrId) { 
+                _build.VRId = vrId; 
                 return this;
             }
             public Builder Tag(string tag) { 

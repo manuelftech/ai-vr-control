@@ -5,8 +5,9 @@ namespace AIControlVR.Configuration
 {
     public class Config
     {
-        public static readonly string ApiStates = Environment.GetEnvironmentVariable("VR_STATE_API_ENDPOINT") ?? "http://localhost:5000/vr-state/template";
-        public static readonly string ApiTextStreaming = Environment.GetEnvironmentVariable("VR_TEXT_STREAM_API_ENDPOINT") ?? "http://localhost:5000/vr-state/session-states";
+        public static readonly string ApiTemplate = Environment.GetEnvironmentVariable("VR_STATE_API_ENDPOINT") ?? "http://localhost:5000/vr-state/transform-template";
+        public static readonly string ApiSessionStates = Environment.GetEnvironmentVariable("SESSION_STATES_API_ENDPOINT") ?? "http://localhost:5000/vr-state/session-states";
+        public static readonly string ApiSessionStatesStream = Environment.GetEnvironmentVariable("SESSION_STATES_INITIALIZE_API_ENDPOINT") ?? "http://localhost:5000/vr-state/session-states/stream";
         public static readonly string TextChange = Environment.GetEnvironmentVariable("TEXT_CHANGE_COMPONENT") ?? "Components.Text";
         public static readonly string SizeChange = Environment.GetEnvironmentVariable("SIZE_CHANGE_COMPONENT") ?? "Transform.Reshape";
         public static readonly string RotationChange = Environment.GetEnvironmentVariable("ROTATION_CHANGE_COMPONENT") ?? "Components.ConstantForce.RelativeTorque.X";

@@ -1,7 +1,8 @@
 from config.config_vars import config
 import logging
 import redis
-logger = logging.getLogger(__name__)
+import structlog
+logger = structlog.get_logger()
 
 class RedisClient():
     _singleton = None

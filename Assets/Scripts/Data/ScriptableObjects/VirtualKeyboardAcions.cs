@@ -28,7 +28,7 @@ namespace AIControlVR.Data.ScriptableObjects
 
         public async void RequestActionToAgent()
         {
-            APIAgentRequest request = new APIAgentRequest.Builder()
+            APIStateRequest request = new APIStateRequest.Builder()
                     .Prompt(CaptureKeyboardInputText())
                     .ConversationId(GlobalManager.Instance.ConversationId)
                     .Build();
@@ -47,7 +47,7 @@ namespace AIControlVR.Data.ScriptableObjects
             GlobalManager.Instance.UpdateVRStateProperties(response);
         }
 
-        public void StreamAgentMessage(APIAgentRequest request)
+        public void StreamAgentMessage(APIStateRequest request)
         {
             GameObject televisionText = GameObject.FindWithTag(Config.DefaultTextDisplayTag);
             if (televisionText == null) throw new Exception($"Element with Tag: {Config.DefaultTextDisplayTag} not found in the scene.");

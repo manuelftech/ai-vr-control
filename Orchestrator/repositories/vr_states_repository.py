@@ -1,9 +1,12 @@
 from redis.commands.search.query import Query
 from config.redis_db import RedisClient
 from config.config_vars import config
-import logging
+from dict_deep import deep_set
 import uuid
-logger = logging.getLogger(__name__)
+import json
+import structlog
+from core.utils import update_nested_key
+logger = structlog.get_logger()
 
 class StateRepository():
     def __init__(self):
@@ -11,46 +14,39 @@ class StateRepository():
 
     async def save(self, content, conversation_id):
         for state in content:
-            state["ConversationId"] = conversation_id
-            id = f"{config.VR_KEY_PREFIX}{str(uuid.uuid4())}"
-            self.redis.client.json().set(id, "$", state)
+            doc = {"Tag": state.pop("Tag"), "ConversationId": conversation_id, "data": json.dumps(state)}
+            self.redis.client.hset(f"{config.VR_KEY_PREFIX}{str(uuid.uuid4())}", mapping=doc)
         logger.info("%s units saved", len(content))
     
-    async def update(self, content=None):
+    async def update(self, content, conversation_id):
         logger.debug("Updating units: %s", content)
-        search_results = self.search(query=content['tag'])
-
+        search_results = self.search(tag=content.Tag, conversation_id=conversation_id)
         for doc in search_results.docs:
-            for doc_update in content["state"]:
-                self.redis.client.json().set(doc.id, f"$.{doc_update["prop"]}", doc_update["value"])
-
+            data = json.loads(doc.data)
+            for prop in content.Properties:
+                deep_set(data, prop.Name, prop.State)
+            self.redis.client.hset(doc['id'], mapping={
+                "Tag": content.Tag, 
+                "ConversationId": conversation_id,
+                "data": json.dumps(data)})
         logger.info("%s units updated", len(search_results.docs))
-    
-    def search(self, query):
-        search_query = Query(config.REDIS_SEARCH_TEMPLATE.format(query)).paging(offset=0, num=config.REDIS_SEARCH_LIMIT)
-        return self.redis.client.ft(config.VR_INDEX).search(search_query)
 
-    
-    def search_state(self):
-        # This real time state much data and is not passed as the agent context, but rather it is accessed in a function tool
-        search_results = self.search()
-        real_time_states = []
-        for doc in search_results.docs:
-            real_time_states.append(doc)
+    def search(self, tag=None, conversation_id=None):
+        search_items = []
+        if tag:
+            search_items.append(f"{config.TAG_SEARCH}{{{tag}}}")
+        if conversation_id:
+            search_items.append(f"{config.CONVERSATION_ID_SEARCH}{{{conversation_id}}}")
 
-        logger.debug("Found %s detailed items", len(real_time_states))
-        return {
-            "role": "assistant", 
-            "content": f"The following is the detailed 3D state of the elements for statistics: {real_time_states}"
-                }
+        query = Query(" ".join(search_items)).paging(offset=0, num=config.REDIS_SEARCH_LIMIT)
+        return self.redis.client.ft(config.VR_INDEX).search(query)
 
-
-    async def delete(self, conversation_id="*"):
+    async def delete(self, conversation_id):
         logger.debug("Scanning for existing cache")
-        cache = list(self.redis.client.scan_iter(conversation_id))
-        if len(cache) < 1:
+        search_results = self.search(conversation_id=conversation_id)
+        if len(search_results.docs) < 1:
             logger.debug("No cache found")
             return
-        for key in cache:
-            self.redis.client.delete(key)
-        logger.debug("Cache successfully deleted")
+        for doc in search_results.docs:
+            self.redis.client.delete(doc['id'])
+        logger.debug("Deleted %s items", len(search_results.docs))

@@ -8,12 +8,22 @@ class _RealTimeStates(_Tool):
     """
     def _get_function(self, input):
         # Search the real time element's status and return it
-        real_time_states = StateRepository().get_real_time_states(input[''])
-        return real_time_states
+        state_details = StateRepository().search(tag=input['tag'])
+        return state_details
         
     def _get_description(self):
          return {
                 "type": "function",
                 "name": get_file_name(__file__),
-                "description": "Generates statistics of the virtual reality states."
+                "description": "Generates statistics of the virtual reality tag state.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "tag": {
+                            "type": "string",
+                            "description": "The tag of the virtual reality element that will be used to provide information to the user about its state.",
+                        },
+                    },
+                    "required": ["tag"],
+                },
             }

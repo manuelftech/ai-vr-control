@@ -1,7 +1,9 @@
+from functools import wraps
 from config.config_vars import config
 import colorlog
 import logging
 import sys
+import structlog
 
 def configure_logger():
     handler = logging.StreamHandler(sys.stdout)
@@ -11,4 +13,5 @@ def configure_logger():
             datefmt=config.LOGGER_DATE_FORMAT, 
             log_colors=config.LOGGER_COLOR_FORMAT)
     )
+
     logging.basicConfig(level=config.LOGGER_LEVEL, handlers=[handler])

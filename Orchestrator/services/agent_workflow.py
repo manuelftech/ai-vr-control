@@ -2,14 +2,15 @@ from schemas.vr_state_response import VRStateResponse
 from repositories.vr_states_repository import StateRepository
 from services.tools.tool_manager import tools
 from config.openai_agent import OpenAIAgent
+from config.exception_handlers.invalid_agent_request_error import InvalidAgentResponseError
 from agents import trace
 from config.config_vars import config
 from core.utils import read_file
 from fastapi.encoders import jsonable_encoder
-import logging
+import structlog
 import asyncio
 import json
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger()
 
 class AgentWorkflow():
     """
@@ -24,12 +25,14 @@ class AgentWorkflow():
 
         workflow_completed = False
         while not workflow_completed:
-            with trace("States information"):
-                stream = OpenAIAgent(name="stream information", 
-                                instructions=instructions, 
-                                conversation_id=conversation_id,
-                                tools=tools.descriptions,
-                                stream=True)
+            with trace("Element_State_Inquiry_Flow"): 
+                stream = await OpenAIAgent().run_agent(
+                    name="ElementStateReporter",
+                    instructions=instructions,
+                    conversation_id=conversation_id,
+                    tools=tools.descriptions,
+                    stream=True
+                )
 
                 complete_tool_params = None
                 complete_text_response = ""
@@ -64,7 +67,29 @@ class AgentWorkflow():
                  "call_id": item.call_id, 
                  "output": json.dumps({"result": result, "status": "Function called successfully"})
                 }
-            
+
+    def apply_template_state(self, agent_response):
+        try:
+            return VRStateResponse.model_validate_json(agent_response)
+        except:
+            raise InvalidAgentResponseError()
+
+    async def save_initial_vr_state(self, content, conversation_id):
+        # Saves the initial Virtual Reality state to Redis
+        await StateRepository().save(content=jsonable_encoder(content), conversation_id=conversation_id)
+
+    async def clear_cache(self, conversation_id):
+        await StateRepository().delete(conversation_id=conversation_id)
+
+    async def update_vr_state(self, states, conversation_id):
+        await StateRepository().update(content=states, conversation_id=conversation_id)
+
+    def create_conversation(self):
+        logger.info("Creating Conversation id")
+        conversation_id = OpenAIAgent().get_conversation_id()
+        logger.debug("Conversation id created: %s", conversation_id)
+        return conversation_id
+    
     async def get_vr_template(self, prompt, conversation_id):
         # We provide the instructions to understand how to structure its state response
         instructions = [
@@ -73,39 +98,13 @@ class AgentWorkflow():
             {"role": "user", "content": prompt}
             ]
 
-        with trace("Virtual reality template"): 
+        with trace("Json_Template_Generation_Flow"): 
             response = await OpenAIAgent().run_agent(
-                name="generate template",
-                instructions=instructions
+                name="JsonTemplateGenerator",
+                instructions=instructions,
+                conversation_id=conversation_id,
+                output_type=VRStateResponse
             )
-        
-        # We format the response provided by the agent
-        template = self.apply_template_state(response.output_text) # response.final_output
-        # The updated Virtual Reality state is persisted
-        asyncio.create_task(self.update_vr_state, content=template, conversation_id=conversation_id)
-        return template
-
-    def apply_template_state(self, agent_response):
-        try:
-            return VRStateResponse.model_validate_json(agent_response)
-        except:
-            raise Exception("Agent did not return JSON transformation structure")
-
-    async def save_initial_vr_state(self, content, conversation_id):
-        # The cache is cleared automatically before saving the new states
-        await StateRepository().delete(conversation_id=conversation_id)
-
-        # Saves the initial Virtual Reality state to Redis
-        await StateRepository().save(content=jsonable_encoder(content), conversation_id=conversation_id)
-
-    async def clear_cache(self, conversation_id):
-        await StateRepository().delete(conversation_id=conversation_id)
-
-    async def update_vr_state(self):
-        StateRepository().update()
-
-    def create_conversation(self):
-        logger.info("Creating Conversation id")
-        conversation_id = OpenAIAgent().get_conversation_id()
-        logger.debug("Conversation id created: %s", conversation_id)
-        return conversation_id
+        if not response.final_output.Tag:
+            raise InvalidAgentResponseError("Missing Tag")
+        return response.final_output
