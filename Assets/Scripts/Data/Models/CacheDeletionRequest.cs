@@ -6,22 +6,38 @@ namespace AIControlVR.Data.Models
     [Serializable]
     public class CacheDeletionRequest
     {
-        public string ConversationIdState;
-        public string ConversationIdTemplate;
+        public List<ConversationIdProps> ConversationIds;
         
         public CacheDeletionRequest() { }
         public class Builder
         {
             private CacheDeletionRequest _build = new CacheDeletionRequest();
-            public Builder ConversationIdState(string conversationIdState) { 
-                _build.ConversationIdState = conversationIdState; 
+            public Builder ConversationIds(List<ConversationIdProps> conversationIds) { 
+                _build.ConversationIds = conversationIds; 
                 return this;
             }
-            public Builder ConversationIdTemplate(string conversationIdTemplate) { 
-                _build.ConversationIdTemplate = conversationIdTemplate; 
-                return this;
-            }
+
             public CacheDeletionRequest Build()
+            {
+                return _build;
+            }
+        }
+    }
+
+
+     public class ConversationIdProps
+    {
+        public string ConversationId;
+        
+        public ConversationId() { }
+        public class Builder
+        {
+            private ConversationIdProps _build = new ConversationIdProps();
+            public Builder ConversationId(string conversationId) { 
+                _build.ConversationId = conversationId; 
+                return this;
+            }
+            public ConversationIdProps Build()
             {
                 return _build;
             }

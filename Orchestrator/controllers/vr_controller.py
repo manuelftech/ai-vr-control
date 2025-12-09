@@ -34,4 +34,4 @@ async def save_initial_state(req: InitialVRStateProperties):
 @router.delete("/session-states")
 async def delete_state(req: CacheDeletionRequest):
     # The cache is cleared automatically upon the finalizing of the virtual reality simulation
-    await AgentWorkflow().clear_cache(conversatiod_ids=[req.conv_id_template, req.conv_id_state])
+    await AgentWorkflow().clear_cache(conversatiod_ids=req.conversation_ids)
