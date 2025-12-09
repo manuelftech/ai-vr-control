@@ -9,6 +9,9 @@ class ConfigVar(BaseSettings):
     # --- OpenAI Configuration ---
     LLM_MODEL: str
     VECTOR_STORE_KNOWLEDGE_BASE_ID: str
+    AGENT_WAITING_MESSAGE: str
+    AGENT_TEMPLATE: str
+    AGENT_STATES: str
 
     # --- Redis Configuration ---
     REDIS_HOST: str

@@ -18,7 +18,8 @@ namespace AIControlVR.Managers
         public static GlobalManager Instance { get; private set; }
         private AgentAPI agentAPI = new AgentAPI();
         public Dictionary<string, GameObject> vrStateObjects = new Dictionary<string, GameObject>();
-        public string ConversationId;
+        public string ConversationIdTemplate;
+        public string ConversationIdState;
         const float InitialNormalSize = 1.0f;
 
         void Awake()
@@ -56,13 +57,15 @@ namespace AIControlVR.Managers
                 .VirtualRealityState(GetFormattedVirtualRealityState())
                 .Build());
             // We save the Agent conversation Id to use it for subsequent API calls to save our states
-            ConversationId = resp.ConversationId;
+            ConversationIdTemplate = resp.ConversationIdTemplate;
+            ConversationIdState = resp.ConversationIdState;
         }
 
         private void DeleteRedisCache(){
             // Cleans cache in Redis
             agentAPI.DeleteVrStateCache(new CacheDeletionRequest.Builder()
-                    .ConversationId(ConversationId)
+                    .ConversationIdTemplate(ConversationIdTemplate)
+                    .ConversationIdState(ConversationIdState)
                     .Build());
         }
 

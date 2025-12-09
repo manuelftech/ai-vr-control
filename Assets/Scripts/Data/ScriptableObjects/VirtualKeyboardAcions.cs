@@ -28,20 +28,25 @@ namespace AIControlVR.Data.ScriptableObjects
 
         public async void RequestActionToAgent()
         {
-            APIStateRequest request = new APIStateRequest.Builder()
-                    .Prompt(CaptureKeyboardInputText())
-                    .ConversationId(GlobalManager.Instance.ConversationId)
-                    .Build();
+            
 
             bool isStreaming = GlobalManager.Instance.StreamingMode;
             if (isStreaming){
+                APIStateRequest reqStreaming = new APIStateRequest.Builder()
+                    .Prompt(CaptureKeyboardInputText())
+                    .ConversationId(GlobalManager.Instance.ConversationIdState)
+                    .Build();
                 Debug.Log("Streaming Mode");
-                StreamAgentMessage(request);
+                StreamAgentMessage(reqStreaming);
                 return;
             }
             Debug.Log("Not streaming Mode");
             // Send the prompt to te Agent
-            VRStateResponse response = await agentAPI.UpdateVRStates(request);
+            APIStateRequest reqSynchronous = new APIStateRequest.Builder()
+                    .Prompt(CaptureKeyboardInputText())
+                    .ConversationId(GlobalManager.Instance.ConversationIdTemplate)
+                    .Build();
+            VRStateResponse response = await agentAPI.UpdateVRStates(reqSynchronous);
 
             // Change the state of the elements in the 3D environment
             GlobalManager.Instance.UpdateVRStateProperties(response);

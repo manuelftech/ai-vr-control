@@ -33,14 +33,14 @@ class OpenAIAgent():
         if output_type:
             agent.output_type=AgentOutputSchema(output_type, strict_json_schema=True)
         if stream:
-            return self.runner.run_streamed(agent, conversation_id=conversation_id)
+            return self.runner.run_streamed(agent, input=instructions, conversation_id=conversation_id)
         return await self.runner.run(agent, input=instructions, conversation_id=conversation_id)
     
-    def get_conversation_id(self):
+    def get_conversation_id(self, name):
         conversation = OpenAI().conversations.create(
             metadata={"topic": "VR State"},
             items=[{"type": "message", "role": "assistant", 
-                    "content": "VR State Ready"}]
+                    "content": name}]
         )
         return conversation.id
     

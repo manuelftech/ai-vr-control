@@ -27,11 +27,11 @@ async def update_vr_states(req: StateRequest, background_tasks: BackgroundTasks)
 @router.post("/session-states", response_model=ConversationStateResponse, response_model_by_alias=False)
 async def save_initial_state(req: InitialVRStateProperties):
     # Saves and sets up the vr state cache
-    conversation_id = AgentWorkflow().create_conversation()
-    await AgentWorkflow().save_initial_vr_state(content=req.vr_state, conversation_id=conversation_id)
-    return ConversationStateResponse(conversation_id=conversation_id)
+    conv_ids = await AgentWorkflow().create_conversation()
+    await AgentWorkflow().save_initial_vr_state(content=req.vr_state, conversation_id=conv_ids.conv_id_template)
+    return conv_ids
 
 @router.delete("/session-states")
 async def delete_state(req: CacheDeletionRequest):
     # The cache is cleared automatically upon the finalizing of the virtual reality simulation
-    await AgentWorkflow().clear_cache(conversation_id=req.conversation_id)
+    await AgentWorkflow().clear_cache(conversatiod_ids=[req.conv_id_template, req.conv_id_state])

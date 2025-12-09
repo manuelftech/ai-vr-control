@@ -35,7 +35,7 @@ namespace AIControlVR.Managers.Networking
             }
             else
             {
-                Debug.Log($"Endpoint URL: {Config.ApiTemplate}, Response: {request.downloadHandler.text}");
+                Debug.Log($"Endpoint URL: {Config.ApiTemplate}, Method: {method} Response: {request.downloadHandler.text}");
                 var response = JsonUtility.FromJson<VRStateResponse>(request.downloadHandler.text);
                 return response;
             }
@@ -56,7 +56,7 @@ namespace AIControlVR.Managers.Networking
             {
                 throw new Exception($"Error calling API State Endpoint {Config.ApiSessionStates}: Error: {request.error}");
             }
-            Debug.Log($"Endpoint URL: {Config.ApiSessionStates}, Response: {request.downloadHandler.text}");
+            Debug.Log($"Endpoint URL: {Config.ApiSessionStates}, Method: {method}, Response: {request.downloadHandler.text}");
             var response = JsonUtility.FromJson<ConversationStateResponse>(request.downloadHandler.text);
             return response;
         }
@@ -75,7 +75,7 @@ namespace AIControlVR.Managers.Networking
             {
                 throw new Exception($"Error calling API State Endpoint {Config.ApiSessionStates}: Error: {request.error}");
             }
-            Debug.Log($"Endpoint URL: {Config.ApiSessionStates} Successfully deleted cache.");
+            Debug.Log($"Endpoint URL: {Config.ApiSessionStates}, Method: {method} Successfully deleted cache.");
         }
         
         public IEnumerator<WaitForSeconds> UpdateTextStateStream(TextMeshPro textComponent, APIStateRequest apiStateRequest)
@@ -114,7 +114,7 @@ namespace AIControlVR.Managers.Networking
                 {
                     textComponent.text += webRequest.downloadHandler.text.Substring(previousResponse.Length); 
                 }
-                Debug.Log($"Endpoint URL: {Config.ApiSessionStatesStream}, Response: {textComponent.text}");
+                Debug.Log($"Endpoint URL: {Config.ApiSessionStatesStream}, Method: {method}, Response: {textComponent.text}");
             }
         }
         
