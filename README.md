@@ -8,7 +8,7 @@ AI-powered agent-based system for dynamic modification of Virtual Reality enviro
 - API Management: Handled by FastAPI, which facilitates both synchronous and streaming endpoints.
 
 ## In-Engine Experience Video
-Demonstration of the system's functionality.
+Interacting within the virtual reality platform.
 
 [![video](https://img.youtube.com/vi/-t16E0ieU7k/hqdefault.jpg)](https://youtu.be/-t16E0ieU7k)
 
@@ -170,15 +170,15 @@ Element_State_Inquiry_Flow (Using Tools) | Streaming | Provides information | 14
 The virtual environment was developed using the Unity Engine, it represents a living room with objects to interact, as well as a keyboard where a user can type commands for an agent to follow.
 
 ### Assets
-The virtual living space was assembled using a variety of prefabs and materials sourced from libraries available on the Unity Asset Store.
+The virtual reality world was developed using a variety of prefabs and materials sourced from libraries available on the Unity Asset Store.
 
 ### State Management
 A central GlobalManager script governs the registering of interactive elements within the scene, it also orchestrates changes to the state of the elements, such as modifying colors, updating text displayed on the TV screen, or toggling interaction modes.
 - Physics Interaction
 Elements within the environment are manipulated using Unity's built-in physics engine. Interactions involve applying physical forces and constraints, specifically:
-    * ConstantForce: Used to apply continuous force to objects, creating consistent movement or floating effects.
-    * RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
-    * Text: Displays information within the environment, it was strategically positioned upon the relevision to easily resemble a livingroom.
+    * ConstantForce Force: Used to apply continuous force to objects, creating consistent movement or floating effects.
+    * ConstantForce RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
+    * TextMeshPro: Displays information within the environment, it was strategically positioned upon the relevision to easily resemble a livingroom.
 - A 3D keyboard present in the scene as the primary component for user-agent interaction.
 - Response Handling: The environment can switch between receiving streaming and synchronous responses from the Python application. This functionality is toggled by clicking a dedicated UI button within the keyboard (represented visually by a cube icon).
 
