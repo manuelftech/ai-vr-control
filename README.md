@@ -8,7 +8,7 @@ AI-powered agent-based system for dynamic modification of Virtual Reality enviro
 - API Management: Handled by FastAPI, which facilitates both synchronous and streaming endpoints.
 
 ## In-Engine Experience Video
-Demonstration of the system's core functionality.
+Demonstration of the system's functionality.
 
 [![video](https://img.youtube.com/vi/-t16E0ieU7k/hqdefault.jpg)](https://youtu.be/-t16E0ieU7k)
 
@@ -162,7 +162,7 @@ Key performance metrics for the LLM system, utilizing the gpt-5-nano-2025-08-07 
 
 Workflow | Transmission mode | Action | Average Latency (ms) | Notes
 ---|---|---|---|---
-Json_Template_Generation_Flow | Synchronous | Generate JSON Template | 6.555 s (n = 6 processes) | Total time until the complete JSON payload is generated
+Json_Template_Generation_Flow | Synchronous | Generate JSON Template | 6.118 s (n = 9 processes) | Total time until the complete JSON payload is generated
 Element_State_Inquiry_Flow | Streaming | Provides information | 7.403 s (n = 4 processes) | Total time until the complete text payload is generated
 Element_State_Inquiry_Flow (Using Tools) | Streaming | Provides information | 14.023 s (n = 3 processes) | Total time until the complete text payload is generated
 
@@ -238,7 +238,7 @@ This command builds the Python image, uses the local .env file for configuration
 
 ### 4. Configure and Run the Unity Engine application
 * The Unity Engine acts as the client and needs to know where your locally running HTTP services are located.
-* Ensure that your operating system environment variables are accessible within the Unity environment (this may require specific configuration depending on your OS and Unity version).
+* Ensure that your operating system environment variables are accessible within the Unity environment.
 * Set the following system environment variables before launching the Unity Editor:
     *   **`VR_TEMPLATE_API_ENDPOINT`**: Points to the local Python service template endpoint (e.g., http://localhost:5000/vr-state/transform-template).
     *   **`VR_STATE_API_ENDPOINT`**: Points to the local Python service state endpoint (e.g., http://localhost:5000/vr-state/session-states).
