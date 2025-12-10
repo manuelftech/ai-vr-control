@@ -247,6 +247,6 @@ This command builds the Python image, uses the local .env file for configuration
     *   **`VR_TEMPLATE_API_ENDPOINT`**: Points to the local Python service template endpoint (e.g., http://localhost:5000/vr-state/transform-template).
     *   **`VR_STATE_API_ENDPOINT`**: Points to the local Python service state endpoint (e.g., http://localhost:5000/vr-state/session-states).
     *   **`VR_INFO_API_ENDPOINT`**: Points to the local Python service streaming endpoint (e.g., http://localhost:5000/vr-state/session-states/stream).
-* Once the environment variables are set and the Python service is running, press the Play button within the Unity Editor to start the virtual reality environment.
+* Once the environment variables are set and the Python service is running, start the virtual reality environment.
 
 Project Link: [github.com ai-vr-control](https://github.com/manuelftech/ai-vr-control)
