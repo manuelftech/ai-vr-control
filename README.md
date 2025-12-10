@@ -178,7 +178,7 @@ A central GlobalManager script governs the registering of interactive elements w
     * ConstantForce Force: Used to apply continuous force to objects, creating consistent movement or floating effects.
     * ConstantForce RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
     * TextMeshPro: Displays information within the environment, it was strategically positioned upon the relevision to easily resemble a livingroom.
-- A 3D keyboard present in the scene as the primary component for user-agent interaction.
+    * Renderer: Responsible for visual presentation, manipulating the appearance of models, textures, and lighting within the environment.
 - Response Handling: The environment can switch between receiving streaming and synchronous responses from the Python application. This functionality is toggled by clicking a dedicated UI button within the keyboard (represented visually by a cube icon).
 
 # Local Environment Setup
