@@ -1,6 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
-from typing import Dict
 load_dotenv()
 
 class ConfigVar(BaseSettings):
@@ -12,6 +11,7 @@ class ConfigVar(BaseSettings):
     AGENT_WAITING_MESSAGE: str
     AGENT_TEMPLATE: str
     AGENT_STATES: str
+    AGENT_DATA_FOUND_MESSAGE: str
 
     # --- Redis Configuration ---
     REDIS_HOST: str
@@ -31,10 +31,5 @@ class ConfigVar(BaseSettings):
     # --- App Configuration ---
     APP_PORT: int
     ENDPOINT_PREFIX: str
-    LOGGER_FORMAT: str
-    LOGGER_LEVEL: int
-    LOGGER_DATE_FORMAT: str
-    LOGGER_COLOR_FORMAT: Dict[str, str]
-    CHAT_GENERIC_FULFILLED_MESSAGE: Dict[str, str]
 
 config = ConfigVar()

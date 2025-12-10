@@ -1,20 +1,19 @@
+from config.exception_handlers.exception_handler import global_exception_handler, validation_exception_handler, agent_request_handler
+from config.exception_handlers.invalid_agent_request_error import InvalidAgentResponseError
+from fastapi.exceptions import RequestValidationError
 from controllers.vr_controller import router
 from config.logger import configure_logger
 from config.openai_agent import OpenAIAgent
 from config.redis_db import RedisClient
 from config.config_vars import config
+from fastapi import FastAPI, Request
 from config.drive import Drive
 import uvicorn
-from fastapi.exceptions import RequestValidationError
-from config.exception_handlers.exception_handler import global_exception_handler, validation_exception_handler
 import time
 import uuid
-from fastapi import FastAPI, Request
 import structlog
 logger = structlog.get_logger()
-
 server = FastAPI()
-configure_logger()
 
 @server.middleware("http")
 async def middleware_logging(req: Request, call_next):
@@ -29,7 +28,7 @@ async def middleware_logging(req: Request, call_next):
     body = await req.body()
     try:
         log_body = body.decode('utf-8') if body else None
-        logger.info("Request: %s", log_body)
+        logger.debug("Request: %s", log_body)
     except UnicodeDecodeError as e:
         logger.error(e)
     
@@ -43,6 +42,7 @@ async def middleware_logging(req: Request, call_next):
     return res
 
 server.add_exception_handler(RequestValidationError, validation_exception_handler)
+server.add_exception_handler(InvalidAgentResponseError, agent_request_handler)
 server.add_exception_handler(Exception, global_exception_handler)
 
 if __name__ == "__main__":
@@ -54,4 +54,7 @@ if __name__ == "__main__":
     RedisClient()
     # Initialize the Server
     server.include_router(router)
-    uvicorn.run(server, host="0.0.0.0", port=config.APP_PORT)
+
+    # Cofigure log format
+    configure_logger()
+    uvicorn.run(server, host="0.0.0.0", port=config.APP_PORT, log_config=None, access_log=False)

@@ -1,59 +1,53 @@
-# Virtual Reality State Management via AI Agent
-## Overview
-This project provides a scalable system built with OpenAI that orchestrates real-time interaction between a ChatGPT agent and a Unity Engine client. It leverages Vector Stores from OpenAI, Google Drive, and Redis integration to manage 3D element states dynamically, responding to natural language prompts and leveraging private documentation for context. The system uses a 3D state approach to update specific Unity components, such as ConstantForce and Renderer.Color, offering an intuitive, AI-driven interface for complex virtual scene manipulation.
+# AI Agents + Virtual Reality
+## System Overview
+AI-powered agent-based system for dynamic modification of Virtual Reality environment elements, leveraging Python and OpenAI libraries to harness ChatGPT capabilities. This enables manipulation of 3D elements, including movement, color, and state changes, as desired. The system integrates three data sources: Vector Store for structured data, Google Workspace (Drive) for file management, and Redis for dynamic, cached data and real-time information. This allows agents to access real-time data, static information, and conversational context, facilitating seamless interactions within the VR environment.
 
 ## Features
 - AI Integration: Seamless connection to a ChatGPT agent for interpreting natural language commands into structured data templates.
-- Real-time State Management: Utilizes Redis for efficient, low-latency storage and retrieval of 3D object states.
-- FastAPI: A high-performance Python service for API management.
-- Dynamic Asset Loading: Downloads necessary prompt files from Google Drive and context files (e.g., README.md from the project GitHub repo) from a vector store.
 - Unity Interoperability: Direct control over Unity ConstantForce.Force, ConstantForce.RelativeTorque, Renderer.Color, and TextMeshPro states via structured JSON responses.
-System Architecture.
-- The architecture separates concerns into a modular system where the FastAPI service acts as the central coordinator.
+- API Management: Handled by FastAPI, which facilitates both synchronous and streaming endpoints.
 
 ## In-Engine Experience Video
 Demonstration of the system's core functionality: real-time, interactive command execution within the virtual reality environment.
 
-[![video](https://img.youtube.com/vi/bB7ghHSNvR4/hqdefault.jpg)](https://youtu.be/bB7ghHSNvR4)
+[![video](https://img.youtube.com/vi/-t16E0ieU7k/hqdefault.jpg)](https://youtu.be/-t16E0ieU7k)
 
 ## Architecture Diagram
 High-level diagram illustrating the system data flow.
 
 ```mermaid
 graph TD
-    subgraph Unity Engine client
-        UC_HL("HTTP Logic (C# Scripts)")
-        UC_DD("Data Deserialization")
-        UC_3D("3D State Management (Unity MonoBehaviours)")
-        UC_HL -- HTTP Request (PUT/POST) --> UC_DD
-        UC_DD -- Update 3D State --> UC_3D
+    subgraph Unity Engine
+        STATE_MANAGEMENT("User in a VR world makes requests to the Agent")
+        UC_DD("Validates and applies new 3D state")
+        UC_DD -- Changed reflected --> STATE_MANAGEMENT
     end
 
-    subgraph Python_Service
-        PB_F("OpenAI Application")
+    subgraph Python Application
+        PB_F("Validate incoming data (pydantic/regex)")
         PB_F -- Routes Request --> PB_EP
-        PB_EP("Endpoint Logic")
+        PB_EP("Runs AI Agent with conversation context")
         PB_EP -- OpenAI Request --> PB_S
-        PB_S("Agent processes request")
-        PB_S -- Process Data --> PB_G
-        PB_G("Data Serialization (Pydantic/dict)")
+        PB_S("Agent provides information/Modification data structure")
+        PB_S -- Process Data --> REDIS
+        REDIS("Updates state in Database (Redis)")
     end
 
-    UC_HL <--> Internet/Network
-    Internet/Network <--> PB_F
-    PB_G -- JSON Response --> Internet/Network
+    STATE_MANAGEMENT --> Internet/Network
+    Internet/Network --> PB_F
+    REDIS -- JSON Response --> Internet/Network
     Internet/Network -- JSON Response --> UC_DD
 ```
 
-## Data Flow Overview
-- User Input: A user in the Unity client sends a natural language command to the backend server.
-- AI Processing: FastAPI forwards the prompt to the ChatGPT agent, providing context retrieved from the Vector Store and Google Drive assets.
-- State Generation: The AI agent returns a structured JSON template defining the desired changes (e.g., "Change the red cube's color to blue and increase its upward force").
-- Redis Update: The backend service validates and persists the new state in Redis.
-- Unity Sync: The Unity client receives an HTTP update, applying the state changes to specific components.
+## Data Flow
+- User Input: A user in the Unity client sends a natural language command to the Python API server.
+- AI Processing: The user request is forwarded to the AI agent, providing context retrieved from the conversation history that was initialized.
+- State Generation: The AI agent returns a structured JSON template defining the desired changes.
+- Redis Update: The Database service validates and persists the new state.
+- Unity Engine: The Unity system receives this data structure and applies it to the specified components.
 
 ## Data Structures
-The Unity virtual environment facilitates the storage of element states both within the local environment and through transmission to the Python service for subsequent analytical processing.
+The virtual reality environment sends and updates the following data structure for analytical processing through agent function tools:
 
 ```json
 {
@@ -97,7 +91,7 @@ The Unity virtual environment facilitates the storage of element states both wit
 }
 ```
 
-The AI agent responds with structured templates to enforce predictable state updates in Unity.
+The AI agent can generate the following data structure to enforce new states in the virtual reality environment.
 ```json
 {
     "Tag": "sofa",
@@ -126,7 +120,7 @@ The AI agent responds with structured templates to enforce predictable state upd
 ```
 
 ## Folder Structure
-A clear separation of concerns is maintained across both Python and C# projects:
+Separation of concerns across both Python and C# (Unity Engine) projects:
 
 Orchestrator/ (Python OpenAI)
 ```text
@@ -159,16 +153,15 @@ Assets/
 ```
 
 ## API Endpoints
-The API documentation (Swagger UI) is available at 127.0.0.1.
+The Swagger UI API documentation is available at http://127.0.0.1:5000/docs
+
 ## Key Endpoints:
 Endpoint | Method | Description
 ---|---|---
-vr-state/session-states | POST | A streaming endpoint that fetches information from the agent for display within the virtual environment.
-vr-state/template | PUT | Receives a template from the agent used by the Unity engine to update the states of virtual reality elements.
-vr-state/session-states | POST | Saves the initial states of virtual reality elements and obtains a conversation ID; all subsequent updates within the session are kept within this single conversation.
-vr-state/session-states | DELETE | Automatically triggered when the Unity engine application closes, deleting all cached data associated with the session.
-## Unity Client Integration
-The Unity client is expected to interact with the system via HTTP requests.
+vr-state/session-states/stream | POST | A streaming endpoint that fetches information from the agent for display within the virtual environment.
+vr-state/transform-template | PUT | Receives a template from the agent used by the Unity engine to update the states of virtual reality elements.
+vr-state/session-states | POST | Saves the initial states of virtual reality elements and obtains conversation Ids, all subsequent updates within the session are kept within these conversations.
+vr-state/session-states | DELETE | Automatically triggered when the Unity engine application closes, deleting all cached data associated with the conversation.
 
 ## 📊 Performance Metrics 
 
@@ -176,28 +169,29 @@ Key performance metrics for the LLM system, utilizing the gpt-5-nano-2025-08-07 
 
 Workflow | Transmission mode | Action | Average Latency (ms) | Notes
 ---|---|---|---|---
-Virtual reality template | Synchronous | Generate JSON Template | ms | Total time until the complete text payload is generated
-States information | Streaming | Provide information | ms | Total time until the complete JSON payload is generated
+Json_Template_Generation_Flow | Synchronous | Generate JSON Template | 6.555 ms (n = 6 processes) | Total time until the complete JSON payload is generated
+Element_State_Inquiry_Flow | Streaming | Provides information | 7.403 ms (n = 4 processes) | Total time until the complete text payload is generated
+Element_State_Inquiry_Flow (Using Tools) | Streaming | Provides information | 14.023 ms (n = 3 processes) | Total time until the complete text payload is generated
 
 ## Virtual Environment Creation and Mechanics
-The virtual environment was developed within the Unity game engine, leveraging several core functionalities and custom scripts to create an interactive, dynamic space.
+The virtual environment was developed using the Unity Engine, it represents a living room with objects to interact, as well as a keyboard where a user can type commands for an agent to follow.
+
 ### Environment Assets
-The virtual living space was assembled using a variety of prefabs sourced from different libraries available on the Unity Asset Store. Key environmental elements such as sofas, the desk with books, keyboard, and the television were integrated as prefab elements.
+The virtual living space was assembled using a variety of prefabs and materials sourced from libraries available on the Unity Asset Store.
+
 ## Core Mechanics
 - State Management
-A central GlobalManager script governs the interactive elements within the scene. This manager orchestrates changes to the state of various objects, such as modifying colors, updating text displayed on the TV screen, or toggling interaction modes.
+A central GlobalManager script governs the registering of interactive elements within the scene, it also orchestrates changes to the state of the elements, such as modifying colors, updating text displayed on the TV screen, or toggling interaction modes.
 - Physics Interaction
-Elements within the environment are manipulated using Unity's built-in physics engine. Interactions often involve applying physical forces and constraints, specifically:
+Elements within the environment are manipulated using Unity's built-in physics engine. Interactions involve applying physical forces and constraints, specifically:
     * ConstantForce: Used to apply continuous force to objects, creating consistent movement or floating effects.
     * RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
-    * Text Input for External API Integration
-- A 3D keyboard model present in the scene acts as the primary interface for user text input. This input mechanism facilitates interaction with an external AI agent.
-- Input Redirection: The text entered via the 3D keyboard is captured and displayed on the 3D television element using a TextMeshPro component layered over the TV screen.
-- Response Handling: The environment can switch between receiving streaming and synchronous responses from the FastAPI application. This functionality is toggled by clicking a dedicated UI button within the scene (represented visually by a cube icon on the 3D keyboard).
+    * Text: Displays information within the environment, it was strategically positioned upon the relevision to easily resemble a livingroom.
+- A 3D keyboard present in the scene as the primary component for user-agent interaction.
+- Response Handling: The environment can switch between receiving streaming and synchronous responses from the Python application. This functionality is toggled by clicking a dedicated UI button within the keyboard (represented visually by a cube icon).
 
 # Local Environment Setup
-
-To run this project locally, you will need several components operational: the Unity application, a Python backend service managed via Docker, a local Redis database, and authentication credentials for Google Cloud and OpenAI.
+To run this project locally, you will need: the Unity application, a Python service managed via Docker, a local Redis database, and authentication credentials for Google Cloud and OpenAI.
 
 ## Configuration Steps
 
@@ -205,25 +199,25 @@ Follow these steps to configure and run the application stack:
 
 ### 1. Configure Environment Variables
 
-The backend services rely on sensitive credentials and configurations that must be provided via environment variables.
+The services rely on environment variables provided by the .env file.
 
 *   Locate the `.env-template` file in the repository root.
-*   Make a copy and rename it to `.env`. This file is ignored by Git and will store your local secrets.
+*   Make a copy and rename it to `.env`. This file is ignored by Git and will store here the local secrets.
 
 Edit your new `.env` file to include the following information:
 
-*   **`SERVICE_ACCOUNT_FILE`**: The local path to your Google Cloud Platform (GCP) credentials JSON file.
-*   **`OPENAI_API_KEY`**: Your API key from OpenAI for accessing the language model (LLM_KEY).
-*   **`DRIVE_CONFIG_FILES`**: A comma-separated list of Google Drive file IDs required by the application.
-*   **`VECTOR_STORE_KNOWLEDGE_BASE_ID`**: Your vector store id for accessing private files.
+*   **`SERVICE_ACCOUNT_FILE`**: The local path to the Google Cloud Platform (GCP) credentials JSON file.
+*   **`OPENAI_API_KEY`**: The API key from OpenAI for accessing the language model (LLM_KEY).
+*   **`DRIVE_CONFIG_FILES`**: A comma-separated list of Google Drive file IDs required by the application (Prompt files configuration)
+*   **`VECTOR_STORE_KNOWLEDGE_BASE_ID`**: The vector store id for accessing documentation files.
 
 **Important:** Ensure you have shared the permissions for the Google Drive files with the service account email associated with your GCP credentials file.
 
 ### 2. Set up the Database
 
-The project uses a Redis database for state management. You need to ensure a local instance is running.
+The project uses a Redis database for state management. You need to ensure an instance is running.
 
-*   **Redis Indexing:** The Redis database must be configured with an index that supports searching using the pattern `@Tag:{} @ConversationId:{}`, this can be executed in Python by issuing the following code:
+*   **Redis Indexing:** The Redis database must be configured with an index that supports searching using the pattern `@Tag:{} @ConversationId:{}`, this can be executed by issuing the following command:
 
 ```bash
 'FT.CREATE', "VRIdx",
@@ -234,25 +228,31 @@ The project uses a Redis database for state management. You need to ensure a loc
         'ConversationId', 'TAG'
 ```
 
-### 3. Run the Backend Services (FastAPI & Redis)
+### 3. Run the Python Service
 
-Use Docker to build and run the backend services defined in the `Dockerfile` file.
+Use Docker to build and run the Python service defined in the `Dockerfile` file.
 
 Open a terminal in the project Orchestrator directory and run:
 
 ```bash
-docker build -t my-app-image Orchestrator/Dockerfile
+docker build -t ai-vr-control .
 ```
 
-This command builds the FastAPI image, uses your local .env file for configuration, and connects it to the local Redis instance. 
-### 4. Configure and Run the Unity Client 
-The Unity Engine acts as the client and needs to know where your locally running backend services are located.
-Launch the Unity Hub, open the project, and wait for the Unity Editor to load.
-Ensure that your operating system environment variables are accessible within the Unity environment (this may require specific configuration depending on your OS and Unity version).
-Set the following system environment variables in your local machine before launching the Unity Editor, or configure them directly within the Editor settings if possible:
-VR_STATE_API_ENDPOINT: Should point to your local FastAPI service's state endpoint (e.g., http://localhost:5000/state).
-VR_TEXT_STREAM_API_ENDPOINT: Should point to your local FastAPI service's info endpoint (e.g., http://localhost:5000/state-info).
-Once the environment variables are set and the backend is running, press the Play button within the Unity Editor to start the virtual reality environment. The API will be available at http://127.0.0.1:5000.
+Run the container and pass the OPENAI_API_KEY environment variable:
+```bash
+docker run --network host -e OPENAI_API_KEY="$OPENAI_API_KEY" ai-vr-control
+```
 
+This command builds the Python image, uses the local .env file for configuration, and connects it to the local Redis instance.
+
+### 4. Configure and Run the Unity Client 
+* The Unity Engine acts as the client and needs to know where your locally running HTTP services are located.
+* Launch the Unity Hub, open the project, and wait for the Unity Editor to load.
+* Ensure that your operating system environment variables are accessible within the Unity environment (this may require specific configuration depending on your OS and Unity version).
+* Set the following system environment variables before launching the Unity Editor:
+*   **`VR_TEMPLATE_API_ENDPOINT`**: Points to the local Python service template endpoint (e.g., http://localhost:5000/vr-state/transform-template).
+*   **`VR_STATE_API_ENDPOINT`**: Points to the local Python service state endpoint (e.g., http://localhost:5000/vr-state/session-states).
+*   **`VR_INFO_API_ENDPOINT`**: Points to the local Python service streaming endpoint (e.g., http://localhost:5000/vr-state/session-states/stream).
+* Once the environment variables are set and the Python service is running, press the Play button within the Unity Editor to start the virtual reality environment.
 
 Project Link: [github.com ai-vr-control](https://github.com/manuelftech/ai-vr-control)

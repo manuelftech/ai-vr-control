@@ -19,7 +19,7 @@ namespace AIControlVR.Managers
         private AgentAPI agentAPI = new AgentAPI();
         public Dictionary<string, GameObject> vrStateObjects = new Dictionary<string, GameObject>();
         public string ConversationIdTemplate;
-        public string ConversationIdState;
+        public string ConversationIdInfo;
         const float InitialNormalSize = 1.0f;
 
         void Awake()
@@ -58,14 +58,13 @@ namespace AIControlVR.Managers
                 .Build());
             // We save the Agent conversation Id to use it for subsequent API calls to save our states
             ConversationIdTemplate = resp.ConversationIdTemplate;
-            ConversationIdState = resp.ConversationIdState;
+            ConversationIdInfo = resp.ConversationIdInfo;
         }
 
         private void DeleteRedisCache(){
             // Cleans cache in Redis
             agentAPI.DeleteVrStateCache(new CacheDeletionRequest.Builder()
-                    .ConversationIdTemplate(ConversationIdTemplate)
-                    .ConversationIdState(ConversationIdState)
+                    .ConversationId(ConversationIdTemplate)
                     .Build());
         }
 

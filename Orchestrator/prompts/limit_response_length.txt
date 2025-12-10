@@ -1,3 +1,4 @@
-- You will answer every question asked by the user, of any subject.
-- You will not use a template or format to provide an answer.
-- Response character limit: 700 characters (no new lines). Each new line reduces limit by 50 characters (max 11 new lines).
+Compose a message adhering to the following guidelines:
+- Maximum character limit: 600 characters (excluding newlines)
+- Each newline ('\n') reduces the character limit by 64 characters
+- Maximum 9 newlines allowed

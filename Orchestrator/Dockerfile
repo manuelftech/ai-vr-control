@@ -1,5 +1,4 @@
 FROM python:3.14-slim
-ENV OPENAI_API_KEY="some_value"
 ARG CONF_GROUP=groupconf
 ARG CONF_USER=userconf
 ARG PORT=5000
@@ -20,4 +19,4 @@ RUN apt-get update && \
 
 EXPOSE $PORT
 USER $CONF_USER
-CMD ["python", "app.py"]
+CMD ["python", "server.py"]

@@ -5,7 +5,6 @@ from dict_deep import deep_set
 import uuid
 import json
 import structlog
-from core.utils import update_nested_key
 logger = structlog.get_logger()
 
 class StateRepository():
@@ -38,15 +37,18 @@ class StateRepository():
         if conversation_id:
             search_items.append(f"{config.CONVERSATION_ID_SEARCH}{{{conversation_id}}}")
 
-        query = Query(" ".join(search_items)).paging(offset=0, num=config.REDIS_SEARCH_LIMIT)
-        return self.redis.client.ft(config.VR_INDEX).search(query)
+        search_query = " ".join(search_items)
+        logger.debug("Search Query: %s", search_query)
+        query = Query(search_query).paging(offset=0, num=config.REDIS_SEARCH_LIMIT)
+        search_result = self.redis.client.ft(config.VR_INDEX).search(query)
+        logger.debug("Found %s items", len(search_result.docs))
+        return search_result
 
     async def delete(self, conversation_id):
-        logger.debug("Scanning for existing cache")
         search_results = self.search(conversation_id=conversation_id)
         if len(search_results.docs) < 1:
             logger.debug("No cache found")
             return
         for doc in search_results.docs:
             self.redis.client.delete(doc['id'])
-        logger.debug("Deleted %s items", len(search_results.docs))
+        logger.debug("Deleted %s items for conversation_id %s", len(search_results.docs), conversation_id)

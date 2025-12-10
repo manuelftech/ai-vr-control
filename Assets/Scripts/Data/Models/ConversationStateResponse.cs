@@ -6,16 +6,16 @@ namespace AIControlVR.Data.Models
     [Serializable]
     public class ConversationStateResponse
     {
-        public string ConversationIdState;
+        public string ConversationIdInfo;
         public string ConversationIdTemplate;
         
         public ConversationStateResponse() { }
         public class Builder
         {
             private ConversationStateResponse _build = new ConversationStateResponse();
-            public Builder ConversationIdState(string conversationIdState)
+            public Builder ConversationIdInfo(string conversationIdInfo)
             {
-                 _build.ConversationIdState = conversationIdState;
+                 _build.ConversationIdInfo = conversationIdInfo;
                  return this;
             }
             public Builder ConversationIdTemplate(string conversationIdTemplate)

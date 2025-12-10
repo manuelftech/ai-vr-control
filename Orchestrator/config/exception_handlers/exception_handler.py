@@ -4,10 +4,11 @@ from config.exception_handlers.invalid_agent_request_error import InvalidAgentRe
 from starlette.status import HTTP_422_UNPROCESSABLE_CONTENT, HTTP_500_INTERNAL_SERVER_ERROR, HTTP_400_BAD_REQUEST
 import structlog
 import structlog.contextvars
+import structlog
 logger = structlog.get_logger()
 
 def handle_exception(exc: Exception, status_code: int, message: str):
-    logger.error(message, exc_info=exc)
+    logger.error(f"HTTP Status {status_code}: {message}", exc_info=exc)
     structlog.contextvars.bind_contextvars(error_details=str(exc))
     request_id = structlog.contextvars.get_contextvars().get("request_id", "N/A")
     raise HTTPException(status_code=status_code, detail={"request_id": request_id})

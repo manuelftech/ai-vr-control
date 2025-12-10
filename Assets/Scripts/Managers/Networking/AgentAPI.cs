@@ -16,8 +16,8 @@ namespace AIControlVR.Managers.Networking
     public class AgentAPI
     {
         public Config Config;
-        private const float waitingSecondsLoading = 0.2f;
-        private const int loadingMessageLength = 5;
+        private const float waitingSecondsLoading = 0.4f;
+        private const int loadingMessageLength = 4;
         public async Task<VRStateResponse> UpdateVRStates(APIStateRequest apiStateRequest)
         {
             // Updates the virtual reality state in Redis
@@ -91,6 +91,7 @@ namespace AIControlVR.Managers.Networking
                 webRequest.SendWebRequest();
 
                 // Displays the loading bar for the user
+                textComponent.text = string.Empty;
                 while (!webRequest.isDone && webRequest.downloadHandler.text.Length < 1){
                     if (textComponent.text.Length == loadingMessageLength) textComponent.text = string.Empty;
                     textComponent.text += Config.DefaultWaitingMessageSymbol;
@@ -106,6 +107,7 @@ namespace AIControlVR.Managers.Networking
                     {
                         textComponent.text += webRequest.downloadHandler.text.Substring(previousResponse.Length);
                         previousResponse = webRequest.downloadHandler.text;
+                        Debug.Log($"Receiving streaming info: {webRequest.downloadHandler.text}");
                     }
                     yield return null;
                 }

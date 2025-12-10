@@ -34,7 +34,7 @@ namespace AIControlVR.Data.ScriptableObjects
             if (isStreaming){
                 APIStateRequest reqStreaming = new APIStateRequest.Builder()
                     .Prompt(CaptureKeyboardInputText())
-                    .ConversationId(GlobalManager.Instance.ConversationIdState)
+                    .ConversationId(GlobalManager.Instance.ConversationIdInfo)
                     .Build();
                 Debug.Log("Streaming Mode");
                 StreamAgentMessage(reqStreaming);

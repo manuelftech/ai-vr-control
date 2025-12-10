@@ -26,7 +26,7 @@ class Drive():
                     scopes=config.SCOPES)
                 )
             client.files().list(pageSize=1, fields="nextPageToken, files(id, name)").execute().get('files', [])
-            logger.debug("Successfuly connected to Drive")
+            logger.debug("Connected to Drive")
             return client
         except Exception as e:
             raise Exception(e)
@@ -46,10 +46,10 @@ class Drive():
                 return
     
     def _download_default_config_files(self, filenames=[]):
-        logger.debug("Downloading config files")
+        logger.debug("Downloading config files from Drive")
         if len(filenames) < 1:
-            logger.warning("No default files to download")
+            logger.warning("No files to download from Drive")
             return
-        #for file_id in filenames:
-            #self._download_file(file_id)
-        logger.debug("Config files successfully downloaded")
+        for file_id in filenames:
+            self._download_file(file_id)
+        logger.debug("Downloaded %s config files from Drive", len(filenames))

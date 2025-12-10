@@ -1,13 +1,13 @@
 from fastapi import APIRouter, BackgroundTasks
-import structlog
 from schemas.conversation_state_response import ConversationStateResponse
+from schemas.cache_deletion_request import CacheDeletionRequest
 from schemas.vr_state_request import InitialVRStateProperties
 from schemas.vr_state_response import VRStateResponse
 from services.agent_workflow import AgentWorkflow
 from fastapi.responses import StreamingResponse
 from schemas.state_request import StateRequest
-from schemas.cache_deletion_request import CacheDeletionRequest
 from config.config_vars import config
+import structlog
 logger = structlog.get_logger()
 router = APIRouter(prefix=config.ENDPOINT_PREFIX)
 
@@ -28,10 +28,10 @@ async def update_vr_states(req: StateRequest, background_tasks: BackgroundTasks)
 async def save_initial_state(req: InitialVRStateProperties):
     # Saves and sets up the vr state cache
     conv_ids = await AgentWorkflow().create_conversation()
-    await AgentWorkflow().save_initial_vr_state(content=req.vr_state, conversation_id=conv_ids.conv_id_template)
+    await AgentWorkflow().save_initial_vr_state(content=req.vr_state, conversation_id=conv_ids.ConversationIdTemplate)
     return conv_ids
 
 @router.delete("/session-states")
 async def delete_state(req: CacheDeletionRequest):
     # The cache is cleared automatically upon the finalizing of the virtual reality simulation
-    await AgentWorkflow().clear_cache(conversatiod_ids=req.conversation_ids)
+    await AgentWorkflow().clear_cache(conversation_id=req.conversation_id)

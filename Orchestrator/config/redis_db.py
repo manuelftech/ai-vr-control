@@ -1,5 +1,4 @@
 from config.config_vars import config
-import logging
 import redis
 import structlog
 logger = structlog.get_logger()

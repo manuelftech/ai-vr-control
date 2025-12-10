@@ -11,7 +11,7 @@ namespace AIControlVR.Managers
         public Config Config;
         public void ToggleStreamingMode()
         {
-            GameObject streamingKey = GameObject.FindWithTag(Config.StreamingTag);
+            GameObject streamingKey = GameObject.FindWithTag(Config.VisibilityTag);
             if (streamingKey == null) throw new Exception($"Element with Tag: {Config.DefaultInputTag} not found in the scene.");
             var img = streamingKey.GetComponent<Image>();
             if (img == null) Debug.LogWarning($"Image component not found in Tag: : {Config.DefaultInputTag}");
