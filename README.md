@@ -20,7 +20,7 @@ graph TD
     subgraph Unity Engine
         STATE_MANAGEMENT("User in a VR world makes requests to the Agent")
         UC_DD("Validates and applies new 3D state")
-        UC_DD -- Changed reflected --> STATE_MANAGEMENT
+        UC_DD -- Changes reflected --> STATE_MANAGEMENT
     end
 
     subgraph Python Application
@@ -110,11 +110,7 @@ The AI agent can generate the following data structure to enforce new states in 
       {
          "Name": "Transform.Reshape",
          "State": 0.5
-      },
-      {
-         "Name": "Components.Text",
-         "State": "AI agent response"
-      },
+      }
    ]
 }
 ```
@@ -139,7 +135,7 @@ Orchestrator/
 ```
 
 
-Assets/ (Unity Client Environment)
+Assets/ (Unity Engine)
 ```text
 Assets/
 ├── Assets/                 # Materials, Prefabs, Scenes
@@ -243,7 +239,7 @@ docker run --network host -e OPENAI_API_KEY="$OPENAI_API_KEY" ai-vr-control
 
 This command builds the Python image, uses the local .env file for configuration, and connects it to the local Redis instance.
 
-### 4. Configure and Run the Unity Client 
+### 4. Configure and Run the Unity Engine application
 * The Unity Engine acts as the client and needs to know where your locally running HTTP services are located.
 * Launch the Unity Hub, open the project, and wait for the Unity Editor to load.
 * Ensure that your operating system environment variables are accessible within the Unity environment (this may require specific configuration depending on your OS and Unity version).
