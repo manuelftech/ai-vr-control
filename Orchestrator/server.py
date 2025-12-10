@@ -50,7 +50,7 @@ if __name__ == "__main__":
     OpenAIAgent()
     # Validate Drive connection and downloads default configuration files
     Drive()
-    # Validate database connection and cleans cache
+    # Validate database connection 
     RedisClient()
     # Initialize the Server
     server.include_router(router)
