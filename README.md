@@ -165,9 +165,9 @@ Key performance metrics for the LLM system, utilizing the gpt-5-nano-2025-08-07 
 
 Workflow | Transmission mode | Action | Average Latency (ms) | Notes
 ---|---|---|---|---
-Json_Template_Generation_Flow | Synchronous | Generate JSON Template | 6.555 ms (n = 6 processes) | Total time until the complete JSON payload is generated
-Element_State_Inquiry_Flow | Streaming | Provides information | 7.403 ms (n = 4 processes) | Total time until the complete text payload is generated
-Element_State_Inquiry_Flow (Using Tools) | Streaming | Provides information | 14.023 ms (n = 3 processes) | Total time until the complete text payload is generated
+Json_Template_Generation_Flow | Synchronous | Generate JSON Template | 6.555 s (n = 6 processes) | Total time until the complete JSON payload is generated
+Element_State_Inquiry_Flow | Streaming | Provides information | 7.403 s (n = 4 processes) | Total time until the complete text payload is generated
+Element_State_Inquiry_Flow (Using Tools) | Streaming | Provides information | 14.023 s (n = 3 processes) | Total time until the complete text payload is generated
 
 ## Virtual Reality Environment
 The virtual environment was developed using the Unity Engine, it represents a living room with objects to interact, as well as a keyboard where a user can type commands for an agent to follow.
