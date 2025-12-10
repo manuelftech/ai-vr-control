@@ -3,9 +3,9 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from core.utils import get_base_workdir
 from config.config_vars import config
-import logging
 import io
-logger = logging.getLogger(__name__)
+import structlog
+logger = structlog.get_logger()
 
 class Drive():
     _singleton = None
@@ -14,7 +14,7 @@ class Drive():
     def __init__(self):
         if not self._is_already_initialized:
             self.client = self._connect()
-            self._download_default_config_files(config.DRIVE_PROMPT_FILES)
+            self._download_default_config_files(config.DRIVE_CONFIG_FILES)
             self._is_already_initialized = True
 
     def _connect(self):
@@ -26,7 +26,7 @@ class Drive():
                     scopes=config.SCOPES)
                 )
             client.files().list(pageSize=1, fields="nextPageToken, files(id, name)").execute().get('files', [])
-            logger.debug("Successfuly connected to Drive")
+            logger.debug("Connected to Drive")
             return client
         except Exception as e:
             raise Exception(e)
@@ -46,10 +46,10 @@ class Drive():
                 return
     
     def _download_default_config_files(self, filenames=[]):
-        logger.debug("Downloading config files")
+        logger.debug("Downloading config files from Drive")
         if len(filenames) < 1:
-            logger.warning("No default files to download")
+            logger.warning("No files to download from Drive")
             return
         for file_id in filenames:
             self._download_file(file_id)
-        logger.debug("Config files successfully downloaded")
+        logger.debug("Downloaded %s config files from Drive", len(filenames))

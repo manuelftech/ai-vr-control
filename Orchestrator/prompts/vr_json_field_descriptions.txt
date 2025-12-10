@@ -1,0 +1,6 @@
+Description of properties:
+'Tag': The type of object (e.g., "cube", "vase", "rack", "picture", "sofa", "joystick").
+'Components.ConstantForce.Force.Y' = Levitation state (e.g., 0 for falling, 9.83 for levitating).
+'Components.ConstantForce.RelativeTorque.X' = Rotation state (e.g., 0 for not rotating, 4.76 for spinning).
+'Components.Color' = Color state (e.g., #FF0000).
+'Transform.Reshape' = Size state (e.g., 1.5 for bigger, 0.5 for smaller).

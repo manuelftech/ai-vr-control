@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.14-slim
 ARG CONF_GROUP=groupconf
 ARG CONF_USER=userconf
 ARG PORT=5000
@@ -19,4 +19,4 @@ RUN apt-get update && \
 
 EXPOSE $PORT
 USER $CONF_USER
-CMD ["python", "app.py"]
+CMD ["python", "server.py"]

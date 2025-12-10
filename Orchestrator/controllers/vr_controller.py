@@ -1,49 +1,37 @@
-from services.agent_workflow_manager import Workflow
-from schemas.vr_state_response import VRStateResponse
-from schemas.vr_state_request import VRStateRequest
-from repository.vr_repository import VRRepository
 from fastapi import APIRouter, BackgroundTasks
-from fastapi.encoders import jsonable_encoder
-from schemas.agent_request import AgentRequest
-from models.agent_history import AgentHistory
+from schemas.conversation_state_response import ConversationStateResponse
+from schemas.cache_deletion_request import CacheDeletionRequest
+from schemas.vr_state_request import InitialVRStateProperties
+from schemas.vr_state_response import VRStateResponse
+from services.agent_workflow import AgentWorkflow
+from fastapi.responses import StreamingResponse
+from schemas.state_request import StateRequest
 from config.config_vars import config
-import logging
-logger = logging.getLogger(__name__)
+import structlog
+logger = structlog.get_logger()
 router = APIRouter(prefix=config.ENDPOINT_PREFIX)
 
-@router.put("/state")
-async def state(request: AgentRequest, background_tasks: BackgroundTasks):
-    logging.debug("Prompt: %s", request.Prompt)
+@router.post("/session-states/stream")
+async def stream_info(req: StateRequest):
+    # We return information as streaming
+    return StreamingResponse(AgentWorkflow().stream_vr_info(prompt=req.prompt, conversation_id=req.conversation_id), media_type="text/event-stream")
+
+@router.put("/transform-template", response_model=VRStateResponse, response_model_by_alias=False)
+async def update_vr_states(req: StateRequest, background_tasks: BackgroundTasks):
     # Retrieves the modification structure from the Agent
-    vr_state = Workflow().start(prompt=request.Prompt)
+    transform_template = await AgentWorkflow().get_vr_template(prompt=req.prompt, conversation_id=req.conversation_id)
+    # The updated Virtual Reality state is persisted
+    background_tasks.add_task(AgentWorkflow().update_vr_state, states=transform_template, conversation_id=req.conversation_id)
+    return transform_template
 
-    # The following processes execute without waiting for them to complete, but immediately returning the Controller response
-    # Save chat history
-    background_tasks.add_task(VRRepository().save_all, content=AgentHistory(message=request.Prompt).create_completed_response())
-    # Save updated Virtual Reality state
-    background_tasks.add_task(VRRepository().update_all, content=vr_state)
-    # Save temporal real-time data for next request
-    background_tasks.add_task(VRRepository().cache_real_time_state)
-    
-    response = VRStateResponse(vr_state=vr_state)
-    logging.debug("Modification properties Response: %s", response)
-    return response
+@router.post("/session-states", response_model=ConversationStateResponse, response_model_by_alias=False)
+async def save_initial_state(req: InitialVRStateProperties):
+    # Saves and sets up the vr state cache
+    conv_ids = await AgentWorkflow().create_conversation()
+    await AgentWorkflow().save_initial_vr_state(content=req.vr_state, conversation_id=conv_ids.ConversationIdTemplate)
+    return conv_ids
 
-@router.post("/state")
-async def state(vr_state: list[VRStateRequest], background_tasks: BackgroundTasks):
-    # The cache is cleared automatically before saving the new states
-    await VRRepository().purge_all()
-
-    logging.debug("Received VR states: %s", vr_state)
-    # Saves the initial Virtual Reality state to Redis
-    await VRRepository().save_all(content=jsonable_encoder(vr_state))
-
-    # Save temporal real-time data for next request
-    background_tasks.add_task(VRRepository().cache_real_time_state)
-    logging.info("Successfully generated environment cache")
-
-@router.delete("/state")
-async def state():
+@router.delete("/session-states")
+async def delete_state(req: CacheDeletionRequest):
     # The cache is cleared automatically upon the finalizing of the virtual reality simulation
-    await VRRepository().purge_all()
-    logging.info("Successfully deleted environment cache")
+    await AgentWorkflow().clear_cache(conversation_id=req.conversation_id)

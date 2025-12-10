@@ -1,28 +1,31 @@
 from pydantic import BaseModel, Field
 
 class CoordinatesProperties(BaseModel):
-    X: float = Field(None, description="X axis of the virtual reality object")
-    Y: float = Field(None, description="Y axis of the virtual reality object")
-    Z: float = Field(None, description="Z axis of the virtual reality object")
+    x: float = Field(alias='X', description="X axis of the virtual reality object")
+    y: float = Field(alias='Y', description="Y axis of the virtual reality object")
+    z: float = Field(alias='Z', description="Z axis of the virtual reality object")
 
 class ConstantForceProps(BaseModel):
-    Force: CoordinatesProperties | None = Field(None, description="Force against gravity applied to the virtual reality object")
-    RelativeTorque: CoordinatesProperties | None = Field(None, description="Rotation applied to the virtual reality object")
+    force: CoordinatesProperties | None = Field(alias='Force', description="Force against gravity applied to the virtual reality object")
+    relative_torque: CoordinatesProperties | None = Field(alias='RelativeTorque', description="Rotation applied to the virtual reality object")
 
 class ComponentsProperties(BaseModel):
-    ConstantForce: ConstantForceProps | None = Field(None, description="Force applied to the virtual reality object")
-    Color: str| None = Field(None, description="Color property of the Component", pattern=r"^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|)$")
-    Text: str | None = Field(None, description="Text property of the Component")
+    constant_force: ConstantForceProps | None = Field(alias='ConstantForce', description="Force applied to the virtual reality object")
+    color: str| None = Field(alias='Color', description="Color property of the Component", pattern=r"^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|)$")
+    text: str | None = Field(alias='Text', description="Text property of the Component")
 
 class TransformProperties(BaseModel):
-    Position: CoordinatesProperties = Field(None, description="Position of the virtual reality object in the environment")
-    Rotation: CoordinatesProperties = Field(None, description="Rotation of the virtual reality object in the environment")
-    Scale: CoordinatesProperties = Field(None, description="Size of the virtual reality object in the environment")
-    Reshape: float = Field(None, description="How much an element has changed its size.")
+    position: CoordinatesProperties = Field(alias='Position', description="Position of the virtual reality object in the environment")
+    rotation: CoordinatesProperties = Field(alias='Rotation', description="Rotation of the virtual reality object in the environment")
+    scale: CoordinatesProperties = Field(alias='Scale', description="Size of the virtual reality object in the environment")
+    reshape: float = Field(alias='Reshape', description="How much an element has changed its size.")
 
 class VRStateRequest(BaseModel):
-    Id: str = Field(None, description="Automatically generated Id for the duration of the scene session")
-    Tag: str = Field(None, description="Tag of the object (e.g., television, cube, sofa)")
-    Name: str = Field(None, description="Name of the object")
-    Components: ComponentsProperties = Field(None, description="Components of the object (e.g., Renderer, ConstantForce)")
-    Transform: TransformProperties = Field(None, description="Position of the object in the virtual reality environment")
+    vr_id: str = Field(alias='VRId', description="Automatically generated Id for the duration of the scene session")
+    tag: str = Field(alias='Tag', description="Tag of the object (e.g., television, cube, sofa)")
+    name: str = Field(alias='Name', description="Name of the object")
+    components: ComponentsProperties = Field(alias='Components', description="Components of the object (e.g., Renderer, ConstantForce)")
+    transform: TransformProperties = Field(alias='Transform', description="Position of the object in the virtual reality environment")
+
+class InitialVRStateProperties(BaseModel):
+    vr_state: list[VRStateRequest]| None = Field(alias='VirtualRealityState', description="Complete scene elements")

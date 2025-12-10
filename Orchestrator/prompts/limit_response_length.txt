@@ -1,0 +1,4 @@
+Compose a message adhering to the following guidelines:
+- Maximum character limit: 600 characters (excluding newlines)
+- Each newline ('\n') reduces the character limit by 64 characters
+- Maximum 9 newlines allowed
