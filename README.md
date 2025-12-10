@@ -85,8 +85,7 @@ The virtual reality environment sends and updates the following data structure f
                 "Z": 0.0
             }
         },
-        "Color": "#FF0000",
-        "Text": "Streaming data provided by the agent",
+        "Color": "#FF0000"
     }
 }
 ```
