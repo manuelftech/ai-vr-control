@@ -8,7 +8,7 @@ AI-powered agent-based system for dynamic modification of Virtual Reality enviro
 - API Management: Handled by FastAPI, which facilitates both synchronous and streaming endpoints.
 
 ## In-Engine Experience Video
-Demonstration of the system's core functionality: real-time, interactive command execution within the virtual reality environment.
+Demonstration of the system's core functionality.
 
 [![video](https://img.youtube.com/vi/-t16E0ieU7k/hqdefault.jpg)](https://youtu.be/-t16E0ieU7k)
 
