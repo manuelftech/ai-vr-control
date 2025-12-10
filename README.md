@@ -241,7 +241,6 @@ This command builds the Python image, uses the local .env file for configuration
 
 ### 4. Configure and Run the Unity Engine application
 * The Unity Engine acts as the client and needs to know where your locally running HTTP services are located.
-* Launch the Unity Hub, open the project, and wait for the Unity Editor to load.
 * Ensure that your operating system environment variables are accessible within the Unity environment (this may require specific configuration depending on your OS and Unity version).
 * Set the following system environment variables before launching the Unity Editor:
     *   **`VR_TEMPLATE_API_ENDPOINT`**: Points to the local Python service template endpoint (e.g., http://localhost:5000/vr-state/transform-template).
