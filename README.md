@@ -19,24 +19,24 @@ High-level diagram illustrating the system data flow.
 graph TD
     subgraph Unity Engine
         STATE_MANAGEMENT("User in a VR world makes requests to the Agent")
-        UC_DD("Validates and applies new 3D state")
-        UC_DD -- Changes reflected --> STATE_MANAGEMENT
+        VALIDATION_3D("Validates and applies new 3D state")
+        VALIDATION_3D -- Changes reflected --> STATE_MANAGEMENT
     end
 
     subgraph Python Application
-        PB_F("Validate incoming data (pydantic/regex)")
-        PB_F -- Routes Request --> PB_EP
-        PB_EP("Runs AI Agent with conversation context")
-        PB_EP -- OpenAI Request --> PB_S
-        PB_S("Agent provides information/Modification data structure")
-        PB_S -- Process Data --> REDIS
+        VALIDATION_INPUT("Validate incoming data (pydantic/regex)")
+        VALIDATION_INPUT -- Routes Request --> AI_CONTEXT
+        AI_CONTEXT("Runs AI Agent with conversation context")
+        AI_CONTEXT -- OpenAI Request --> AI_TEMPLATE
+        AI_TEMPLATE("Agent provides information/Modification data structure")
+        AI_TEMPLATE -- Process Data --> REDIS
         REDIS("Updates state in Database (Redis)")
     end
 
     STATE_MANAGEMENT --> Internet/Network
-    Internet/Network --> PB_F
+    Internet/Network --> VALIDATION_INPUT
     REDIS -- JSON Response --> Internet/Network
-    Internet/Network -- JSON Response --> UC_DD
+    Internet/Network -- JSON Response --> VALIDATION_3D
 ```
 
 ## Data Flow
@@ -128,7 +128,7 @@ Orchestrator/
 ├── repositories/             # Data access layer (Redis interface)
 ├── services/               # OpenAI agent interaction, business logic
 │   ├── tools/              # Agent function/tool definitions
-├── server.py                 # FastAPI application entry point
+├── server.py                 # Application entry point
 ```
 
 
@@ -160,7 +160,7 @@ vr-state/session-states | DELETE | Automatically triggered when the Unity engine
 
 Key performance metrics for the LLM system, utilizing the gpt-5-nano-2025-08-07 model, were reviewed in the project platform dashboard in https://platform.openai.com/logs?api=traces.
 
-Workflow | Transmission mode | Action | Average Latency (ms) | Notes
+Workflow | Transmission mode | Action | Average Latency (secs) | Notes
 ---|---|---|---|---
 Json_Template_Generation_Flow | Synchronous | Generate JSON Template | 6.118 s (n = 9 processes) | Total time until the complete JSON payload is generated
 Element_State_Inquiry_Flow | Streaming | Provides information | 7.403 s (n = 4 processes) | Total time until the complete text payload is generated
@@ -245,4 +245,4 @@ This command builds the Python image, uses the local .env file for configuration
     *   **`VR_INFO_API_ENDPOINT`**: Points to the local Python service streaming endpoint (e.g., http://localhost:5000/vr-state/session-states/stream).
 * Once the environment variables are set and the Python service is running, start the virtual reality environment.
 
-Project Link: [github.com ai-vr-control](https://github.com/manuelftech/ai-vr-control)
+Project Link: [github.com](https://github.com/manuelftech/ai-vr-control)
