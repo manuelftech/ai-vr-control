@@ -124,14 +124,12 @@ Orchestrator/
 ├── config/                 # Environment variables and credential management
 ├── controllers/            # API endpoints (routers) and input validation
 ├── core/                   # Shared helpers, utilities, and main application logic
-├── docs/                   # PDF documents ingested into the Vector Store
 ├── schemas/                # Pydantic data models for API requests/responses
 ├── prompts/                # Prompt configuration and template storage
-├── repository/             # Data access layer (Redis interface)
+├── repositories/             # Data access layer (Redis interface)
 ├── services/               # OpenAI agent interaction, business logic
 │   ├── tools/              # Agent function/tool definitions
-├── main.py                 # FastAPI application entry point
-└── requirements.txt        # Python dependencies
+├── server.py                 # FastAPI application entry point
 ```
 
 
