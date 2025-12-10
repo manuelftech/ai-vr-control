@@ -170,11 +170,11 @@ Element_State_Inquiry_Flow (Using Tools) | Streaming | Provides information | 14
 The virtual environment was developed using the Unity Engine, it represents a living room with objects to interact, as well as a keyboard where a user can type commands for an agent to follow.
 
 ### Assets
-The virtual reality world was developed using a variety of prefabs and materials sourced from libraries available on the Unity Asset Store.
+The virtual reality environment was developed using a variety of prefabs and materials sourced from libraries available on the Unity Asset Store.
 
 ### State Management
 A central GlobalManager script governs the registering of interactive elements within the scene, it also orchestrates changes to the state of the elements, such as modifying colors, updating text displayed on the TV screen, or toggling interaction modes.
-- Physics interactions and renderer modifications are managed using the functionality provided by the built-in Unity engine. Management encompasses the application of physical forces and constraints, alongside the updating of text content:
+- Physics interactions and renderer modifications are managed using the functionality provided by the Unity engine. Management encompasses the application of physical forces and constraints, alongside the updating of text content:
     * ConstantForce Force: Used to apply continuous force to objects, creating consistent movement or floating effects.
     * ConstantForce RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
     * TextMeshPro: Displays information within the environment, it was strategically positioned upon the relevision to easily resemble a livingroom.
@@ -182,7 +182,7 @@ A central GlobalManager script governs the registering of interactive elements w
 - Response Handling: The environment can switch between receiving streaming and synchronous responses from the Python application. This functionality is toggled by clicking a dedicated UI button within the keyboard (represented visually by a cube icon).
 
 # Local Environment Setup
-To run this project locally, you will need: the Unity application, a Python service managed via Docker, a local Redis database, and authentication credentials for Google Cloud and OpenAI.
+To run this project locally, it is required to have the Unity Engine editor 6.2, a Python service managed via Docker, a local Redis database, and authentication credentials for Google Cloud and OpenAI.
 
 ## Configuration Steps
 
