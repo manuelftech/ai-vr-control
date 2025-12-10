@@ -174,7 +174,7 @@ The virtual reality world was developed using a variety of prefabs and materials
 
 ### State Management
 A central GlobalManager script governs the registering of interactive elements within the scene, it also orchestrates changes to the state of the elements, such as modifying colors, updating text displayed on the TV screen, or toggling interaction modes.
-- Physics interaction and Renderer manipulation are manipulated using Unity's built-in physics engine. Interactions involve applying physical forces and constraints, and updating of the content of specifically:
+- Physics interactions and renderer modifications are managed using the functionality provided by the built-in Unity physics engine. Management encompasses the application of physical forces and constraints, alongside the updating of text content:
     * ConstantForce Force: Used to apply continuous force to objects, creating consistent movement or floating effects.
     * ConstantForce RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
     * TextMeshPro: Displays information within the environment, it was strategically positioned upon the relevision to easily resemble a livingroom.
