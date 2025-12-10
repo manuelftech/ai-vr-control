@@ -173,14 +173,13 @@ Json_Template_Generation_Flow | Synchronous | Generate JSON Template | 6.555 ms 
 Element_State_Inquiry_Flow | Streaming | Provides information | 7.403 ms (n = 4 processes) | Total time until the complete text payload is generated
 Element_State_Inquiry_Flow (Using Tools) | Streaming | Provides information | 14.023 ms (n = 3 processes) | Total time until the complete text payload is generated
 
-## Virtual Environment Creation and Mechanics
+## Virtual Reality Environment
 The virtual environment was developed using the Unity Engine, it represents a living room with objects to interact, as well as a keyboard where a user can type commands for an agent to follow.
 
-### Environment Assets
+### Assets
 The virtual living space was assembled using a variety of prefabs and materials sourced from libraries available on the Unity Asset Store.
 
-## Core Mechanics
-- State Management
+### State Management
 A central GlobalManager script governs the registering of interactive elements within the scene, it also orchestrates changes to the state of the elements, such as modifying colors, updating text displayed on the TV screen, or toggling interaction modes.
 - Physics Interaction
 Elements within the environment are manipulated using Unity's built-in physics engine. Interactions involve applying physical forces and constraints, specifically:
@@ -207,11 +206,10 @@ The services rely on environment variables provided by the .env file.
 Edit your new `.env` file to include the following information:
 
 *   **`SERVICE_ACCOUNT_FILE`**: The local path to the Google Cloud Platform (GCP) credentials JSON file.
-*   **`OPENAI_API_KEY`**: The API key from OpenAI for accessing the language model (LLM_KEY).
 *   **`DRIVE_CONFIG_FILES`**: A comma-separated list of Google Drive file IDs required by the application (Prompt files configuration)
 *   **`VECTOR_STORE_KNOWLEDGE_BASE_ID`**: The vector store id for accessing documentation files.
 
-**Important:** Ensure you have shared the permissions for the Google Drive files with the service account email associated with your GCP credentials file.
+Ensure you have shared the permissions for the Google Drive files with the service account email associated with your GCP credentials file.
 
 ### 2. Set up the Database
 
@@ -250,9 +248,9 @@ This command builds the Python image, uses the local .env file for configuration
 * Launch the Unity Hub, open the project, and wait for the Unity Editor to load.
 * Ensure that your operating system environment variables are accessible within the Unity environment (this may require specific configuration depending on your OS and Unity version).
 * Set the following system environment variables before launching the Unity Editor:
-*   **`VR_TEMPLATE_API_ENDPOINT`**: Points to the local Python service template endpoint (e.g., http://localhost:5000/vr-state/transform-template).
-*   **`VR_STATE_API_ENDPOINT`**: Points to the local Python service state endpoint (e.g., http://localhost:5000/vr-state/session-states).
-*   **`VR_INFO_API_ENDPOINT`**: Points to the local Python service streaming endpoint (e.g., http://localhost:5000/vr-state/session-states/stream).
+    *   **`VR_TEMPLATE_API_ENDPOINT`**: Points to the local Python service template endpoint (e.g., http://localhost:5000/vr-state/transform-template).
+    *   **`VR_STATE_API_ENDPOINT`**: Points to the local Python service state endpoint (e.g., http://localhost:5000/vr-state/session-states).
+    *   **`VR_INFO_API_ENDPOINT`**: Points to the local Python service streaming endpoint (e.g., http://localhost:5000/vr-state/session-states/stream).
 * Once the environment variables are set and the Python service is running, press the Play button within the Unity Editor to start the virtual reality environment.
 
 Project Link: [github.com ai-vr-control](https://github.com/manuelftech/ai-vr-control)
