@@ -162,12 +162,12 @@ Key performance metrics for the LLM system, utilizing the gpt-5-nano-2025-08-07 
 
 Workflow | Transmission mode | Action | Average Latency (secs) | Notes
 ---|---|---|---|---
-Json_Template_Generation_Flow | Synchronous | Generate JSON Template | 6.118 s (n = 9 processes) | Total time until the complete JSON payload is generated
+Json_Template_Generation_Flow | Synchronous | Generates JSON Template | 6.118 s (n = 9 processes) | Total time until the complete JSON payload is generated
 Element_State_Inquiry_Flow | Streaming | Provides information | 7.403 s (n = 4 processes) | Total time until the complete text payload is generated
 Element_State_Inquiry_Flow (Using Tools) | Streaming | Provides information | 14.023 s (n = 3 processes) | Total time until the complete text payload is generated
 
 ## Virtual Reality Environment
-The virtual environment was developed using the Unity Engine, it represents a living room with objects to interact, as well as a keyboard where a user can type commands for an agent to follow.
+The virtual environment was developed using the Unity Engine, it represents a living room with objects to interact with, as well as a keyboard where a user can type commands for an agent to follow.
 
 ### Assets
 The virtual reality environment was developed using a variety of prefabs and materials sourced from libraries available on the Unity Asset Store.
@@ -177,7 +177,7 @@ A central GlobalManager script governs the registering of interactive elements w
 - Physics interactions and renderer modifications are managed using the functionality provided by the Unity engine. Management encompasses the application of physical forces and constraints, alongside the updating of text content:
     * ConstantForce Force: Used to apply continuous force to objects, creating consistent movement or floating effects.
     * ConstantForce RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
-    * TextMeshPro: Displays information within the environment, it was strategically positioned upon the relevision to easily resemble a livingroom.
+    * TextMeshPro: Displays information within the environment, it was strategically positioned upon the television to easily resemble a living room.
     * Renderer: Responsible for visual presentation, manipulating the appearance of models, textures, and lighting within the environment.
 - Response Handling: The environment can switch between receiving streaming and synchronous responses from the Python application. This functionality is toggled by clicking a dedicated UI button within the keyboard (represented visually by a cube icon).
 
@@ -193,7 +193,7 @@ Follow these steps to configure and run the application stack:
 The services rely on environment variables provided by the .env file.
 
 *   Locate the `.env-template` file in the repository root.
-*   Make a copy and rename it to `.env`. This file is ignored by Git and will store here the local secrets.
+*   Make a copy and rename it to `.env`. This file is ignored by Git and will store the local secrets here.
 
 Edit your new `.env` file to include the following information:
 
