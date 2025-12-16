@@ -1,3 +1,4 @@
+import subprocess
 from config.exception_handlers.invalid_agent_request_error import InvalidAgentResponseError
 from schemas.conversation_state_response import ConversationStateResponse
 from schemas.vr_state_response import VRStateResponse
@@ -8,7 +9,6 @@ from agents import trace
 from config.config_vars import config
 from core.utils import read_file
 from fastapi.encoders import jsonable_encoder
-import json
 import structlog
 logger = structlog.get_logger()
 
@@ -64,6 +64,9 @@ class AgentWorkflow():
         # Saves the initial Virtual Reality state to Redis
         await StateRepository().save(content=jsonable_encoder(content), conversation_id=conversation_id)
 
+    async def screenshot(self, container_name="ai-vr-control"):
+        return subprocess.check_output(f'docker exec {container_name} sh -c "export DISPLAY=:99 && import -window root jpeg:-"', shell=True)
+    
     async def clear_cache(self, conversation_id):
         await StateRepository().delete(conversation_id=conversation_id)
 

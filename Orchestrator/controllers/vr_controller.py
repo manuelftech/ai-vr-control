@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Response
 from schemas.conversation_state_response import ConversationStateResponse
 from schemas.cache_deletion_request import CacheDeletionRequest
 from schemas.vr_state_request import InitialVRStateProperties
@@ -35,3 +35,7 @@ async def save_initial_state(req: InitialVRStateProperties):
 async def delete_state(req: CacheDeletionRequest):
     # The cache is cleared automatically upon the finalizing of the virtual reality simulation
     await AgentWorkflow().clear_cache(conversation_id=req.conversation_id)
+
+@router.post("/screenshot")
+async def desktop():
+    return Response(await AgentWorkflow().screenshot(), media_type="image/jpg")

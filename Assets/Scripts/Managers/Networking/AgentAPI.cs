@@ -119,6 +119,34 @@ namespace AIControlVR.Managers.Networking
                 Debug.Log($"Endpoint URL: {Config.ApiSessionStatesStream}, Method: {method}, Response: {textComponent.text}");
             }
         }
-        
+
+
+        public IEnumerator<object> DisplayScreenshot(TextMeshPro textComponent, APIStateRequest apiStateRequest)
+        {
+            string method = "POST";
+            Debug.Log($"Endpoint URL: {Config.ApiScreenshot}, Method: {method}");
+            GameObject imageObject = GameObject.FindWithTag(Config.ScreenshotTag);
+            SpriteRenderer spriteRenderer = imageObject.GetComponent<SpriteRenderer>();
+            Texture2D texture = new Texture2D(1, 1);
+
+            while (true){
+                using (UnityWebRequest webRequest = new UnityWebRequest(Config.ApiScreenshot, method))
+                {
+                    webRequest.downloadHandler = new DownloadHandlerBuffer();
+                    yield return webRequest.SendWebRequest();
+                    if (webRequest.result == UnityWebRequest.Result.Success)
+                    {
+                        texture.LoadImage(webRequest.downloadHandler.data);
+                        spriteRenderer.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 10.0f);                    
+                        Debug.Log($"Displaying screenshot");
+                    }
+                    else
+                    {
+                        Debug.LogError($"Error fetching screenshot: {webRequest.error}");
+                    }
+                }
+                yield return null;
+            }
+        }
     }
 }

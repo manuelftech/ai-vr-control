@@ -19,6 +19,7 @@ TagManager:
   - text
   - streaming_visibility
   - visibility_image
+  - RemoteDesktopStream
   layers:
   - Default
   - TransparentFX
