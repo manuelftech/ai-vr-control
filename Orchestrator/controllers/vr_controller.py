@@ -37,5 +37,5 @@ async def delete_state(req: CacheDeletionRequest):
     await AgentWorkflow().clear_cache(conversation_id=req.conversation_id)
 
 @router.post("/image-generation")
-async def desktop():
+async def image_generation():
     return Response(await AgentWorkflow().image_generation(), media_type="image/jpg")
