@@ -36,6 +36,6 @@ async def delete_state(req: CacheDeletionRequest):
     # The cache is cleared automatically upon the finalizing of the virtual reality simulation
     await AgentWorkflow().clear_cache(conversation_id=req.conversation_id)
 
-@router.post("/screenshot")
+@router.post("/image-generation")
 async def desktop():
-    return Response(await AgentWorkflow().screenshot(), media_type="image/jpg")
+    return Response(await AgentWorkflow().image_generation(), media_type="image/jpg")

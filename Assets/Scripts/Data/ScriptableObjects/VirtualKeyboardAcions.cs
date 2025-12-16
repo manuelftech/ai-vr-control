@@ -60,5 +60,14 @@ namespace AIControlVR.Data.ScriptableObjects
             if (textComponent == null) throw new Exception($"tmpInputField component not found in Tag: : {Config.DefaultInputTag}");
             StartCoroutine(agentAPI.UpdateTextStateStream(textComponent, request));
         }
+
+        public void DisplayGeneratedImage(APIStateRequest request)
+        {
+            GameObject televisionImageDisplay = GameObject.FindWithTag(Config.ScreenshotTag);
+            if (televisionImageDisplay == null) throw new Exception($"Element with Tag: {Config.ScreenshotTag} not found in the scene.");
+            SpriteRenderer spriteRenderer = televisionImageDisplay.GetComponent<SpriteRenderer>();
+            if (spriteRenderer == null) throw new Exception($"SpriteRenderer component not found in Tag: : {Config.ScreenshotTag}");
+            StartCoroutine(agentAPI.DisplayGeneratedImage(spriteRenderer, request));
+        }
     }
 }

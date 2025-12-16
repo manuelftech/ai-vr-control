@@ -6,6 +6,7 @@ from repositories.vr_states_repository import StateRepository
 from services.tools.tool_manager import tool_manager
 from config.openai_agent import OpenAIAgent
 from agents import trace
+import requests
 from config.config_vars import config
 from core.utils import read_file
 from fastapi.encoders import jsonable_encoder
@@ -63,6 +64,17 @@ class AgentWorkflow():
     async def save_initial_vr_state(self, content, conversation_id):
         # Saves the initial Virtual Reality state to Redis
         await StateRepository().save(content=jsonable_encoder(content), conversation_id=conversation_id)
+
+    async def image_generation(self, prompt):
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=prompt,
+            size="1024x1024",
+            quality="standard",
+            n=1
+        )
+
+        return requests.get(response.data[0].url).content
 
     async def screenshot(self, container_name="ai-vr-control"):
         return subprocess.check_output(f'docker exec {container_name} sh -c "export DISPLAY=:99 && import -window root jpeg:-"', shell=True)
