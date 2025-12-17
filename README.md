@@ -1,11 +1,11 @@
 # AI Agents + Virtual Reality
 ## System Overview
-AI-powered agent-based system for dynamic modification of Virtual Reality environment elements, leveraging Python and OpenAI libraries to harness ChatGPT capabilities. This enables manipulation of 3D elements, including movement, color, and state changes, as desired. The system integrates three data sources: Vector Store for structured data, Google Workspace (Drive) for file management, and Redis for dynamic, cached data and real-time information. This allows agents to access real-time data, static information, and conversational context, facilitating seamless interactions within the VR environment.
+AI-powered agent-based system for dynamic modification of Virtual Reality environment elements, leveraging Python and OpenAI libraries to harness ChatGPT capabilities. This enables manipulation of 3D objects, including movement, color, and state changes, as desired. The system integrates three data sources: Vector Store for document data, Google Workspace (Drive) for file management, and Redis for dynamic cached data, this allows agents to access real-time data as well as static information and conversational context, facilitating seamless interactions within the VR environment.
 
 ## Features
-- AI Integration: Seamless connection to a ChatGPT agent for interpreting natural language commands into structured data templates.
-- Unity Interoperability: Direct control over Unity ConstantForce.Force, ConstantForce.RelativeTorque, Renderer.Color, and TextMeshPro states via structured JSON responses.
-- API Management: Handled by FastAPI, which facilitates both synchronous and streaming endpoints.
+- Real-time Text Streaming: A streaming communication with Unity Engine, facilitating live updates and synchronization.
+- 3D Object Modification: Generates JSON templates to modify 3D objects in Unity Engine, enabling dynamic and interactive experiences.
+- State Management: Saves and retrieves the state of elements, allowing for seamless persistence and recall of Unity data.
 
 ## In-Engine Experience Video
 Interacting within the virtual reality platform.
@@ -115,7 +115,7 @@ The AI agent can generate the following data structure to enforce new states in 
 ```
 
 ## Folder Structure
-Separation of concerns across both Python and C# (Unity Engine) projects:
+Clear boundaries between business logic and engine-specific implementation
 
 Orchestrator/ (Python OpenAI)
 ```text
@@ -173,7 +173,7 @@ The virtual environment was developed using the Unity Engine, it represents a li
 The virtual reality environment was developed using a variety of prefabs and materials sourced from libraries available on the Unity Asset Store.
 
 ### State Management
-A central GlobalManager script governs the registering of interactive elements within the scene, it also orchestrates changes to the state of the elements, such as modifying colors, updating text displayed on the TV screen, or toggling interaction modes.
+A central Global Manager script governs the registering of interactive elements within the scene, it also orchestrates changes to the state of the elements, such as modifying colors, updating text displayed on the TV screen, or toggling interaction modes.
 - Physics interactions and renderer modifications are managed using the functionality provided by the Unity engine. Management encompasses the application of physical forces and constraints, alongside the updating of text content:
     * ConstantForce Force: Used to apply continuous force to objects, creating consistent movement or floating effects.
     * ConstantForce RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
@@ -239,9 +239,16 @@ This command builds the Python image, uses the local .env file for configuration
 * The Unity Engine acts as the client and needs to know where your locally running HTTP services are located.
 * Ensure that your operating system environment variables are accessible within the Unity environment.
 * Set the following system environment variables before launching the Unity Editor:
-    *   **`VR_TEMPLATE_API_ENDPOINT`**: Points to the local Python service template endpoint (e.g., http://localhost:5000/vr-state/transform-template).
-    *   **`VR_STATE_API_ENDPOINT`**: Points to the local Python service state endpoint (e.g., http://localhost:5000/vr-state/session-states).
-    *   **`VR_INFO_API_ENDPOINT`**: Points to the local Python service streaming endpoint (e.g., http://localhost:5000/vr-state/session-states/stream).
+    *   **`VR_TEMPLATE_API_ENDPOINT`**: Points to the local Python service template endpoint (e.g., /vr-state/transform-template).
+    *   **`VR_STATE_API_ENDPOINT`**: Points to the local Python service state endpoint (e.g., /vr-state/session-states).
+    *   **`VR_INFO_API_ENDPOINT`**: Points to the local Python service streaming endpoint (e.g., /vr-state/session-states/stream).
 * Once the environment variables are set and the Python service is running, start the virtual reality environment.
+
+### Acknowledgments
+This project was made possible by leveraging industry-leading tools and frameworks:
+* AI & Logic: OpenAI for the development of GPT models and the OpenAI Python SDK for seamless agent integration.
+* Engine & Interface: The Unity Engine team for the core development environment and the Unity XR Interaction Toolkit for the VR foundation.
+* Backend Infrastructure: The FastAPI maintainers for the high-performance web framework and the Redis team for robust data-structure bridging and caching.
+* DevOps & Productivity: The Docker team for containerization standards and Google Workspace for centralized project documentation and configuration management.
 
 Project Link: [github.com](https://github.com/manuelftech/ai-vr-control)
