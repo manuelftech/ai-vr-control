@@ -1,12 +1,12 @@
 # AI Agents + Virtual Reality
 ## System Overview
-AI-powered agent-based system for dynamic modification of Virtual Reality environment elements, leveraging Python and OpenAI libraries to harness ChatGPT capabilities. This enables manipulation of 3D objects, including physics, color, and size as desired. The system integrates three data sources: Vector Store for document data, Google Workspace (Drive) for file management, and Redis for dynamic cache, this allows agents to access real-time data as well as static information, facilitating seamless interactions within the VR environment.
+AI-powered agent-based system for dynamic modification of Virtual Reality environment elements, leveraging Python and OpenAI libraries to harness ChatGPT capabilities. This enables manipulation of 3D objects, including physics, color, and size as desired. The system integrates three data sources: Vector Store for document data, Google Workspace via Drive for file management, and Redis for dynamic cache, this allows agents to access real-time data as well as static information, facilitating seamless interactions within the VR environment.
 
 ## Features
-- Real-time Text Streaming: A streaming communication with Unity Engine, facilitating live updates and synchronization.
-- Conversation history: Generates conversation IDs within the workflow to seamlessly remember previously executed actions and maintain context.
-- 3D Object Modification: Generates JSON templates to modify 3D objects in Unity Engine, enabling dynamic and interactive experiences.
-- State Management: Saves and retrieves the state of elements, allowing for seamless persistence and recall of Unity data.
+- Real-time Text Streaming: A streaming communication with Unity Engine, facilitating live updates.
+- Conversation history: Generates conversation IDs within the workflow to maintain context.
+- 3D Object Modification: Generates JSON templates to modify 3D objects in Unity Engine.
+- State Management: Persists and retrieves states to enable data analytics and system observability.
 
 ## In-Engine Experience Video
 Interacting within the virtual reality platform.
@@ -179,7 +179,7 @@ A central Global Manager script governs the registering of interactive elements 
     * ConstantForce Force: Used to apply continuous force to objects, creating consistent movement or floating effects.
     * ConstantForce RelativeTorque: Applied to induce rotational movement, allowing objects to spin or orient themselves dynamically within the virtual space.
     * TextMeshPro: Displays information within the environment, it was strategically positioned upon the television to easily resemble a living room.
-    * Renderer: Responsible for visual presentation, manipulating the appearance of models, textures, and lighting within the environment.
+    * Renderer: Responsible for visual presentation, manipulating the appearance of models and their textures within the environment.
 - Response Handling: The environment can switch between receiving streaming and synchronous responses from the Python application. This functionality is toggled by clicking a dedicated UI button within the keyboard (represented visually by a cube icon).
 
 # Local Environment Setup
