@@ -1,9 +1,10 @@
 # AI Agents + Virtual Reality
 ## System Overview
-AI-powered agent-based system for dynamic modification of Virtual Reality environment elements, leveraging Python and OpenAI libraries to harness ChatGPT capabilities. This enables manipulation of 3D objects, including movement, color, and state changes, as desired. The system integrates three data sources: Vector Store for document data, Google Workspace (Drive) for file management, and Redis for dynamic cached data, this allows agents to access real-time data as well as static information and conversational context, facilitating seamless interactions within the VR environment.
+AI-powered agent-based system for dynamic modification of Virtual Reality environment elements, leveraging Python and OpenAI libraries to harness ChatGPT capabilities. This enables manipulation of 3D objects, including physics, color, and size as desired. The system integrates three data sources: Vector Store for document data, Google Workspace (Drive) for file management, and Redis for dynamic cache, this allows agents to access real-time data as well as static information, facilitating seamless interactions within the VR environment.
 
 ## Features
 - Real-time Text Streaming: A streaming communication with Unity Engine, facilitating live updates and synchronization.
+- Conversation history: Generates conversation IDs within the workflow to seamlessly remember previously executed actions and maintain context.
 - 3D Object Modification: Generates JSON templates to modify 3D objects in Unity Engine, enabling dynamic and interactive experiences.
 - State Management: Saves and retrieves the state of elements, allowing for seamless persistence and recall of Unity data.
 
@@ -146,7 +147,7 @@ Assets/
 ```
 
 ## API Endpoints
-The Swagger UI API documentation is available at http://127.0.0.1:5000/docs
+Interactive API documentation is available at the /docs endpoint via Swagger UI.
 
 ## Key Endpoints:
 Endpoint | Method | Description
