@@ -11,7 +11,7 @@ AI-powered agent-based system for dynamic modification of Virtual Reality enviro
 ## In-Engine Experience Video
 Interacting within the virtual reality platform.
 
-[![video](https://img.youtube.com/vi/-t16E0ieU7k/hqdefault.jpg)](https://youtu.be/-t16E0ieU7k)
+[![video](https://img.youtube.com/vi/3aVSiJS5_fI/hqdefault.jpg)](https://youtu.be/3aVSiJS5_fI)
 
 ## Architecture Diagram
 High-level diagram illustrating the system data flow.
